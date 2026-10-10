@@ -10,9 +10,21 @@ Every app works offline and keeps files on the phone. Languages: English, हि
 | App | Folder | What it does |
 |---|---|---|
 | **DocScan** | `apps/doc_scanner` | Scan paper with automatic edge detection → clean PDF. One-tap names (Aadhaar, PAN, Marksheet…). |
-| **Vault** | `apps/doc_vault` | Store documents by category (Identity, Education, Bank, Health, Property, Vehicle, Bills). PIN lock, expiry alerts on the home screen. |
+| **Vault** | `apps/doc_vault` | Store documents by category, PIN lock, expiry alerts. |
 | **Signa** | `apps/sign_maker` | Draw or type a signature, export a transparent PNG. |
-| **PDF Studio** | `apps/pdf_studio` | View, merge, extract/delete pages, photos→PDF, rotate, add signature, page numbers, watermark, password protect/unlock. |
+| **PDF Studio** | `apps/pdf_studio` | View, merge, extract/delete pages, photos→PDF, rotate, sign, page numbers, watermark, lock/unlock. |
+| **FillIt** | `apps/pdf_fill` | Fill PDF forms: type text, tick, cross, date and signature right on the page. |
+| **Likho** | `apps/doc_writer` | Write and edit documents; open .docx, .txt or PDF text; export Word or PDF; templates. |
+| **Ludo Royale** | `apps/ludo_star` | Ludo with Classic, Quick and Rush modes, 2–4 players, computer opponents. |
+| **Deutsch Dost** | `apps/learn_german` | A1 German in 8 units with meanings in English/Hindi/Gujarati, flashcards, quiz, listening. |
+| **Sur** | `apps/learn_music` | Piano with sargam labels, play-along songs, ear training, tanpura drone, metronome. |
+| **Ghar** | `apps/property_ghar` | Property listings with a WhatsApp flyer; EMI, stamp duty and area calculators. |
+| **BillBook** | `apps/bill_book` | Monthly bill tracker with due dates, official pay links and payment history. |
+| **PF Saathi** | `apps/pf_saathi` | EPF balance via EPFO missed call / SMS, official portals, retirement calculator. |
+| **Gaadi** | `apps/vehicle_gaadi` | Vehicles, RTO lookup from number plate, insurance/PUC reminders, fuel log, Parivahan links. |
+| **Dial Abroad** | `apps/dial_abroad` | Contacts abroad with their local time, call with the right code or on WhatsApp. |
+| **Milo** | `apps/meet_milo` | Free video meetings on Jitsi Meet with shareable links and scheduling. |
+| **Safar** | `apps/safar_trips` | Train booking and Tatkal opening countdowns, PNR check, saved passengers. |
 
 Shared code lives in `packages/ud_core` (theme, fonts, translations, widgets, file helpers).
 
@@ -46,11 +58,10 @@ future update. Then in GitHub → **Settings → Secrets and variables → Actio
 
 The next build produces Play-ready `.aab` files. In Play Console create each app,
 upload its `.aab` under **Testing → Internal testing** first, then Production.
-Package names: `com.udapps.doc_scanner`, `com.udapps.doc_vault`,
-`com.udapps.sign_maker`, `com.udapps.pdf_studio`.
+Package names are `com.udapps.<folder name>`, e.g. `com.udapps.doc_scanner`.
 
 Play also needs, per app: a privacy policy URL, screenshots, a short and full
-description, and the Data safety form (all four apps: no data collected, no data shared).
+description, and the Data safety form (these apps collect and share no data; files stay on the phone).
 
 ## Running locally
 

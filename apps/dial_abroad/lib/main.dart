@@ -37,9 +37,10 @@ String digits(String s) => s.replaceAll(RegExp(r'\D'), '').replaceFirst(RegExp(r
 
 /// Difference from Indian time, e.g. "1 h 30 m".
 String offsetLabel(BuildContext context, Country c) {
-  final there = tz.getLocation(c.tz).currentTimeZone.offset;
-  final india = tz.getLocation('Asia/Kolkata').currentTimeZone.offset;
-  final diffMin = (there - india) ~/ 60000;
+  // DateTime.timeZoneOffset is a Duration in every version of the package.
+  final there = tz.TZDateTime.now(tz.getLocation(c.tz)).timeZoneOffset;
+  final india = tz.TZDateTime.now(tz.getLocation('Asia/Kolkata')).timeZoneOffset;
+  final diffMin = (there - india).inMinutes;
   if (diffMin == 0) return context.tr('same');
   final m = diffMin.abs();
   final h = '${m ~/ 60} h${m % 60 == 0 ? '' : ' ${m % 60} m'}';
