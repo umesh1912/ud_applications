@@ -1,0 +1,31 @@
+name: doc_writer
+description: Likho — write and edit Word documents, export Word or PDF.
+version: 1.0.0+1
+publish_to: none
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  ud_core:
+    path: ../../packages/ud_core
+  archive: ">=3.6.0 <5.0.0"
+  pdf: ">=3.11.0 <4.0.0"
+  printing: ">=5.13.0 <6.0.0"
+  syncfusion_flutter_pdf: ">=27.1.48 <40.0.0"
+  path_provider: ^2.1.4
+
+dev_dependencies:
+  flutter_launcher_icons: any
+
+flutter:
+  uses-material-design: true
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: assets/icon/icon.png
+  adaptive_icon_background: "#5A4A3A"
+  adaptive_icon_foreground: assets/icon/foreground.png

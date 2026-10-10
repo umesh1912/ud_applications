@@ -30,6 +30,18 @@ jobs:
             label: Deutsch Dost
           - app: learn_music
             label: Sur
+          - app: doc_writer
+            label: Likho
+          - app: pdf_fill
+            label: FillIt
+          - app: property_ghar
+            label: Ghar
+          - app: bill_book
+            label: BillBook
+          - app: pf_saathi
+            label: PF Saathi
+          - app: vehicle_gaadi
+            label: Gaadi
     env:
       APP: ${{ matrix.app }}
     steps:

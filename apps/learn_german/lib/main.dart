@@ -121,7 +121,7 @@ class _HomePageState extends State<HomePage> {
           subtitle: context.tr('home_sub'),
           actions: const [UdSettingsButton(appName: appName)],
           dock: UdDock(
-            label: context.tr('continue'),
+            label: context.tr('continue_learning'),
             icon: Icons.play_arrow_rounded,
             onPressed: () => _openUnit(context, next, p),
           ),

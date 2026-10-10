@@ -1,0 +1,30 @@
+name: pdf_fill
+description: FillIt — fill PDF forms with text, ticks, dates and signatures.
+version: 1.0.0+1
+publish_to: none
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  ud_core:
+    path: ../../packages/ud_core
+  printing: ">=5.13.0 <6.0.0"
+  syncfusion_flutter_pdf: ">=27.1.48 <40.0.0"
+  image_picker: ^1.1.2
+  open_filex: ^4.6.0
+
+dev_dependencies:
+  flutter_launcher_icons: any
+
+flutter:
+  uses-material-design: true
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: assets/icon/icon.png
+  adaptive_icon_background: "#0F6E8C"
+  adaptive_icon_foreground: assets/icon/foreground.png
