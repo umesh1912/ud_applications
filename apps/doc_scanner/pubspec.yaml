@@ -1,0 +1,29 @@
+name: doc_scanner
+description: DocScan — scan documents into clean PDFs.
+version: 1.0.0+1
+publish_to: none
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  ud_core:
+    path: ../../packages/ud_core
+  google_mlkit_document_scanner: ^0.6.0
+  open_filex: ^4.6.0
+  path_provider: ^2.1.4
+
+dev_dependencies:
+  flutter_launcher_icons: any
+
+flutter:
+  uses-material-design: true
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: assets/icon/icon.png
+  adaptive_icon_background: "#C2512E"
+  adaptive_icon_foreground: assets/icon/foreground.png

@@ -1,0 +1,28 @@
+name: sign_maker
+description: Signa — draw or type a clean digital signature.
+version: 1.0.0+1
+publish_to: none
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  ud_core:
+    path: ../../packages/ud_core
+  signature: ">=5.5.0 <7.0.0"
+  google_fonts: ">=6.2.1 <10.0.0"
+
+dev_dependencies:
+  flutter_launcher_icons: any
+
+flutter:
+  uses-material-design: true
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: assets/icon/icon.png
+  adaptive_icon_background: "#2B3A8C"
+  adaptive_icon_foreground: assets/icon/foreground.png

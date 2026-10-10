@@ -1,0 +1,30 @@
+name: pdf_studio
+description: PDF Studio — view, merge, split, sign and protect PDFs offline.
+version: 1.0.0+1
+publish_to: none
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  ud_core:
+    path: ../../packages/ud_core
+  syncfusion_flutter_pdf: ">=27.1.48 <40.0.0"
+  syncfusion_flutter_pdfviewer: ">=27.1.48 <40.0.0"
+  image_picker: ^1.1.2
+  open_filex: ^4.6.0
+
+dev_dependencies:
+  flutter_launcher_icons: any
+
+flutter:
+  uses-material-design: true
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: assets/icon/icon.png
+  adaptive_icon_background: "#A3273B"
+  adaptive_icon_foreground: assets/icon/foreground.png

@@ -1,0 +1,26 @@
+# Flutter / Dart
+.dart_tool/
+.packages
+build/
+pubspec.lock
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Generated per build by `flutter create` in CI
+apps/*/android/
+apps/*/ios/
+apps/*/test/
+apps/*/.metadata
+apps/*/analysis_options.yaml
+apps/*/*.iml
+apps/*/.idea/
+
+# Signing — never commit
+*.jks
+*.keystore
+key.properties
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/

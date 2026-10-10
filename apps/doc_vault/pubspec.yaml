@@ -1,0 +1,30 @@
+name: doc_vault
+description: Vault — keep every important document safe and findable.
+version: 1.0.0+1
+publish_to: none
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  ud_core:
+    path: ../../packages/ud_core
+  image_picker: ^1.1.2
+  open_filex: ^4.6.0
+  crypto: ^3.0.3
+  shared_preferences: ^2.3.0
+
+dev_dependencies:
+  flutter_launcher_icons: any
+
+flutter:
+  uses-material-design: true
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: assets/icon/icon.png
+  adaptive_icon_background: "#1F5F5B"
+  adaptive_icon_foreground: assets/icon/foreground.png
