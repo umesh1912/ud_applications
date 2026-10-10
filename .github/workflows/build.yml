@@ -77,7 +77,8 @@ jobs:
       - name: Analyze
         working-directory: apps/${{ matrix.app }}
         run: |
-          flutter analyze --no-fatal-infos --no-fatal-warnings > analyze.txt 2>&1 || true
+          (cd ../../packages/ud_core && flutter pub get > /dev/null)
+          flutter analyze . ../../packages/ud_core --no-fatal-infos --no-fatal-warnings > analyze.txt 2>&1 || true
           cat analyze.txt
           grep -E "^\s*error " analyze.txt | head -n 40 | while IFS= read -r line; do echo "::error title=analyze $APP::$line"; done
           if grep -qE "^\s*error " analyze.txt; then exit 1; fi
