@@ -1,0 +1,28 @@
+name: learn_german
+description: Deutsch Dost — learn German in Hindi, Gujarati or English.
+version: 1.0.0+1
+publish_to: none
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  ud_core:
+    path: ../../packages/ud_core
+  flutter_tts: ">=4.0.0 <6.0.0"
+  shared_preferences: ^2.3.0
+
+dev_dependencies:
+  flutter_launcher_icons: any
+
+flutter:
+  uses-material-design: true
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: assets/icon/icon.png
+  adaptive_icon_background: "#3E6B48"
+  adaptive_icon_foreground: assets/icon/foreground.png

@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'l10n.dart';
 
@@ -74,3 +75,23 @@ String udStampName(String prefix) {
 
 String udPagesLabel(BuildContext context, int n) =>
     n == 1 ? context.tr('one_page') : context.tr('pages', {'n': '$n'});
+
+/// Opens a web link, phone number (tel:), SMS (sms:) or app link.
+/// Web pages open in an in-app browser tab; returns false if nothing could open it.
+Future<bool> udOpenUrl(String url, {bool external = false}) async {
+  final uri = Uri.parse(url);
+  final web = uri.scheme == 'http' || uri.scheme == 'https';
+  try {
+    return await launchUrl(
+      uri,
+      mode: web && !external
+          ? LaunchMode.inAppBrowserView
+          : LaunchMode.externalApplication,
+    );
+  } catch (_) {
+    return false;
+  }
+}
+
+Future<void> udShareText(String text) =>
+    SharePlus.instance.share(ShareParams(text: text));

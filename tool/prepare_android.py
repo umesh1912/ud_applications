@@ -16,6 +16,10 @@ android = app_dir / "android"
 manifest = android / "app/src/main/AndroidManifest.xml"
 text = manifest.read_text()
 text = re.sub(r'android:label="[^"]*"', f'android:label="{label}"', text, count=1)
+extra = app_dir / "android_manifest_extra.xml"
+if extra.exists() and "<!-- ud-extra -->" not in text:
+    text = text.replace("</manifest>", "<!-- ud-extra -->\n" + extra.read_text() + "\n</manifest>", 1)
+    print("manifest extras added")
 manifest.write_text(text)
 print("label set:", label)
 

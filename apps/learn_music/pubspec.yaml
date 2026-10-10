@@ -1,0 +1,28 @@
+name: learn_music
+description: Sur — learn music with sargam, piano and tanpura.
+version: 1.0.0+1
+publish_to: none
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  ud_core:
+    path: ../../packages/ud_core
+  audioplayers: ">=6.0.0 <8.0.0"
+  path_provider: ^2.1.4
+
+dev_dependencies:
+  flutter_launcher_icons: any
+
+flutter:
+  uses-material-design: true
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: assets/icon/icon.png
+  adaptive_icon_background: "#8E3B6E"
+  adaptive_icon_foreground: assets/icon/foreground.png

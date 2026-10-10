@@ -24,6 +24,12 @@ jobs:
             label: Signa
           - app: pdf_studio
             label: PDF Studio
+          - app: ludo_star
+            label: Ludo Royale
+          - app: learn_german
+            label: Deutsch Dost
+          - app: learn_music
+            label: Sur
     env:
       APP: ${{ matrix.app }}
     steps:
