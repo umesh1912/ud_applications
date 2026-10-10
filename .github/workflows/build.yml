@@ -86,10 +86,11 @@ jobs:
       - name: Build APK and Play bundle
         working-directory: apps/${{ matrix.app }}
         run: |
-          ../../tool/ci_run.sh "apk $APP" flutter build apk --release --build-number=${{ github.run_number }}
+          ../../tool/ci_run.sh "apk $APP" flutter build apk --release --split-per-abi --target-platform android-arm,android-arm64 --build-number=${{ github.run_number }}
           ../../tool/ci_run.sh "aab $APP" flutter build appbundle --release --build-number=${{ github.run_number }}
           mkdir -p "$GITHUB_WORKSPACE/out"
-          cp build/app/outputs/flutter-apk/app-release.apk "$GITHUB_WORKSPACE/out/$APP.apk"
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk "$GITHUB_WORKSPACE/out/$APP.apk"
+          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk "$GITHUB_WORKSPACE/out/$APP-old-phones.apk"
           cp build/app/outputs/bundle/release/app-release.aab "$GITHUB_WORKSPACE/out/$APP.aab"
 
       - uses: actions/upload-artifact@v4
@@ -117,6 +118,6 @@ jobs:
           tag_name: build-${{ github.run_number }}
           name: Build ${{ github.run_number }}
           body: |
-            Download the `.apk` file to install directly on your phone.
-            Upload the `.aab` file to Google Play Console.
+            **Install on your phone:** download `<app>.apk`. Very old phones (32-bit) need `<app>-old-phones.apk`.
+            **Google Play Console:** upload `<app>.aab`.
           files: out/*
