@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
@@ -31,7 +31,7 @@ jobs:
           distribution: temurin
           java-version: "21"
 
-      - uses: android-actions/setup-android@v3
+      # ubuntu-latest ships the Android SDK (ANDROID_HOME), as the Flutter workflow relies on.
 
       - run: npm ci
 
