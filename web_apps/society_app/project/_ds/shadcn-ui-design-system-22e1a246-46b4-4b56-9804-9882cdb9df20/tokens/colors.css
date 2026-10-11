@@ -1,0 +1,35 @@
+:root{
+/* Slate scale — Colors page of the source file */
+--slate-50:#f8fafc;--slate-100:#f1f5f9;--slate-200:#e2e8f0;--slate-300:#cbd5e1;--slate-400:#94a3b8;--slate-500:#64748b;--slate-600:#475569;--slate-700:#334155;--slate-800:#1e293b;--slate-900:#0f172a;
+/* Other literal fills used by components */
+--white:#ffffff;--black:#000000;
+--red-500:#ef4444;
+--gray-200:#e5e7eb;          /* checkbox border, menu dividers, hover-card border */
+--gray-placeholder:#d9d9d9;  /* Figma default fill left on avatar initials, switch-off track, slider thumb, progress track */
+--gray-quote:#e3e3e3;        /* blockquote rule */
+--poster-pink:#db4e66;--poster-plum:#a24688;--poster-indigo:#4e3aba;
+--gradient-poster:linear-gradient(180deg,#db4e66 0%,#a24688 39.57%,#4e3aba 100%); /* @kind color */
+
+/* Semantic aliases */
+--background:var(--white);
+--foreground:var(--slate-900);
+--foreground-strong:var(--black);
+--muted:var(--slate-100);
+--muted-foreground:var(--slate-500);
+--subtle-foreground:var(--slate-600);   /* 20px page descriptions */
+--placeholder:var(--slate-400);
+--border:var(--slate-200);
+--input:var(--slate-300);
+--primary:var(--slate-900);
+--primary-foreground:var(--white);
+--secondary:var(--slate-100);
+--secondary-foreground:var(--slate-900);
+--accent:var(--slate-100);
+--accent-foreground:var(--slate-900);
+--destructive:var(--red-500);
+--destructive-foreground:var(--white);
+--ring:var(--black);
+--surface-card:var(--white);
+--surface-popover:var(--white);
+--divider:var(--gray-200);
+}

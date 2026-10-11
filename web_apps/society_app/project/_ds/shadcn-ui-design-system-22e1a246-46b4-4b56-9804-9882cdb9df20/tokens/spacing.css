@@ -1,0 +1,26 @@
+:root{
+/* Spacing values that occur in the file's auto-layout (exact, not snapped) */
+--space-2:2px;--space-3:3px;--space-4:4px;--space-5:5px;--space-6:6px;--space-7:7px;--space-8:8px;--space-9:9px;--space-10:10px;--space-12:12px;--space-13:13px;--space-16:16px;--space-17:17px;--space-18:18px;--space-24:24px;--space-25:25px;--space-32:32px;--space-44:44px;--space-56:56px;--space-64:64px;
+/* Radii */
+--radius-xs:2px;    /* checkbox */
+--radius-sm:3px;    /* tab item, inline code, palette swatch */
+--radius-menubar:4px;
+--radius-poster:5px;
+--radius-md:6px;    /* default: buttons, inputs, cards, menus */
+--radius-lg:8px;    /* dialog, focus ring */
+--radius-bar:40px;  /* progress, slider */
+--radius-switch:50px;
+--radius-pill:96px; /* circular icon button */
+--radius-full:50%;
+/* Elevation */
+--shadow-popover:0px 4px 6px 0px rgba(0,0,0,0.09);
+--shadow-dropdown:0px 2px 4px 0px rgba(15,23,42,0.15);
+--shadow-tooltip:0px 2px 4px 0px rgba(30,41,59,0.25);
+--shadow-hovercard:0px 4px 4px 0px rgba(174,174,174,0.25);
+/* Borders are drawn as 1px inset box-shadows in the file */
+--ring-border:inset 0 0 0 1px var(--slate-200);
+--ring-input:inset 0 0 0 1px var(--slate-300);
+--ring-focus:0 0 0 2px var(--black);
+/* Layout */
+--doc-frame-width:792px;--doc-frame-padding:32px 32px 64px 32px;--doc-frame-gap:64px;
+}

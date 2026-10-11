@@ -1,0 +1,19 @@
+/* App-level base styles from the prototype's <helmet> block. */
+html, body, #root { height: 100%; }
+body { margin: 0; background: #fff; font-family: Inter, "Noto Sans Gujarati", system-ui, sans-serif; color: #0f172a; -webkit-tap-highlight-color: transparent; }
+@media (min-width: 820px) { body { background: #f1f5f9; } }
+a { color: #0f172a; }
+a:hover { color: #475569; }
+* { box-sizing: border-box; }
+button { font-family: inherit; }
+.sc-input, .sc-field-label, .sc-btn, .sc-label, .sc-textarea, .sc-avatar { font-family: Inter, "Noto Sans Gujarati", sans-serif; }
+::-webkit-scrollbar { width: 0; height: 0; }
+/* The design system's input text is placeholder-grey by default; typed values should read as ink. */
+.sc-input { color: var(--slate-900); }
+.sc-input[type="search"]::-webkit-search-cancel-button { display: none; }
+.hov:hover { background: #f1f5f9 !important; }
+.hov2:hover { background: #f8fafc !important; }
+button:focus-visible, a:focus-visible { outline: 2px solid #000; outline-offset: 2px; }
+.sheet { animation: sheet-up .18s ease-out; }
+@keyframes sheet-up { from { transform: translateY(24px); opacity: .6; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .sheet { animation: none; } }

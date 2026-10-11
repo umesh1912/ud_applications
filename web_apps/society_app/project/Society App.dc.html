@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/shadcn-ui-design-system-22e1a246-46b4-4b56-9804-9882cdb9df20/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/shadcn-ui-design-system-22e1a246-46b4-4b56-9804-9882cdb9df20/tokens/colors.css">
+<link rel="stylesheet" href="_ds/shadcn-ui-design-system-22e1a246-46b4-4b56-9804-9882cdb9df20/tokens/typography.css">
+<link rel="stylesheet" href="_ds/shadcn-ui-design-system-22e1a246-46b4-4b56-9804-9882cdb9df20/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/shadcn-ui-design-system-22e1a246-46b4-4b56-9804-9882cdb9df20/components/components.css">
+<link rel="stylesheet" href="_ds/shadcn-ui-design-system-22e1a246-46b4-4b56-9804-9882cdb9df20/styles.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;500;600;700&display=swap">
+<script src="_ds/shadcn-ui-design-system-22e1a246-46b4-4b56-9804-9882cdb9df20/_ds_bundle.js"></script>
+<style>body{margin:0;background:#f1f5f9;font-family:Inter,"Noto Sans Gujarati",system-ui,sans-serif;color:#0f172a}a{color:#0f172a}a:hover{color:#475569}*{box-sizing:border-box}button{font-family:inherit}.sc-input,.sc-field-label,.sc-btn{font-family:Inter,"Noto Sans Gujarati",sans-serif}::-webkit-scrollbar{width:0;height:0}</style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-wrap:wrap;gap:48px;justify-content:center;align-items:flex-start;padding:40px 24px">
+
+<sc-if value="{{ showGuide }}" hint-placeholder-val="{{ true }}">
+<div style="width:300px;display:flex;flex-direction:column;gap:20px;padding-top:24px">
+  <div style="display:flex;flex-direction:column;gap:6px">
+    <div style="font-size:24px;font-weight:700;letter-spacing:-0.4px">Shivam Residency app</div>
+    <div style="font-size:14px;color:#64748b;line-height:1.5;text-wrap:pretty">Interactive prototype. Switch roles to see each view — actions carry across roles (a visitor logged at the gate appears for the resident, a bill submitted by the treasurer waits for the secretary).</div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <div style="font-size:12px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Role</div>
+    <sc-for list="{{ roleBtns }}" as="r" hint-placeholder-count="4">
+      <button onClick="{{ r.onClick }}" style="display:flex;align-items:center;gap:12px;padding:10px 12px;border:0;border-radius:6px;cursor:pointer;text-align:left;background:{{ r.bg }};color:{{ r.fg }};box-shadow:inset 0 0 0 1px #e2e8f0">
+        <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="{{ r.icon }}" size="{{ 18 }}" hint-size="18px,18px"></x-import>
+        <span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;font-weight:600">{{ r.label }}</span><span style="font-size:12px;opacity:.7">{{ r.sub }}</span></span>
+      </button>
+    </sc-for>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <div style="font-size:12px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Language</div>
+    <div style="display:flex;gap:4px;padding:4px;background:#e2e8f0;border-radius:6px">
+      <button onClick="{{ setGu }}" style="flex:1;border:0;padding:8px;border-radius:4px;cursor:pointer;font-size:14px;font-weight:600;background:{{ guBg }};color:#0f172a">ગુજરાતી</button>
+      <button onClick="{{ setEn }}" style="flex:1;border:0;padding:8px;border-radius:4px;cursor:pointer;font-size:14px;font-weight:600;background:{{ enBg }};color:#0f172a">English</button>
+    </div>
+  </div>
+  <div style="font-size:13px;color:#64748b;line-height:1.6">Try: pay bills → receipt · approve the visitor at the gate · book the clubhouse · vote in a poll · hold SOS · as watchman, log a visitor for B-304 · as treasurer, submit the light bill · as secretary, approve it.</div>
+</div>
+</sc-if>
+
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:874px;position:relative;display:flex;flex-direction:column;background:#fff;font-family:Inter,'Noto Sans Gujarati',sans-serif;color:#0f172a">
+
+  <div style="padding:58px 16px 12px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #f1f5f9">
+    <sc-if value="{{ isSub }}">
+      <button onClick="{{ back }}" style="width:36px;height:36px;border:0;border-radius:6px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#0f172a">
+        <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconChevronLeft" size="{{ 20 }}" hint-size="20px,20px"></x-import>
+      </button>
+    </sc-if>
+    <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px">
+      <div style="font-size:12px;color:#64748b;font-weight:500">{{ headerSub }}</div>
+      <div style="font-size:20px;font-weight:700;letter-spacing:-0.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ title }}</div>
+    </div>
+    <button onClick="{{ toggleLang }}" style="height:32px;padding:0 10px;border:0;border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0;background:#fff;font-size:13px;font-weight:600;cursor:pointer;color:#0f172a">{{ langLabel }}</button>
+    <button onClick="{{ openSos }}" style="height:32px;padding:0 10px;border:0;border-radius:6px;background:#ef4444;color:#fff;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px">
+      <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconSiren" size="{{ 15 }}" hint-size="15px,15px"></x-import>SOS</button>
+  </div>
+
+  <div style="flex:1;overflow-y:auto;padding:16px 16px 24px">
+
+    <sc-if value="{{ sosBanner }}">
+      <div style="background:#ef4444;color:#fff;border-radius:6px;padding:14px;display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
+        <div style="display:flex;gap:10px;align-items:center"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconSiren" size="{{ 22 }}" hint-size="22px,22px"></x-import><div style="font-weight:700;font-size:15px">{{ sosBannerText }}</div></div>
+        <button onClick="{{ resolveSos }}" style="height:40px;border:0;border-radius:6px;background:#fff;color:#ef4444;font-weight:700;font-size:14px;cursor:pointer">{{ T.responding }}</button>
+      </div>
+    </sc-if>
+
+    <!-- RESIDENT HOME -->
+    <sc-if value="{{ s.resHome }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Avatar" initials="RP" size="{{ 44 }}" hint-size="44px,44px"></x-import>
+          <div style="display:flex;flex-direction:column;gap:2px"><div style="font-size:16px;font-weight:600">{{ T.greeting }}, {{ userName }}</div><div style="font-size:13px;color:#64748b">{{ T.flat }} B-304 · {{ T.wingB }}</div></div>
+        </div>
+        <div style="background:#0f172a;color:#fff;border-radius:6px;padding:18px;display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div style="display:flex;flex-direction:column;gap:4px"><div style="font-size:13px;color:#cbd5e1">{{ T.totalDue }}</div><div style="font-size:32px;font-weight:700;letter-spacing:-0.8px">{{ dueTotalFmt }}</div></div>
+            <div style="font-size:12px;color:#cbd5e1;text-align:right">{{ T.dueBy }}<br><span style="color:#fff;font-weight:600;font-size:14px">10 Oct 2026</span></div>
+          </div>
+          <sc-if value="{{ hasDue }}">
+            <button onClick="{{ goBills }}" style="height:42px;border:0;border-radius:6px;background:#fff;color:#0f172a;font-size:14px;font-weight:600;cursor:pointer">{{ T.payNow }}</button>
+          </sc-if>
+          <sc-if value="{{ noDue }}"><div style="font-size:14px;display:flex;gap:6px;align-items:center"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconCheckCircle2" size="{{ 16 }}" hint-size="16px,16px"></x-import>{{ T.allPaid }}</div></sc-if>
+        </div>
+        <sc-if value="{{ approval }}">
+          <div style="border-radius:6px;box-shadow:inset 0 0 0 1px #0f172a;padding:14px;display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;gap:12px;align-items:center">
+              <div style="width:40px;height:40px;border-radius:40px;background:#f1f5f9;display:flex;align-items:center;justify-content:center"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconBellRing" size="{{ 20 }}" hint-size="20px,20px"></x-import></div>
+              <div style="flex:1;display:flex;flex-direction:column;gap:2px"><div style="font-size:12px;color:#64748b;font-weight:500">{{ T.atGate }}</div><div style="font-size:15px;font-weight:600">{{ approval.name }}</div><div style="font-size:13px;color:#64748b">{{ approval.purpose }} · {{ approval.time }}</div></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" variant="outline" onClick="{{ denyVisitor }}" dc-props="{{ wide }}" hint-size="100%,40px">{{ T.deny }}</x-import>
+              <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" onClick="{{ approveVisitor }}" dc-props="{{ wide }}" hint-size="100%,40px">{{ T.approve }}</x-import>
+            </div>
+          </div>
+        </sc-if>
+        <div style="font-size:13px;font-weight:600;color:#64748b">{{ T.services }}</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+          <sc-for list="{{ resTiles }}" as="t" hint-placeholder-count="8">
+            <button onClick="{{ t.onClick }}" style="border:0;background:#fff;box-shadow:inset 0 0 0 1px #e2e8f0;border-radius:6px;padding:12px 4px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;color:#0f172a;min-height:80px" style-hover="background:#f1f5f9">
+              <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="{{ t.icon }}" size="{{ 22 }}" hint-size="22px,22px"></x-import>
+              <span style="font-size:12px;font-weight:500;line-height:1.25;text-align:center">{{ t.label }}</span>
+            </button>
+          </sc-for>
+        </div>
+        <button onClick="{{ goNotices }}" style="border:0;background:#fff;box-shadow:inset 0 0 0 1px #e2e8f0;border-radius:6px;padding:14px;display:flex;flex-direction:column;gap:6px;text-align:left;cursor:pointer;color:#0f172a">
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#64748b;font-weight:500"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconMegaphone" size="{{ 14 }}" hint-size="14px,14px"></x-import>{{ T.latestNotice }} · {{ topNotice.date }}</div>
+          <div style="font-size:15px;font-weight:600">{{ topNotice.title }}</div>
+          <div style="font-size:13px;color:#64748b;line-height:1.5">{{ topNotice.body }}</div>
+        </button>
+        <button onClick="{{ goEvents }}" style="border:0;background:#fff;box-shadow:inset 0 0 0 1px #e2e8f0;border-radius:6px;padding:14px;display:flex;gap:12px;align-items:center;text-align:left;cursor:pointer;color:#0f172a">
+          <div style="width:48px;height:52px;border-radius:6px;background:#f1f5f9;display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="font-size:11px;color:#64748b;font-weight:600">OCT</span><span style="font-size:20px;font-weight:700">11</span></div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:2px"><div style="font-size:12px;color:#64748b;font-weight:500">{{ T.upcoming }}</div><div style="font-size:15px;font-weight:600">{{ topEvent.title }}</div><div style="font-size:13px;color:#64748b">{{ topEvent.place }} · {{ topEvent.goingLabel }}</div></div>
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconChevronRight" size="{{ 18 }}" hint-size="18px,18px"></x-import>
+        </button>
+      </div>
+    </sc-if>
+
+    <!-- ADMIN HOME -->
+    <sc-if value="{{ s.adminHome }}">
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Avatar" initials="{{ adminInitials }}" size="{{ 44 }}" hint-size="44px,44px"></x-import>
+          <div style="display:flex;flex-direction:column;gap:2px"><div style="font-size:16px;font-weight:600">{{ T.greeting }}, {{ adminName }}</div><div style="font-size:13px;color:#64748b">{{ adminRole }}</div></div>
+        </div>
+        <div style="background:#0f172a;color:#fff;border-radius:6px;padding:18px;display:flex;flex-direction:column;gap:4px">
+          <div style="font-size:13px;color:#cbd5e1">{{ T.fundBalance }}</div>
+          <div style="font-size:32px;font-weight:700;letter-spacing:-0.8px">{{ fundFmt }}</div>
+          <div style="font-size:12px;color:#cbd5e1">{{ T.asOn }} 08 Oct 2026</div>
+        </div>
+        <button onClick="{{ goReports }}" style="border:0;background:#fff;box-shadow:inset 0 0 0 1px #e2e8f0;border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:10px;text-align:left;cursor:pointer;color:#0f172a">
+          <div style="display:flex;justify-content:space-between;width:100%"><span style="font-size:14px;font-weight:600">{{ T.octCollection }}</span><span style="font-size:14px;font-weight:600">{{ collPct }}%</span></div>
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Progress" value="{{ collPct }}" width="100%" hint-size="100%,8px" style="width:100%"></x-import>
+          <div style="font-size:13px;color:#64748b">{{ collectedFmt }} / {{ targetFmt }} · {{ defCount }} {{ T.flatsPending }}</div>
+        </button>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <button onClick="{{ goExpenses }}" style="border:0;background:#fff;box-shadow:inset 0 0 0 1px #e2e8f0;border-radius:6px;padding:14px;display:flex;flex-direction:column;gap:4px;text-align:left;cursor:pointer;color:#0f172a"><span style="font-size:12px;color:#64748b">{{ T.monthExpense }}</span><span style="font-size:20px;font-weight:700">{{ expTotalFmt }}</span></button>
+          <button onClick="{{ goExpenses }}" style="border:0;background:#fff;box-shadow:inset 0 0 0 1px #e2e8f0;border-radius:6px;padding:14px;display:flex;flex-direction:column;gap:4px;text-align:left;cursor:pointer;color:#0f172a"><span style="font-size:12px;color:#64748b">{{ T.pendingApproval }}</span><span style="font-size:20px;font-weight:700">{{ pendingCount }}</span></button>
+        </div>
+        <div style="font-size:13px;font-weight:600;color:#64748b">{{ T.quickActions }}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <sc-for list="{{ adminActions }}" as="a" hint-placeholder-count="4">
+            <button onClick="{{ a.onClick }}" style="border:0;background:#fff;box-shadow:inset 0 0 0 1px #e2e8f0;border-radius:6px;padding:14px;display:flex;align-items:center;gap:10px;cursor:pointer;color:#0f172a;text-align:left" style-hover="background:#f1f5f9">
+              <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="{{ a.icon }}" size="{{ 20 }}" hint-size="20px,20px"></x-import>
+              <span style="font-size:13px;font-weight:600;line-height:1.3">{{ a.label }}</span>
+            </button>
+          </sc-for>
+        </div>
+        <div style="font-size:13px;font-weight:600;color:#64748b">{{ T.openComplaints }}</div>
+        <div style="border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0">
+          <sc-for list="{{ openComplaints }}" as="c" hint-placeholder-count="2">
+            <div style="padding:12px 14px;display:flex;gap:10px;align-items:center;border-bottom:1px solid #f1f5f9">
+              <div style="flex:1;display:flex;flex-direction:column;gap:2px"><div style="font-size:14px;font-weight:600">{{ c.text }}</div><div style="font-size:12px;color:#64748b">{{ c.id }} · {{ c.flat }} · {{ c.cat }}</div></div>
+              <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" variant="outline" onClick="{{ c.advance }}" hint-size="80px,36px">{{ c.actionLabel }}</x-import>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- WATCHMAN HOME -->
+    <sc-if value="{{ s.gateHome }}">
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+          <sc-for list="{{ gateStats }}" as="g" hint-placeholder-count="3">
+            <div style="border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0;padding:12px;display:flex;flex-direction:column;gap:2px"><span style="font-size:24px;font-weight:700">{{ g.n }}</span><span style="font-size:12px;color:#64748b;line-height:1.3">{{ g.label }}</span></div>
+          </sc-for>
+        </div>
+        <button onClick="{{ openNewVisitor }}" style="height:64px;border:0;border-radius:6px;background:#0f172a;color:#fff;font-size:16px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer">
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconUserPlus" size="{{ 22 }}" hint-size="22px,22px"></x-import>{{ T.newEntry }}</button>
+        <div style="border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0;padding:14px;display:flex;flex-direction:column;gap:10px">
+          <div style="font-size:14px;font-weight:600;display:flex;gap:8px;align-items:center"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconQrCode" size="{{ 18 }}" hint-size="18px,18px"></x-import>{{ T.verifyPass }}</div>
+          <div style="display:flex;gap:8px;align-items:flex-end">
+            <div style="flex:1"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Input" placeholder="482915" value="{{ f.code }}" onChange="{{ on.code }}" inputMode="numeric" dc-props="{{ wide }}" hint-size="100%,40px"></x-import></div>
+            <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" onClick="{{ verifyCode }}" hint-size="80px,40px">{{ T.check }}</x-import>
+          </div>
+          <sc-if value="{{ codeResult }}"><div style="font-size:13px;padding:10px;border-radius:6px;background:#f1f5f9;font-weight:500">{{ codeResult }}</div></sc-if>
+        </div>
+        <div style="font-size:13px;font-weight:600;color:#64748b">{{ T.insideNow }}</div>
+        <sc-for list="{{ insideVisitors }}" as="v" hint-placeholder-count="3">
+          <div style="border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0;padding:12px 14px;display:flex;gap:10px;align-items:center">
+            <div style="flex:1;display:flex;flex-direction:column;gap:2px"><div style="font-size:14px;font-weight:600">{{ v.name }}</div><div style="font-size:12px;color:#64748b">{{ v.flat }} · {{ v.purpose }} · {{ T.inAt }} {{ v.in }}</div></div>
+            <span style="font-size:12px;font-weight:600;padding:3px 8px;border-radius:40px;background:{{ v.badgeBg }};color:{{ v.badgeFg }}">{{ v.statusLabel }}</span>
+            <sc-if value="{{ v.canExit }}"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" variant="outline" onClick="{{ v.exit }}" hint-size="64px,36px">{{ T.exit }}</x-import></sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <!-- BILLS -->
+    <sc-if value="{{ s.bills }}">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="font-size:13px;color:#64748b">{{ T.selectBills }}</div>
+        <sc-for list="{{ billRows }}" as="b" hint-placeholder-count="4">
+          <button onClick="{{ b.toggle }}" style="border:0;background:#fff;box-shadow:inset 0 0 0 1px {{ b.ring }};border-radius:6px;padding:14px;display:flex;gap:12px;align-items:center;text-align:left;cursor:pointer;color:#0f172a">
+            <div style="width:40px;height:40px;border-radius:6px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;flex:none"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="{{ b.icon }}" size="{{ 20 }}" hint-size="20px,20px"></x-import></div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:2px"><div style="font-size:14px;font-weight:600">{{ b.title }}</div><div style="font-size:12px;color:#64748b">{{ T.dueBy }} {{ b.due }}</div></div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><div style="font-size:15px;font-weight:700">{{ b.amt }}</div><span style="font-size:11px;font-weight:600;padding:2px 8px;border-radius:40px;background:{{ b.badgeBg }};color:{{ b.badgeFg }};box-shadow:inset 0 0 0 1px {{ b.badgeRing }}">{{ b.status }}</span></div>
+          </button>
+        </sc-for>
+        <sc-if value="{{ hasDue }}">
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" onClick="{{ openPay }}" dc-props="{{ wideTall }}" hint-size="100%,48px">{{ T.pay }} {{ selTotalFmt }}</x-import>
+        </sc-if>
+        <div style="border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0;padding:14px;display:flex;flex-direction:column;gap:4px">
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Switch" label="{{ T.autopay }}" checked="{{ autopay }}" onChange="{{ toggleAutopay }}" hint-size="100%,24px"></x-import>
+          <div style="font-size:12px;color:#64748b;padding-left:52px">{{ T.autopaySub }}</div>
+        </div>
+        <div style="font-size:13px;font-weight:600;color:#64748b;margin-top:8px">{{ T.history }}</div>
+        <div style="border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0">
+          <sc-for list="{{ historyRows }}" as="h" hint-placeholder-count="3">
+            <div style="padding:12px 14px;display:flex;gap:10px;align-items:center;border-bottom:1px solid #f1f5f9">
+              <div style="flex:1;display:flex;flex-direction:column;gap:2px"><div style="font-size:14px;font-weight:500">{{ h.title }}</div><div style="font-size:12px;color:#64748b">{{ h.date }} · {{ h.via }} · {{ h.no }}</div></div>
+              <div style="font-size:14px;font-weight:600">{{ h.amt }}</div>
+              <button onClick="{{ h.dl }}" style="width:32px;height:32px;border:0;border-radius:6px;background:transparent;cursor:pointer;color:#0f172a;display:flex;align-items:center;justify-content:center" style-hover="background:#f1f5f9"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconDownload" size="{{ 16 }}" hint-size="16px,16px"></x-import></button>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- GATE (resident) -->
+    <sc-if value="{{ s.gate }}">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" icon="IconTicket" onClick="{{ openPass }}" dc-props="{{ wideTall }}" hint-size="100%,48px">{{ T.createPass }}</x-import>
+        <div style="font-size:13px;font-weight:600;color:#64748b;margin-top:4px">{{ T.activePasses }}</div>
+        <sc-for list="{{ passRows }}" as="p" hint-placeholder-count="1">
+          <div style="border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0;padding:14px;display:flex;gap:14px;align-items:center">
+            <div style="width:56px;height:56px;border-radius:6px;background:#f1f5f9;display:flex;align-items:center;justify-content:center"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconQrCode" size="{{ 32 }}" hint-size="32px,32px"></x-import></div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:2px"><div style="font-size:15px;font-weight:600">{{ p.name }}</div><div style="font-size:12px;color:#64748b">{{ p.when }}</div></div>
+            <div style="font-family:Menlo,ui-monospace,monospace;font-weight:700;font-size:18px;letter-spacing:2px">{{ p.code }}</div>
+          </div>
+        </sc-for>
+        <div style="font-size:13px;font-weight:600;color:#64748b;margin-top:4px">{{ T.visitorLog }}</div>
+        <div style="border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0">
+          <sc-for list="{{ myVisitors }}" as="v" hint-placeholder-count="3">
+            <div style="padding:12px 14px;display:flex;gap:10px;align-items:center;border-bottom:1px solid #f1f5f9">
+              <div style="flex:1;display:flex;flex-direction:column;gap:2px"><div style="font-size:14px;font-weight:600">{{ v.name }}</div><div style="font-size:12px;color:#64748b">{{ v.purpose }} · {{ v.in }}</div></div>
+              <span style="font-size:12px;font-weight:600;padding:3px 8px;border-radius:40px;background:{{ v.badgeBg }};color:{{ v.badgeFg }}">{{ v.statusLabel }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- COMMUNITY -->
+    <sc-if value="{{ s.community }}">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;background:#f1f5f9;border-radius:6px">
+          <sc-for list="{{ commTabs }}" as="c" hint-placeholder-count="3">
+            <button onClick="{{ c.onClick }}" style="border:0;height:34px;border-radius:3px;font-size:13px;font-weight:600;cursor:pointer;background:{{ c.bg }};color:{{ c.fg }}">{{ c.label }}</button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ comm.notices }}">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <sc-if value="{{ isSecretary }}"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" variant="outline" icon="IconPlus" onClick="{{ openNotice }}" dc-props="{{ wide }}" hint-size="100%,40px">{{ T.postNotice }}</x-import></sc-if>
+            <sc-for list="{{ noticeRows }}" as="n" hint-placeholder-count="3">
+              <div style="border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0;padding:14px;display:flex;flex-direction:column;gap:6px">
+                <div style="display:flex;gap:6px;align-items:center;font-size:12px;color:#64748b"><span>{{ n.date }}</span><sc-if value="{{ n.pin }}"><span style="font-weight:600;color:#0f172a;padding:1px 6px;border-radius:40px;background:#f1f5f9">{{ T.important }}</span></sc-if></div>
+                <div style="font-size:15px;font-weight:600">{{ n.title }}</div>
+                <div style="font-size:13px;color:#475569;line-height:1.55">{{ n.body }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ comm.events }}">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ eventRows }}" as="e" hint-placeholder-count="3">
+              <div style="border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0;padding:14px;display:flex;flex-direction:column;gap:10px">
+                <div style="display:flex;gap:12px">
+                  <div style="width:48px;height:52px;border-radius:6px;background:#f1f5f9;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none"><span style="font-size:11px;color:#64748b;font-weight:600">{{ e.mon }}</span><span style="font-size:20px;font-weight:700">{{ e.day }}</span></div>
+                  <div style="flex:1;display:flex;flex-direction:column;gap:2px"><div style="font-size:15px;font-weight:600">{{ e.title }}</div><div style="font-size:13px;color:#64748b">{{ e.when }}</div><div style="font-size:13px;color:#64748b">{{ e.place }}</div></div>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span style="font-size:13px;color:#64748b;display:flex;gap:6px;align-items:center"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconUsers" size="{{ 14 }}" hint-size="14px,14px"></x-import>{{ e.goingLabel }}</span>
+                  <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" variant="{{ e.variant }}" onClick="{{ e.rsvp }}" hint-size="110px,36px">{{ e.rsvpLabel }}</x-import>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ comm.polls }}">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ pollRows }}" as="p" hint-placeholder-count="2">
+              <div style="border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0;padding:14px;display:flex;flex-direction:column;gap:10px">
+                <div style="font-size:15px;font-weight:600;line-height:1.4">{{ p.q }}</div>
+                <div style="font-size:12px;color:#64748b">{{ p.meta }}</div>
+                <sc-for list="{{ p.opts }}" as="o" hint-placeholder-count="2">
+                  <button onClick="{{ o.vote }}" style="position:relative;overflow:hidden;border:0;height:42px;border-radius:6px;box-shadow:inset 0 0 0 1px {{ o.ring }};background:#fff;cursor:pointer;text-align:left;padding:0 12px;color:#0f172a">
+                    <div style="position:absolute;left:0;top:0;bottom:0;width:{{ o.w }};background:#f1f5f9;transition:width .4s"></div>
+                    <div style="position:relative;display:flex;justify-content:space-between;font-size:14px;font-weight:{{ o.weight }}"><span>{{ o.label }}</span><span>{{ o.pct }}</span></div>
+                  </button>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <!-- COMPLAINTS -->
+    <sc-if value="{{ s.complaints }}">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" icon="IconPlus" onClick="{{ openComplaint }}" dc-props="{{ wideTall }}" hint-size="100%,48px">{{ T.raiseComplaint }}</x-import>
+        <sc-for list="{{ complaintRows }}" as="c" hint-placeholder-count="3">
+          <div style="border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0;padding:14px;display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:12px;color:#64748b">{{ c.id }} · {{ c.cat }} · {{ c.date }}</span><span style="font-size:11px;font-weight:600;padding:2px 8px;border-radius:40px;background:{{ c.badgeBg }};color:{{ c.badgeFg }}">{{ c.statusLabel }}</span></div>
+            <div style="font-size:14px;font-weight:600">{{ c.text }}</div>
+            <div style="display:flex;gap:4px">
+              <sc-for list="{{ c.steps }}" as="st" hint-placeholder-count="3"><div style="flex:1;height:4px;border-radius:4px;background:{{ st.bg }}"></div></sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <!-- AMENITIES -->
+    <sc-if value="{{ s.amenities }}">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <sc-for list="{{ amenityRows }}" as="a" hint-placeholder-count="4">
+            <button onClick="{{ a.pick }}" style="border:0;border-radius:6px;padding:14px;display:flex;flex-direction:column;gap:8px;text-align:left;cursor:pointer;background:{{ a.bg }};color:{{ a.fg }};box-shadow:inset 0 0 0 1px #e2e8f0">
+              <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="{{ a.icon }}" size="{{ 22 }}" hint-size="22px,22px"></x-import>
+              <span style="font-size:14px;font-weight:600">{{ a.name }}</span><span style="font-size:12px;opacity:.75">{{ a.fee }}</span>
+            </button>
+          </sc-for>
+        </div>
+        <div style="font-size:13px;font-weight:600;color:#64748b">{{ T.pickDate }}</div>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px">
+          <sc-for list="{{ dateRows }}" as="d" hint-placeholder-count="5">
+            <button onClick="{{ d.pick }}" style="border:0;border-radius:6px;padding:8px 0;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;background:{{ d.bg }};color:{{ d.fg }};box-shadow:inset 0 0 0 1px #e2e8f0"><span style="font-size:11px;font-weight:500">{{ d.dow }}</span><span style="font-size:18px;font-weight:700">{{ d.day }}</span></button>
+          </sc-for>
+        </div>
+        <div style="font-size:13px;font-weight:600;color:#64748b">{{ T.pickSlot }}</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+          <sc-for list="{{ slotRows }}" as="sl" hint-placeholder-count="6">
+            <button onClick="{{ sl.pick }}" style="border:0;border-radius:6px;height:40px;cursor:pointer;font-size:13px;font-weight:600;background:{{ sl.bg }};color:{{ sl.fg }};box-shadow:inset 0 0 0 1px #e2e8f0;text-decoration:{{ sl.deco }}">{{ sl.label }}</button>
+          </sc-for>
+        </div>
+        <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" onClick="{{ bookAmenity }}" dc-props="{{ bookProps }}" hint-size="100%,48px">{{ bookLabel }}</x-import>
+        <sc-if value="{{ hasBookings }}">
+          <div style="font-size:13px;font-weight:600;color:#64748b">{{ T.myBookings }}</div>
+          <sc-for list="{{ bookingRows }}" as="b" hint-placeholder-count="1">
+            <div style="border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0;padding:12px 14px;display:flex;gap:10px;align-items:center"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconCalendarCheck" size="{{ 18 }}" hint-size="18px,18px"></x-import><div style="flex:1;font-size:14px;font-weight:500">{{ b.text }}</div><span style="font-size:13px;font-weight:600">{{ b.fee }}</span></div>
+          </sc-for>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <!-- PARKING -->
+    <sc-if value="{{ s.parking }}">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ parkRows }}" as="p" hint-placeholder-count="2">
+          <div style="border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0;padding:14px;display:flex;gap:12px;align-items:center">
+            <div style="width:56px;height:56px;border-radius:6px;background:#0f172a;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px">{{ p.slot }}</div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:2px"><div style="font-family:Menlo,ui-monospace,monospace;font-weight:700;font-size:15px">{{ p.veh }}</div><div style="font-size:12px;color:#64748b">{{ p.type }}</div></div>
+            <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="{{ p.icon }}" size="{{ 22 }}" hint-size="22px,22px"></x-import>
+          </div>
+        </sc-for>
+        <div style="border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0;padding:14px;display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;justify-content:space-between"><span style="font-size:14px;font-weight:600">{{ T.guestParking }}</span><span style="font-size:14px;color:#64748b">{{ guestFree }} / 10 {{ T.free }}</span></div>
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Progress" value="{{ guestPct }}" width="100%" hint-size="100%,8px" style="width:100%"></x-import>
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" variant="outline" onClick="{{ reqGuestParking }}" dc-props="{{ wide }}" hint-size="100%,40px">{{ T.reqGuestParking }}</x-import>
+        </div>
+        <div style="font-size:13px;color:#64748b;line-height:1.5">{{ T.parkRule }}</div>
+      </div>
+    </sc-if>
+
+    <!-- DIRECTORY -->
+    <sc-if value="{{ s.directory }}">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Input" placeholder="{{ T.searchPh }}" value="{{ f.q }}" onChange="{{ on.q }}" dc-props="{{ wide }}" hint-size="100%,40px"></x-import>
+        <sc-for list="{{ dirGroups }}" as="g" hint-placeholder-count="3">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="font-size:13px;font-weight:600;color:#64748b">{{ g.label }}</div>
+            <div style="border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0">
+              <sc-for list="{{ g.items }}" as="p" hint-placeholder-count="2">
+                <div style="padding:10px 14px;display:flex;gap:12px;align-items:center;border-bottom:1px solid #f1f5f9">
+                  <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Avatar" initials="{{ p.ini }}" size="{{ 36 }}" hint-size="36px,36px"></x-import>
+                  <div style="flex:1;display:flex;flex-direction:column;gap:1px"><div style="font-size:14px;font-weight:600">{{ p.name }}</div><div style="font-size:12px;color:#64748b">{{ p.sub }}</div></div>
+                  <button onClick="{{ p.call }}" style="width:36px;height:36px;border:0;border-radius:36px;background:#f1f5f9;cursor:pointer;color:#0f172a;display:flex;align-items:center;justify-content:center"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconPhone" size="{{ 16 }}" hint-size="16px,16px"></x-import></button>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <!-- DOCUMENTS -->
+    <sc-if value="{{ s.docs }}">
+      <div style="border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0">
+        <sc-for list="{{ docRows }}" as="d" hint-placeholder-count="5">
+          <div style="padding:12px 14px;display:flex;gap:12px;align-items:center;border-bottom:1px solid #f1f5f9">
+            <div style="width:36px;height:36px;border-radius:6px;background:#f1f5f9;display:flex;align-items:center;justify-content:center"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconFileText" size="{{ 18 }}" hint-size="18px,18px"></x-import></div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:1px"><div style="font-size:14px;font-weight:600">{{ d.name }}</div><div style="font-size:12px;color:#64748b">PDF · {{ d.size }} · {{ d.date }}</div></div>
+            <button onClick="{{ d.dl }}" style="width:36px;height:36px;border:0;border-radius:6px;background:transparent;cursor:pointer;color:#0f172a;display:flex;align-items:center;justify-content:center" style-hover="background:#f1f5f9"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconDownload" size="{{ 18 }}" hint-size="18px,18px"></x-import></button>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <!-- DAILY HELP -->
+    <sc-if value="{{ s.help }}">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ helpRows }}" as="h" hint-placeholder-count="4">
+          <div style="border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0;padding:12px 14px;display:flex;gap:12px;align-items:center">
+            <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Avatar" initials="{{ h.ini }}" size="{{ 40 }}" hint-size="40px,40px"></x-import>
+            <div style="flex:1;display:flex;flex-direction:column;gap:2px"><div style="font-size:14px;font-weight:600">{{ h.name }}</div><div style="font-size:12px;color:#64748b">{{ h.role }} · {{ h.flats }}</div><div style="font-size:12px;color:#0f172a;font-weight:500">{{ h.status }}</div></div>
+            <sc-if value="{{ isWatchman }}"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" variant="{{ h.variant }}" onClick="{{ h.mark }}" hint-size="70px,36px">{{ h.markLabel }}</x-import></sc-if>
+            <sc-if value="{{ h.showDays }}"><div style="display:flex;flex-direction:column;align-items:flex-end"><span style="font-size:16px;font-weight:700">{{ h.days }}</span><span style="font-size:11px;color:#64748b">{{ T.daysMonth }}</span></div></sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <!-- WATCHMAN VISITOR LOG -->
+    <sc-if value="{{ s.log }}">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" icon="IconUserPlus" onClick="{{ openNewVisitor }}" dc-props="{{ wideTall }}" hint-size="100%,48px">{{ T.newEntry }}</x-import>
+        <div style="border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0">
+          <sc-for list="{{ allVisitors }}" as="v" hint-placeholder-count="5">
+            <div style="padding:12px 14px;display:flex;gap:10px;align-items:center;border-bottom:1px solid #f1f5f9">
+              <div style="flex:1;display:flex;flex-direction:column;gap:2px"><div style="font-size:14px;font-weight:600">{{ v.name }}</div><div style="font-size:12px;color:#64748b">{{ v.flat }} · {{ v.purpose }} · {{ v.in }}{{ v.outTxt }}</div></div>
+              <span style="font-size:12px;font-weight:600;padding:3px 8px;border-radius:40px;background:{{ v.badgeBg }};color:{{ v.badgeFg }}">{{ v.statusLabel }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- REPORTS -->
+    <sc-if value="{{ s.reports }}">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0;padding:16px;display:flex;flex-direction:column;gap:10px">
+          <div style="font-size:13px;color:#64748b">{{ T.octCollection }}</div>
+          <div style="font-size:28px;font-weight:700;letter-spacing:-0.6px">{{ collectedFmt }}<span style="font-size:14px;color:#64748b;font-weight:500"> / {{ targetFmt }}</span></div>
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Progress" value="{{ collPct }}" width="100%" hint-size="100%,8px" style="width:100%"></x-import>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px">
+            <sc-for list="{{ methodSplit }}" as="m" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;color:#64748b">{{ m.label }}</span><span style="font-size:14px;font-weight:600">{{ m.amt }}</span></div></sc-for>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <sc-if value="{{ isTreasurer }}"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" icon="IconBanknote" onClick="{{ openCash }}" dc-props="{{ wide }}" hint-size="100%,40px">{{ T.recordCash }}</x-import></sc-if>
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" variant="outline" icon="IconBellRing" onClick="{{ remindAll }}" dc-props="{{ wide }}" hint-size="100%,40px">{{ T.remindAll }}</x-import>
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" variant="outline" icon="IconDownload" onClick="{{ dlReport }}" dc-props="{{ wide }}" hint-size="100%,40px">{{ T.reportPdf }}</x-import>
+        </div>
+        <div style="font-size:13px;font-weight:600;color:#64748b">{{ T.defaulters }} ({{ defCount }})</div>
+        <div style="border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0">
+          <sc-for list="{{ defRows }}" as="d" hint-placeholder-count="4">
+            <div style="padding:12px 14px;display:flex;gap:10px;align-items:center;border-bottom:1px solid #f1f5f9">
+              <div style="width:52px;font-weight:700;font-size:14px">{{ d.flat }}</div>
+              <div style="flex:1;display:flex;flex-direction:column;gap:1px"><div style="font-size:14px;font-weight:500">{{ d.name }}</div><div style="font-size:12px;color:#ef4444;font-weight:500">{{ d.amt }} · {{ d.months }}</div></div>
+              <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" variant="{{ d.variant }}" onClick="{{ d.remind }}" hint-size="80px,36px">{{ d.remindLabel }}</x-import>
+            </div>
+          </sc-for>
+          <sc-if value="{{ noDefaulters }}"><div style="padding:16px;font-size:14px;color:#64748b;text-align:center">{{ T.noDefaulters }}</div></sc-if>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- EXPENSES -->
+    <sc-if value="{{ s.expenses }}">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0;padding:16px;display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:13px;color:#64748b">{{ T.monthExpense }}</span><span style="font-size:22px;font-weight:700">{{ expTotalFmt }}</span></div>
+          <sc-for list="{{ catBars }}" as="c" hint-placeholder-count="5">
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <div style="display:flex;justify-content:space-between;font-size:13px"><span>{{ c.label }}</span><span style="font-weight:600">{{ c.amt }}</span></div>
+              <div style="height:6px;border-radius:6px;background:#f1f5f9"><div style="height:6px;border-radius:6px;background:#0f172a;width:{{ c.w }}"></div></div>
+            </div>
+          </sc-for>
+        </div>
+        <sc-if value="{{ isTreasurer }}"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" icon="IconUpload" onClick="{{ openBill }}" dc-props="{{ wideTall }}" hint-size="100%,48px">{{ T.submitBill }}</x-import></sc-if>
+        <sc-if value="{{ hasPending }}">
+          <div style="font-size:13px;font-weight:600;color:#64748b">{{ T.pendingApproval }}</div>
+          <sc-for list="{{ pendingRows }}" as="p" hint-placeholder-count="1">
+            <div style="border-radius:6px;box-shadow:inset 0 0 0 1px #0f172a;padding:14px;display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;justify-content:space-between;gap:8px"><div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:14px;font-weight:600">{{ p.title }}</span><span style="font-size:12px;color:#64748b">{{ p.cat }} · {{ p.by }} · {{ p.date }}</span></div><span style="font-size:15px;font-weight:700">{{ p.amt }}</span></div>
+              <div style="display:flex;gap:6px;align-items:center;font-size:12px;color:#64748b"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconFileImage" size="{{ 14 }}" hint-size="14px,14px"></x-import>{{ p.file }}</div>
+              <sc-if value="{{ isSecretary }}">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                  <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" variant="outline" onClick="{{ p.reject }}" dc-props="{{ wide }}" hint-size="100%,40px">{{ T.reject }}</x-import>
+                  <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" onClick="{{ p.approve }}" dc-props="{{ wide }}" hint-size="100%,40px">{{ T.approve }}</x-import>
+                </div>
+              </sc-if>
+              <sc-if value="{{ isTreasurer }}"><div style="font-size:12px;font-weight:500;padding:6px 10px;border-radius:6px;background:#f1f5f9">{{ T.awaitingSec }}</div></sc-if>
+            </div>
+          </sc-for>
+        </sc-if>
+        <div style="font-size:13px;font-weight:600;color:#64748b">{{ T.allExpenses }}</div>
+        <div style="border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0">
+          <sc-for list="{{ expenseRows }}" as="e" hint-placeholder-count="6">
+            <div style="padding:12px 14px;display:flex;gap:12px;align-items:center;border-bottom:1px solid #f1f5f9">
+              <div style="width:36px;height:36px;border-radius:6px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;flex:none"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="{{ e.icon }}" size="{{ 18 }}" hint-size="18px,18px"></x-import></div>
+              <div style="flex:1;display:flex;flex-direction:column;gap:1px"><div style="font-size:14px;font-weight:500">{{ e.title }}</div><div style="font-size:12px;color:#64748b">{{ e.date }} · {{ e.cat }}</div></div>
+              <div style="font-size:14px;font-weight:600">{{ e.amt }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- MORE -->
+    <sc-if value="{{ s.more }}">
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0;padding:14px;display:flex;gap:12px;align-items:center">
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Avatar" initials="{{ meIni }}" size="{{ 48 }}" hint-size="48px,48px"></x-import>
+          <div style="display:flex;flex-direction:column;gap:2px"><div style="font-size:16px;font-weight:600">{{ meName }}</div><div style="font-size:13px;color:#64748b">{{ meSub }}</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+          <sc-for list="{{ moreTiles }}" as="t" hint-placeholder-count="9">
+            <button onClick="{{ t.onClick }}" style="border:0;background:#fff;box-shadow:inset 0 0 0 1px #e2e8f0;border-radius:6px;padding:14px 4px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;color:#0f172a;min-height:84px" style-hover="background:#f1f5f9">
+              <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="{{ t.icon }}" size="{{ 22 }}" hint-size="22px,22px"></x-import>
+              <span style="font-size:12px;font-weight:500;line-height:1.25;text-align:center">{{ t.label }}</span>
+            </button>
+          </sc-for>
+        </div>
+        <div style="font-size:13px;font-weight:600;color:#64748b">{{ T.switchRole }}</div>
+        <div style="border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0">
+          <sc-for list="{{ roleBtns }}" as="r" hint-placeholder-count="4">
+            <button onClick="{{ r.onClick }}" style="width:100%;border:0;background:transparent;padding:12px 14px;display:flex;gap:12px;align-items:center;cursor:pointer;color:#0f172a;border-bottom:1px solid #f1f5f9;text-align:left" style-hover="background:#f8fafc">
+              <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="{{ r.icon }}" size="{{ 18 }}" hint-size="18px,18px"></x-import>
+              <span style="flex:1;font-size:14px;font-weight:500">{{ r.labelLocal }}</span>
+              <sc-if value="{{ r.active }}"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconCheck" size="{{ 16 }}" hint-size="16px,16px"></x-import></sc-if>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+
+  <div style="display:flex;border-top:1px solid #e2e8f0;background:#fff;padding:6px 6px 30px">
+    <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5">
+      <button onClick="{{ t.onClick }}" style="flex:1;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;cursor:pointer;color:{{ t.color }}">
+        <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="{{ t.icon }}" size="{{ 22 }}" hint-size="22px,22px"></x-import>
+        <span style="font-size:11px;font-weight:{{ t.weight }}">{{ t.label }}</span>
+      </button>
+    </sc-for>
+  </div>
+
+  <sc-if value="{{ toast }}">
+    <div style="position:absolute;left:16px;right:16px;bottom:100px;background:#0f172a;color:#fff;border-radius:6px;padding:12px 14px;font-size:14px;font-weight:500;display:flex;gap:8px;align-items:center;box-shadow:0 4px 6px rgba(0,0,0,.09);z-index:30">
+      <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconCheckCircle2" size="{{ 18 }}" hint-size="18px,18px"></x-import>{{ toast }}</div>
+  </sc-if>
+
+  <sc-if value="{{ sheetOpen }}">
+    <div onClick="{{ closeSheet }}" style="position:absolute;inset:0;background:rgba(15,23,42,.45);z-index:40"></div>
+    <div style="position:absolute;left:0;right:0;bottom:0;max-height:86%;overflow-y:auto;background:#fff;border-radius:16px 16px 0 0;padding:10px 20px 40px;z-index:41;display:flex;flex-direction:column;gap:14px">
+      <div style="width:40px;height:4px;border-radius:4px;background:#e2e8f0;align-self:center"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center"><div style="font-size:18px;font-weight:700">{{ sheetTitle }}</div>
+        <button onClick="{{ closeSheet }}" style="width:32px;height:32px;border:0;border-radius:6px;background:#f1f5f9;cursor:pointer;color:#0f172a;display:flex;align-items:center;justify-content:center"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconX" size="{{ 16 }}" hint-size="16px,16px"></x-import></button></div>
+
+      <sc-if value="{{ sh.pay }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;justify-content:space-between;padding:14px;border-radius:6px;background:#f1f5f9"><span style="font-size:14px">{{ selCount }} {{ T.billsSel }}</span><span style="font-size:18px;font-weight:700">{{ selTotalFmt }}</span></div>
+          <div style="font-size:13px;font-weight:600;color:#64748b">{{ T.payMethod }}</div>
+          <sc-for list="{{ methodRows }}" as="m" hint-placeholder-count="3">
+            <button onClick="{{ m.pick }}" style="border:0;background:#fff;box-shadow:inset 0 0 0 {{ m.ringW }} {{ m.ring }};border-radius:6px;padding:14px;display:flex;gap:12px;align-items:center;cursor:pointer;color:#0f172a;text-align:left">
+              <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="{{ m.icon }}" size="{{ 20 }}" hint-size="20px,20px"></x-import>
+              <div style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font-size:14px;font-weight:600">{{ m.label }}</span><span style="font-size:12px;color:#64748b">{{ m.sub }}</span></div>
+              <div style="width:18px;height:18px;border-radius:18px;box-shadow:inset 0 0 0 {{ m.dot }} #0f172a"></div>
+            </button>
+          </sc-for>
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" onClick="{{ doPay }}" loading="{{ paying }}" dc-props="{{ wideTall }}" hint-size="100%,48px">{{ payBtnLabel }}</x-import>
+          <div style="font-size:12px;color:#64748b;text-align:center;display:flex;gap:6px;justify-content:center;align-items:center"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconLock" size="{{ 12 }}" hint-size="12px,12px"></x-import>{{ T.secure }}</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ sh.receipt }}">
+        <div style="display:flex;flex-direction:column;gap:14px;align-items:center;text-align:center">
+          <div style="width:64px;height:64px;border-radius:64px;background:#0f172a;color:#fff;display:flex;align-items:center;justify-content:center"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconCheck" size="{{ 32 }}" hint-size="32px,32px"></x-import></div>
+          <div style="font-size:28px;font-weight:700">{{ receipt.amt }}</div>
+          <div style="width:100%;border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0;text-align:left">
+            <sc-for list="{{ receipt.lines }}" as="l" hint-placeholder-count="4"><div style="display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #f1f5f9;font-size:13px"><span style="color:#64748b">{{ l.k }}</span><span style="font-weight:600">{{ l.v }}</span></div></sc-for>
+          </div>
+          <div style="width:100%;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" variant="outline" icon="IconDownload" onClick="{{ dlReceipt }}" dc-props="{{ wide }}" hint-size="100%,40px">{{ T.receiptPdf }}</x-import>
+            <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" onClick="{{ closeSheet }}" dc-props="{{ wide }}" hint-size="100%,40px">{{ T.done }}</x-import>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ sh.sos }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <sc-if value="{{ sosIdle }}">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <sc-for list="{{ sosTypes }}" as="t" hint-placeholder-count="4">
+                <button onClick="{{ t.pick }}" style="border:0;border-radius:6px;padding:14px;display:flex;flex-direction:column;gap:6px;align-items:flex-start;cursor:pointer;background:{{ t.bg }};color:{{ t.fg }};box-shadow:inset 0 0 0 1px #e2e8f0"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="{{ t.icon }}" size="{{ 20 }}" hint-size="20px,20px"></x-import><span style="font-size:14px;font-weight:600">{{ t.label }}</span></button>
+              </sc-for>
+            </div>
+            <button onClick="{{ sendSos }}" style="height:56px;border:0;border-radius:6px;background:#ef4444;color:#fff;font-size:16px;font-weight:700;cursor:pointer">{{ T.sendAlert }}</button>
+            <div style="font-size:12px;color:#64748b;text-align:center">{{ T.sosNote }}</div>
+          </sc-if>
+          <sc-if value="{{ sosSent }}">
+            <div style="display:flex;flex-direction:column;gap:12px;align-items:center;text-align:center;padding:8px 0">
+              <div style="width:64px;height:64px;border-radius:64px;background:#ef4444;color:#fff;display:flex;align-items:center;justify-content:center"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconSiren" size="{{ 30 }}" hint-size="30px,30px"></x-import></div>
+              <div style="font-size:16px;font-weight:700">{{ T.alertSent }}</div>
+              <div style="font-size:13px;color:#64748b;line-height:1.5">{{ T.alertSentSub }}</div>
+              <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" variant="outline" onClick="{{ callGuard }}" dc-props="{{ wide }}" hint-size="100%,40px">{{ T.callGuard }}</x-import>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ sh.pass }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Input" label="{{ T.guestName }}" placeholder="Kiran Shah" value="{{ f.passName }}" onChange="{{ on.passName }}" dc-props="{{ wide }}" hint-size="100%,66px"></x-import>
+          <div style="display:flex;gap:8px"><sc-for list="{{ passWhen }}" as="w" hint-placeholder-count="2"><button onClick="{{ w.pick }}" style="flex:1;height:40px;border:0;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;background:{{ w.bg }};color:{{ w.fg }};box-shadow:inset 0 0 0 1px #e2e8f0">{{ w.label }}</button></sc-for></div>
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" onClick="{{ createPass }}" dc-props="{{ wideTall }}" hint-size="100%,48px">{{ T.generate }}</x-import>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ sh.complaint }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="font-size:14px;font-weight:500">{{ T.category }}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ compCats }}" as="c" hint-placeholder-count="6"><button onClick="{{ c.pick }}" style="height:34px;padding:0 12px;border:0;border-radius:40px;font-size:13px;font-weight:600;cursor:pointer;background:{{ c.bg }};color:{{ c.fg }};box-shadow:inset 0 0 0 1px #e2e8f0">{{ c.label }}</button></sc-for></div>
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Textarea" label="{{ T.describe }}" placeholder="{{ T.describePh }}" value="{{ f.comp }}" onChange="{{ on.comp }}" dc-props="{{ wide }}" hint-size="100%,110px"></x-import>
+          <button onClick="{{ toggleAttach }}" style="height:56px;border:0;border-radius:6px;box-shadow:inset 0 0 0 1px #cbd5e1;background:#f8fafc;cursor:pointer;color:#475569;font-size:13px;display:flex;gap:8px;align-items:center;justify-content:center;border-style:dashed"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconCamera" size="{{ 18 }}" hint-size="18px,18px"></x-import>{{ attachLabel }}</button>
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" onClick="{{ submitComplaint }}" dc-props="{{ wideTall }}" hint-size="100%,48px">{{ T.submit }}</x-import>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ sh.visitor }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Input" label="{{ T.visitorName }}" placeholder="Ramesh Kumar" value="{{ f.vName }}" onChange="{{ on.vName }}" dc-props="{{ wide }}" hint-size="100%,66px"></x-import>
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Input" label="{{ T.flatNo }}" placeholder="B-304" value="{{ f.vFlat }}" onChange="{{ on.vFlat }}" dc-props="{{ wide }}" hint-size="100%,66px"></x-import>
+          <div style="font-size:14px;font-weight:500">{{ T.purpose }}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ purposeChips }}" as="c" hint-placeholder-count="5"><button onClick="{{ c.pick }}" style="height:34px;padding:0 12px;border:0;border-radius:40px;font-size:13px;font-weight:600;cursor:pointer;background:{{ c.bg }};color:{{ c.fg }};box-shadow:inset 0 0 0 1px #e2e8f0">{{ c.label }}</button></sc-for></div>
+          <button onClick="{{ toggleAttach }}" style="height:56px;border:0;border-radius:6px;box-shadow:inset 0 0 0 1px #cbd5e1;background:#f8fafc;cursor:pointer;color:#475569;font-size:13px;display:flex;gap:8px;align-items:center;justify-content:center"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconCamera" size="{{ 18 }}" hint-size="18px,18px"></x-import>{{ photoLabel }}</button>
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" onClick="{{ submitVisitor }}" dc-props="{{ wideTall }}" hint-size="100%,48px">{{ T.sendApproval }}</x-import>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ sh.notice }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Input" label="{{ T.titleLbl }}" value="{{ f.nTitle }}" onChange="{{ on.nTitle }}" dc-props="{{ wide }}" hint-size="100%,66px"></x-import>
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Textarea" label="{{ T.message }}" value="{{ f.nBody }}" onChange="{{ on.nBody }}" dc-props="{{ wide }}" hint-size="100%,110px"></x-import>
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Switch" label="{{ T.markImportant }}" checked="{{ f.nPin }}" onChange="{{ on.nPin }}" hint-size="100%,24px"></x-import>
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" onClick="{{ submitNotice }}" dc-props="{{ wideTall }}" hint-size="100%,48px">{{ T.publish }}</x-import>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ sh.bill }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Input" label="{{ T.vendor }}" placeholder="Torrent Power" value="{{ f.bVendor }}" onChange="{{ on.bVendor }}" dc-props="{{ wide }}" hint-size="100%,66px"></x-import>
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Input" label="{{ T.amount }}" placeholder="18450" value="{{ f.bAmt }}" onChange="{{ on.bAmt }}" inputMode="numeric" dc-props="{{ wide }}" hint-size="100%,66px"></x-import>
+          <div style="font-size:14px;font-weight:500">{{ T.category }}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ expCatChips }}" as="c" hint-placeholder-count="6"><button onClick="{{ c.pick }}" style="height:34px;padding:0 12px;border:0;border-radius:40px;font-size:13px;font-weight:600;cursor:pointer;background:{{ c.bg }};color:{{ c.fg }};box-shadow:inset 0 0 0 1px #e2e8f0">{{ c.label }}</button></sc-for></div>
+          <button onClick="{{ toggleAttach }}" style="height:64px;border:0;border-radius:6px;box-shadow:inset 0 0 0 1px #cbd5e1;background:#f8fafc;cursor:pointer;color:#475569;font-size:13px;display:flex;gap:8px;align-items:center;justify-content:center"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconUploadCloud" size="{{ 20 }}" hint-size="20px,20px"></x-import>{{ billAttachLabel }}</button>
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" onClick="{{ submitBill }}" dc-props="{{ wideTall }}" hint-size="100%,48px">{{ T.sendForApproval }}</x-import>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ sh.cash }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="font-size:14px;font-weight:500">{{ T.flatNo }}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ cashFlats }}" as="c" hint-placeholder-count="4"><button onClick="{{ c.pick }}" style="height:36px;padding:0 14px;border:0;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;background:{{ c.bg }};color:{{ c.fg }};box-shadow:inset 0 0 0 1px #e2e8f0">{{ c.label }}</button></sc-for></div>
+          <div style="display:flex;justify-content:space-between;padding:14px;border-radius:6px;background:#f1f5f9"><span style="font-size:14px">{{ T.amount }}</span><span style="font-size:18px;font-weight:700">{{ cashAmt }}</span></div>
+          <x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" icon="IconBanknote" onClick="{{ recordCash }}" dc-props="{{ wideTall }}" hint-size="100%,48px">{{ T.recordIssue }}</x-import>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+</div>
+</x-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;initialRole&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;resident&quot;,&quot;secretary&quot;,&quot;treasurer&quot;,&quot;watchman&quot;],&quot;default&quot;:&quot;resident&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;initialLang&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;gu&quot;,&quot;en&quot;],&quot;default&quot;:&quot;gu&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;showGuide&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const D = {
+  home:['હોમ','Home'], bills:['બિલ','Bills'], gate:['ગેટ','Gate'], community:['સમુદાય','Community'], more:['વધુ','More'],
+  reports:['વસૂલાત','Collections'], expenses:['ખર્ચ','Expenses'], visitors:['મુલાકાતીઓ','Visitors'], help:['સ્ટાફ','Staff'],
+  complaints:['ફરિયાદ','Complaints'], amenities:['સુવિધા બુકિંગ','Amenity booking'], parking:['પાર્કિંગ','Parking'],
+  directory:['સભ્ય યાદી','Directory'], docs:['દસ્તાવેજો','Documents'], events:['કાર્યક્રમ','Events'], notices:['નોટિસ','Notices'], polls:['મતદાન','Polls'],
+  dailyHelp:['ઘરકામ સ્ટાફ','Daily help'], gatePass:['ગેટ પાસ','Gate pass'],
+  greeting:['નમસ્તે','Hello'], flat:['ફ્લેટ','Flat'], wingB:['બી વિંગ','B wing'], society:['શિવમ રેસિડેન્સી','Shivam Residency'],
+  totalDue:['કુલ બાકી રકમ','Total due'], payNow:['હમણાં ચૂકવો','Pay now'], dueBy:['છેલ્લી તારીખ','Due'], allPaid:['બધા બિલ ચૂકવાઈ ગયા','All bills paid'],
+  atGate:['ગેટ પર મુલાકાતી રાહ જુએ છે','Visitor waiting at gate'], approve:['મંજૂર','Approve'], deny:['નામંજૂર','Deny'], reject:['નામંજૂર','Reject'],
+  services:['સેવાઓ','Services'], latestNotice:['તાજી નોટિસ','Latest notice'], upcoming:['આગામી કાર્યક્રમ','Upcoming event'],
+  paid:['ચૂકવેલ','Paid'], unpaid:['બાકી','Due'], selectBills:['ચૂકવવા માટે બિલ પસંદ કરો','Tap bills to select them for payment'],
+  history:['ચુકવણી ઇતિહાસ','Payment history'], payMethod:['ચુકવણી પદ્ધતિ','Payment method'],
+  autopay:['ઓટો-પે','Auto-pay'], autopaySub:['દર મહિને 5 તારીખે મેન્ટેનન્સ આપમેળે કપાશે','Maintenance is debited automatically on the 5th'],
+  pay:['ચૂકવો','Pay'], billsSel:['બિલ પસંદ કર્યા','bills selected'], secure:['100% સુરક્ષિત ચુકવણી','Secured payment'],
+  receiptPdf:['રસીદ PDF','Receipt PDF'], done:['થઈ ગયું','Done'], success:['ચુકવણી સફળ','Payment successful'],
+  fundBalance:['સોસાયટી ફંડ બેલેન્સ','Society fund balance'], asOn:['તારીખ','As on'], octCollection:['ઓક્ટોબર મેન્ટેનન્સ વસૂલાત','October maintenance collection'],
+  flatsPending:['ફ્લેટ બાકી','flats pending'], monthExpense:['આ મહિનાનો ખર્ચ','Expenses this month'], pendingApproval:['મંજૂરી બાકી','Awaiting approval'],
+  quickActions:['ઝડપી કાર્યો','Quick actions'], openComplaints:['ખુલ્લી ફરિયાદો','Open complaints'],
+  newEntry:['નવી એન્ટ્રી','New visitor entry'], verifyPass:['ગેટ પાસ કોડ ચકાસો','Verify gate pass code'], check:['ચકાસો','Check'],
+  insideNow:['આજના મુલાકાતીઓ','Today’s visitors'], inAt:['પ્રવેશ','In'], exit:['બહાર','Exit'],
+  createPass:['મહેમાન માટે ગેટ પાસ બનાવો','Create a guest gate pass'], activePasses:['સક્રિય પાસ','Active passes'], visitorLog:['મારા મુલાકાતીઓ','My visitors'],
+  important:['મહત્વપૂર્ણ','Important'], postNotice:['નવી નોટિસ મૂકો','Post a notice'], raiseComplaint:['નવી ફરિયાદ નોંધાવો','Raise a complaint'],
+  pickDate:['તારીખ પસંદ કરો','Pick a date'], pickSlot:['સમય પસંદ કરો','Pick a time slot'], myBookings:['મારા બુકિંગ','My bookings'],
+  guestParking:['મહેમાન પાર્કિંગ','Guest parking'], free:['ખાલી','free'], reqGuestParking:['આજ માટે મહેમાન પાર્કિંગ માંગો','Request guest parking for today'],
+  parkRule:['ફાળવેલ જગ્યા સિવાય વાહન પાર્ક કરવું નહીં. મહેમાન પાર્કિંગ મહત્તમ 12 કલાક માટે.','Park only in your allotted slot. Guest parking is limited to 12 hours.'],
+  searchPh:['નામ અથવા ફ્લેટ નંબર શોધો','Search name or flat'], daysMonth:['દિવસ / મહિનો','days this month'],
+  recordCash:['રોકડ નોંધો','Record cash'], remindAll:['બધાને યાદ અપાવો','Remind all'], reportPdf:['માસિક રિપોર્ટ','Monthly report'],
+  defaulters:['બાકીદારો','Pending dues'], noDefaulters:['બધા ફ્લેટની ચુકવણી થઈ ગઈ','Every flat has paid'],
+  submitBill:['બિલ જમા કરો (લાઇટ, AMC, વગેરે)','Submit a bill (light, AMC, etc.)'], awaitingSec:['સેક્રેટરીની મંજૂરીની રાહ','Waiting for the secretary’s approval'],
+  allExpenses:['બધા ખર્ચ','All expenses'], switchRole:['ભૂમિકા બદલો','Switch role'],
+  sendAlert:['ઇમરજન્સી એલર્ટ મોકલો','Send emergency alert'], sosNote:['બધા વોચમેન અને કમિટી સભ્યોને તરત જાણ થશે','All guards and committee members are notified instantly'],
+  alertSent:['એલર્ટ મોકલાઈ ગયું','Alert sent'], alertSentSub:['ગેટ પરના વોચમેન અને કમિટીને જાણ કરવામાં આવી છે. મદદ રસ્તામાં છે.','Gate guards and committee have been notified. Help is on the way.'],
+  callGuard:['વોચમેનને કૉલ કરો','Call the guard'], responding:['હું જઈ રહ્યો છું','I’m responding'],
+  guestName:['મહેમાનનું નામ','Guest name'], generate:['પાસ બનાવો','Generate pass'], today:['આજે','Today'], tomorrow:['કાલે','Tomorrow'],
+  category:['પ્રકાર','Category'], describe:['વિગત','Details'], describePh:['સમસ્યા ટૂંકમાં લખો','Describe the issue briefly'], submit:['જમા કરો','Submit'],
+  visitorName:['મુલાકાતીનું નામ','Visitor name'], flatNo:['ફ્લેટ નંબર','Flat no.'], purpose:['હેતુ','Purpose'], sendApproval:['મંજૂરી માટે મોકલો','Send for approval'],
+  titleLbl:['શીર્ષક','Title'], message:['સંદેશ','Message'], markImportant:['મહત્વપૂર્ણ તરીકે દર્શાવો','Mark as important'], publish:['પ્રકાશિત કરો','Publish'],
+  vendor:['વેન્ડર / બિલનું નામ','Vendor / bill name'], amount:['રકમ (₹)','Amount (₹)'], sendForApproval:['મંજૂરી માટે મોકલો','Send for approval'],
+  recordIssue:['રોકડ નોંધો અને રસીદ આપો','Record and issue receipt'],
+  secretary:['સેક્રેટરી','Secretary'], treasurer:['ખજાનચી','Treasurer'], resident:['સભ્ય','Resident'], watchman:['વોચમેન','Watchman'],
+  committee:['કમિટી','Committee'], residents:['સભ્યો','Residents'], emergency:['ઇમરજન્સી / સેવા','Emergency & services'],
+  inside:['અંદર','Inside'], waiting:['રાહમાં','Waiting'], out:['બહાર ગયા','Left'], denied:['નામંજૂર','Denied'],
+  expected:['અપેક્ષિત પાસ','Expected passes'], helpIn:['સ્ટાફ હાજર','Staff in'], visitorsIn:['અંદર મુલાકાતી','Visitors inside'],
+  remind:['યાદ અપાવો','Remind'], reminded:['મોકલ્યું','Sent'], going:['જશે','going'], imGoing:['હું આવીશ','I’m going'], youGoing:['તમે આવો છો','You’re going'],
+  votes:['મત','votes'], endsOn:['છેલ્લી તારીખ','Ends'], book:['બુક કરો','Book'], pickFirst:['સમય પસંદ કરો','Select a slot'],
+  attach:['બિલનો ફોટો / PDF જોડો','Attach bill photo / PDF'], photo:['મુલાકાતીનો ફોટો લો','Take visitor photo'], photoAdd:['ફોટો ઉમેરો (વૈકલ્પિક)','Add photo (optional)'],
+  open:['ખુલ્લી','Open'], progress:['ચાલુ','In progress'], resolved:['ઉકેલાઈ','Resolved'], start:['શરૂ કરો','Start'], resolve:['ઉકેલ્યું','Resolve'],
+  present:['હાજર','In'], left:['ગયા','Left'], absent:['ગેરહાજર','Not in'], markIn:['પ્રવેશ','In'], markOut:['બહાર','Out'],
+};
+const fmt = n => '₹' + Math.round(n).toLocaleString('en-IN');
+const nowT = () => { const d = new Date(); return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0'); };
+const ROLES = [
+  { id:'resident', icon:'IconHome', en:'Resident', sub:'Rajesh Patel · B-304' },
+  { id:'secretary', icon:'IconClipboardCheck', en:'Secretary', sub:'Hasmukh Desai · A-101' },
+  { id:'treasurer', icon:'IconWallet', en:'Treasurer', sub:'Nilesh Shah · C-202' },
+  { id:'watchman', icon:'IconShield', en:'Watchman', sub:'Bhikhabhai · Main gate' },
+];
+const TABS = {
+  resident:[['home','IconHome'],['bills','IconReceipt'],['gate','IconShieldCheck'],['community','IconMegaphone'],['more','IconLayoutGrid']],
+  secretary:[['home','IconLayoutDashboard'],['reports','IconIndianRupee'],['expenses','IconPieChart'],['community','IconMegaphone'],['more','IconLayoutGrid']],
+  treasurer:[['home','IconLayoutDashboard'],['reports','IconIndianRupee'],['expenses','IconPieChart'],['community','IconMegaphone'],['more','IconLayoutGrid']],
+  watchman:[['home','IconShield'],['log','IconClipboardList'],['help','IconUsers'],['more','IconLayoutGrid']],
+};
+const CATS = { security:['સિક્યુરિટી','Security'], light:['લાઇટ બિલ','Electricity'], clean:['સફાઈ','Housekeeping'], repair:['રિપેર / AMC','Repairs & AMC'], water:['પાણી','Water'], event:['કાર્યક્રમ','Events'] };
+const CAT_ICON = { security:'IconShield', light:'IconZap', clean:'IconTrash2', repair:'IconWrench', water:'IconDroplets', event:'IconPartyPopper' };
+const COMP_CATS = [['plumb',['પ્લમ્બિંગ','Plumbing']],['elec',['ઇલેક્ટ્રિકલ','Electrical']],['lift',['લિફ્ટ','Lift']],['clean',['સફાઈ','Cleaning']],['sec',['સિક્યુરિટી','Security']],['other',['અન્ય','Other']]];
+const PURPOSES = [['guest',['મહેમાન','Guest']],['delivery',['ડિલિવરી','Delivery']],['cab',['કેબ','Cab']],['service',['સર્વિસ / રિપેર','Service']],['courier',['કુરિયર','Courier']]];
+const SLOTS = ['06–08','08–10','10–12','16–18','18–20','20–22'];
+const DATES = [['ગુરુ','Thu',8],['શુક્ર','Fri',9],['શનિ','Sat',10],['રવિ','Sun',11],['સોમ','Mon',12]];
+
+class Component extends DCLogic {
+  state = {
+    role: this.props.initialRole ?? 'resident', lang: this.props.initialLang ?? 'gu', screen: 'home', sheet: null, toast: null,
+    payMethod: 'upi', paying: false, receipt: null, autopay: false, sel: { m: true, l: true, w: true },
+    bills: [
+      { id:'m', icon:'IconBuilding2', t:['ઓક્ટોબર મેન્ટેનન્સ','October maintenance'], amt:2500, due:'10 Oct', paid:false },
+      { id:'l', icon:'IconZap', t:['કોમન લાઇટ બિલ (હિસ્સો)','Common light bill (share)'], amt:420, due:'15 Oct', paid:false },
+      { id:'w', icon:'IconDroplet', t:['પાણી ચાર્જ','Water charges'], amt:180, due:'15 Oct', paid:false },
+      { id:'s', icon:'IconLandmark', t:['સિંકિંગ ફંડ (Q3)','Sinking fund (Q3)'], amt:1000, due:'30 Sep', paid:true },
+    ],
+    history: [
+      { t:['સિંકિંગ ફંડ (Q3)','Sinking fund (Q3)'], amt:1000, date:'28 Sep', via:'UPI', no:'SR-26-0931' },
+      { t:['સપ્ટેમ્બર મેન્ટેનન્સ','September maintenance'], amt:3100, date:'04 Sep', via:'UPI', no:'SR-26-0912' },
+      { t:['ઓગસ્ટ મેન્ટેનન્સ','August maintenance'], amt:3050, date:'05 Aug', via:'Card', no:'SR-26-0815' },
+    ],
+    visitors: [
+      { id:1, name:'Swiggy – Mahesh', flat:'B-304', p:'delivery', in:'10:42', status:'waiting' },
+      { id:2, name:'Amazon – Courier', flat:'A-204', p:'courier', in:'10:15', status:'inside' },
+      { id:3, name:'Dr. Mehul Vyas', flat:'C-108', p:'guest', in:'09:30', status:'inside' },
+      { id:4, name:'Urban Company – AC', flat:'B-304', p:'service', in:'Yesterday', status:'out', out:'17:20' },
+      { id:5, name:'Ola – GJ01 TX 2231', flat:'A-306', p:'cab', in:'08:05', status:'out', out:'08:09' },
+    ],
+    passes: [{ name:'Kiran Shah', when:['આજે, સાંજે 7 પછી','Today, after 7 pm'], code:'482915' }],
+    complaints: [
+      { id:'C-120', flat:'A-102', cat:'elec', t:['ગેટ પાસેની સ્ટ્રીટ લાઇટ બંધ છે','Street light near the gate is off'], status:'open', date:'07 Oct' },
+      { id:'C-118', flat:'B-304', cat:'plumb', t:['બાથરૂમમાં પાણી લીક થાય છે','Water leaking in bathroom'], status:'progress', date:'06 Oct' },
+      { id:'C-111', flat:'B-304', cat:'lift', t:['બી વિંગની લિફ્ટમાં અવાજ આવે છે','B wing lift is making noise'], status:'resolved', date:'28 Sep' },
+    ],
+    notices: [
+      { t:['નવરાત્રી ગરબા – પાસ વિતરણ','Navratri garba – pass distribution'], b:['ક્લબહાઉસ ઓફિસમાં 9 અને 10 ઓક્ટોબરે સાંજે 6 થી 9 વાગ્યે પાસ મળશે. ફ્લેટ દીઠ 4 પાસ.','Collect passes at the clubhouse office on 9–10 Oct, 6–9 pm. Four passes per flat.'], date:'07 Oct', pin:true },
+      { t:['12 ઓક્ટોબરે પાણી પુરવઠો બંધ','Water supply off on 12 Oct'], b:['ટાંકી સફાઈને કારણે સવારે 10 થી બપોરે 2 સુધી પાણી બંધ રહેશે.','Water will be off from 10 am to 2 pm for tank cleaning.'], date:'05 Oct', pin:false },
+      { t:['વાર્ષિક સામાન્ય સભા 25 ઓક્ટોબરે','Annual general meeting on 25 Oct'], b:['ક્લબહાઉસમાં સવારે 10 વાગ્યે. ઓડિટ રિપોર્ટ દસ્તાવેજોમાં ઉપલબ્ધ છે.','10 am at the clubhouse. The audit report is in Documents.'], date:'01 Oct', pin:false },
+    ],
+    events: [
+      { id:1, t:['નવરાત્રી ગરબા મહોત્સવ','Navratri Garba Mahotsav'], mon:'OCT', day:'11', when:['11–19 ઓક્ટો, રાત્રે 9 વાગ્યે','11–19 Oct, 9 pm'], place:['પાર્ટી લોન','Party lawn'], going:186, me:false },
+      { id:2, t:['વાર્ષિક સામાન્ય સભા','Annual general meeting'], mon:'OCT', day:'25', when:['રવિવાર, સવારે 10 વાગ્યે','Sunday, 10 am'], place:['ક્લબહાઉસ હોલ','Clubhouse hall'], going:64, me:true },
+      { id:3, t:['દિવાળી સ્નેહ મિલન','Diwali Sneh Milan'], mon:'NOV', day:'08', when:['રવિવાર, સાંજે 7 વાગ્યે','Sunday, 7 pm'], place:['પાર્ટી લોન','Party lawn'], going:142, me:false },
+      { id:4, t:['રક્તદાન શિબિર','Blood donation camp'], mon:'NOV', day:'15', when:['સવારે 9 થી 1','9 am – 1 pm'], place:['ક્લબહાઉસ હોલ','Clubhouse hall'], going:38, me:false },
+    ],
+    polls: [
+      { id:1, q:['પાર્કિંગમાં નવા CCTV કેમેરા લગાવવા? (અંદાજે ₹1,20,000)','Install new CCTV cameras in parking? (approx. ₹1,20,000)'], ends:'15 Oct', voted:null, opts:[[['હા','Yes'],64],[['ના','No'],12],[['AGMમાં ચર્ચા કરીએ','Discuss at AGM'],9]] },
+      { id:2, q:['ટેરેસ પર સોલાર પેનલ લગાવવી?','Install solar panels on the terrace?'], ends:'30 Oct', voted:null, opts:[[['હા, સોસાયટી ફંડમાંથી','Yes, from society fund'],41],[['હા, અલગ ફાળાથી','Yes, separate contribution'],22],[['હમણાં નહીં','Not now'],18]] },
+    ],
+    amenity:'hall', date:10, slot:null, bookings:[],
+    guestFree: 4,
+    help: [
+      { name:['સવિતાબેન','Savita ben'], role:['ઘરકામ','Maid'], flats:'B-304, B-305', in:'08:10', out:null, days:7 },
+      { name:['રમેશભાઈ','Ramesh bhai'], role:['દૂધવાળા','Milkman'], flats:'B wing', in:'06:30', out:'06:52', days:8 },
+      { name:['જીગ્નેશ','Jignesh'], role:['કાર સફાઈ','Car cleaner'], flats:'B-304, A-204', in:null, out:null, days:6 },
+      { name:['હંસાબેન','Hansa ben'], role:['રસોઈ','Cook'], flats:'C-108', in:'09:05', out:null, days:7 },
+    ],
+    fund: 842300, collected: 241500, target: 300000, split: { upi:184000, card:31500, cash:26000 },
+    defaulters: [
+      { flat:'B-401', name:'Kalpesh Joshi', amt:7500, months:3, reminded:false },
+      { flat:'A-204', name:'Jayesh Mehta', amt:5000, months:2, reminded:false },
+      { flat:'C-108', name:'Pooja Trivedi', amt:2500, months:1, reminded:false },
+      { flat:'A-306', name:'Rina Parmar', amt:2500, months:1, reminded:false },
+    ],
+    expenses: [
+      { cat:'security', t:['સિક્યુરિટી એજન્સી – ઓક્ટોબર','Security agency – October'], amt:48000, date:'01 Oct' },
+      { cat:'event', t:['નવરાત્રી ડેકોરેશન અને સાઉન્ડ','Navratri decoration & sound'], amt:35000, date:'06 Oct' },
+      { cat:'clean', t:['હાઉસકીપિંગ સ્ટાફ પગાર','Housekeeping staff salary'], amt:22000, date:'01 Oct' },
+      { cat:'light', t:['ટોરેન્ટ પાવર – કોમન લાઇટ (સપ્ટે)','Torrent Power – common light (Sep)'], amt:18450, date:'03 Oct' },
+      { cat:'repair', t:['લિફ્ટ AMC – ઓટીસ','Lift AMC – Otis'], amt:6500, date:'02 Oct' },
+      { cat:'water', t:['પાણીના ટેન્કર (3)','Water tankers (3)'], amt:3600, date:'04 Oct' },
+    ],
+    pending: [{ t:['પ્લમ્બર – પાણીની ટાંકી સફાઈ','Plumber – water tank cleaning'], cat:'water', amt:5500, by:'Nilesh Shah', date:'07 Oct', file:'invoice_tank.jpg' }],
+    commTab:'notices', sosType:'medical', sosSent:false, sosActive:false, attached:false,
+    f:{ code:'', q:'', passName:'', passWhen:'today', comp:'', compCat:'plumb', vName:'', vFlat:'', vP:'guest', nTitle:'', nBody:'', nPin:false, bVendor:'', bAmt:'', bCat:'light', cashFlat:null },
+    codeResult:null,
+  };
+  toast(msg) { clearTimeout(this._t); this.setState({ toast: msg }); this._t = setTimeout(() => this.setState({ toast: null }), 2400); }
+  componentWillUnmount() { clearTimeout(this._t); clearTimeout(this._p); clearTimeout(this._v); }
+  setF(k, v) { this.setState(s => ({ f: { ...s.f, [k]: v } })); }
+  go(screen) { this.setState({ screen }); }
+  open(sheet) { this.setState({ sheet, attached:false, sosSent: sheet === 'sos' ? false : this.state.sosSent }); }
+
+  renderVals() {
+    const st = this.state, L = st.lang === 'gu' ? 0 : 1, x = a => a[L];
+    const T = {}; for (const k in D) T[k] = D[k][L];
+    const role = st.role, isRes = role === 'resident', isAdmin = role === 'secretary' || role === 'treasurer', isW = role === 'watchman';
+    const scr = st.screen;
+    const tabIds = TABS[role].map(t => t[0]);
+    const pill = (on) => ({ bg: on ? '#0f172a' : '#fff', fg: on ? '#fff' : '#0f172a' });
+    const statusBadge = (s) => ({ inside:['#0f172a','#fff'], waiting:['#ef4444','#fff'], out:['#f1f5f9','#475569'], denied:['#f1f5f9','#ef4444'] }[s]);
+    const vRow = v => { const b = statusBadge(v.status); return { name:v.name, flat:v.flat, purpose:x(PURPOSES.find(p=>p[0]===v.p)[1]), in:v.in, outTxt: v.out ? ' → ' + v.out : '', statusLabel:T[v.status], badgeBg:b[0], badgeFg:b[1], canExit: v.status === 'inside', exit:()=>this.exitVisitor(v.id) }; };
+
+    const titles = { home: isW ? x(['મુખ્ય ગેટ','Main gate']) : isAdmin ? x(['ડેશબોર્ડ','Dashboard']) : T.society, bills:T.bills, gate:T.gatePass, community:T.community, more:T.more,
+      reports:T.reports, expenses:T.expenses, log:T.visitors, help:T.dailyHelp, complaints:T.complaints, amenities:T.amenities, parking:T.parking, directory:T.directory, docs:T.docs };
+    const roleLocal = { resident:T.resident, secretary:T.secretary, treasurer:T.treasurer, watchman:T.watchman };
+
+    const dueBills = st.bills.filter(b => !b.paid);
+    const dueTotal = dueBills.reduce((a, b) => a + b.amt, 0);
+    const selBills = dueBills.filter(b => st.sel[b.id]);
+    const selTotal = selBills.reduce((a, b) => a + b.amt, 0);
+    const approvalV = st.visitors.find(v => v.flat === 'B-304' && v.status === 'waiting');
+
+    const tile = (id, icon, label) => ({ icon, label: label || titles[id] || T[id], onClick: () => this.nav(id) });
+    const resTiles = [tile('bills','IconReceipt'), tile('gate','IconTicket'), tile('complaints','IconWrench'), tile('amenities','IconCalendarDays', x(['બુકિંગ','Booking'])),
+      { icon:'IconPartyPopper', label:T.events, onClick:()=>this.setState({ screen:'community', commTab:'events' }) },
+      { icon:'IconCheckSquare', label:T.polls, onClick:()=>this.setState({ screen:'community', commTab:'polls' }) },
+      tile('help','IconUsers', T.dailyHelp), tile('parking','IconCar')];
+    const moreList = isRes ? [tile('complaints','IconWrench'), tile('amenities','IconCalendarDays', x(['બુકિંગ','Booking'])), tile('parking','IconCar'), tile('help','IconUsers', T.dailyHelp), tile('directory','IconUser'), tile('docs','IconFolder'), tile('bills','IconReceipt'), tile('gate','IconTicket'), tile('community','IconMegaphone')]
+      : isAdmin ? [tile('reports','IconIndianRupee'), tile('expenses','IconPieChart'), tile('complaints','IconWrench'), tile('directory','IconUser'), tile('docs','IconFolder'), tile('community','IconMegaphone'), tile('amenities','IconCalendarDays', x(['બુકિંગ','Booking'])), tile('parking','IconCar'), tile('help','IconUsers', T.dailyHelp)]
+      : [tile('log','IconClipboardList'), tile('help','IconUsers', T.dailyHelp), tile('directory','IconUser'), tile('parking','IconCar'), tile('community','IconMegaphone')];
+
+    const expTotal = st.expenses.reduce((a, e) => a + e.amt, 0);
+    const catTot = {}; st.expenses.forEach(e => catTot[e.cat] = (catTot[e.cat] || 0) + e.amt);
+    const catMax = Math.max(...Object.values(catTot));
+    const collPct = Math.round(st.collected / st.target * 100);
+
+    const me = { resident:['RP','Rajesh Patel', `${T.flat} B-304 · ${T.resident}`], secretary:['HD','Hasmukh Desai', `A-101 · ${T.secretary}`], treasurer:['NS','Nilesh Shah', `C-202 · ${T.treasurer}`], watchman:['BB','Bhikhabhai Rathod', `${T.watchman} · ${x(['મુખ્ય ગેટ','Main gate'])}`] }[role];
+
+    const dir = [
+      { label:T.committee, items:[['HD','Hasmukh Desai', `A-101 · ${T.secretary}`],['NS','Nilesh Shah', `C-202 · ${T.treasurer}`],['MP','Meena Pandya', `B-102 · ${x(['પ્રમુખ','Chairperson'])}`]] },
+      { label:T.residents, items:[['JM','Jayesh Mehta','A-204'],['RP','Rajesh Patel','B-304'],['KJ','Kalpesh Joshi','B-401'],['PT','Pooja Trivedi','C-108'],['RP','Rina Parmar','A-306']] },
+      { label:T.emergency, items:[['BR','Bhikhabhai Rathod', `${T.watchman} · 98250 41122`],['MK','Mukesh – plumber','98790 22314'],['BE','Bharat – electrician','99250 66781'],['108',x(['એમ્બ્યુલન્સ','Ambulance']),'108'],['101',x(['ફાયર બ્રિગેડ','Fire brigade']),'101']] },
+    ];
+    const q = st.f.q.trim().toLowerCase();
+    const dirGroups = dir.map(g => ({ label:g.label, items:g.items.filter(i => !q || (i[1] + i[2]).toLowerCase().includes(q)).map(i => ({ ini:i[0], name:i[1], sub:i[2], call:()=>this.toast(x(['કૉલ થઈ રહ્યો છે: ','Calling ']) + i[1]) })) })).filter(g => g.items.length);
+
+    const booked = (a, d) => SLOTS.filter((_, i) => (a.length * 7 + d * 3 + i * 5) % 4 === 0);
+    const amenities = [{ id:'hall', icon:'IconBuilding', n:['ક્લબહાઉસ હોલ','Clubhouse hall'], fee:1500 }, { id:'gym', icon:'IconDumbbell', n:['જિમ','Gym'], fee:0 }, { id:'lawn', icon:'IconPartyPopper', n:['પાર્ટી લોન','Party lawn'], fee:2500 }, { id:'guest', icon:'IconKey', n:['ગેસ્ટ રૂમ','Guest room'], fee:800 }];
+    const curA = amenities.find(a => a.id === st.amenity);
+    const bookedNow = booked(st.amenity, st.date).concat(st.bookings.filter(b => b.a === st.amenity && b.d === st.date).map(b => b.s));
+    const wide = { style:{ width:'100%' } }, wideTall = { style:{ width:'100%', height:48, fontSize:15 } };
+
+    const sheetTitles = { pay:x(['ચુકવણી','Checkout']), receipt:T.success, sos:x(['ઇમરજન્સી SOS','Emergency SOS']), pass:T.gatePass, complaint:T.raiseComplaint, visitor:T.newEntry, notice:T.postNotice, bill:x(['બિલ જમા કરો','Submit a bill']), cash:T.recordCash };
+    const cashD = st.defaulters.find(d => d.flat === st.f.cashFlat);
+    const compStatus = { open:['#ef4444','#fff',1], progress:['#0f172a','#fff',2], resolved:['#f1f5f9','#475569',3] };
+    const helpStatus = h => h.in && !h.out ? `${T.present} ${h.in}` : h.out ? `${T.left} ${h.out}` : T.absent;
+    const waitingCount = st.visitors.filter(v => v.status === 'inside' || v.status === 'waiting').length;
+
+    return {
+      T, showGuide: this.props.showGuide ?? true,
+      roleBtns: ROLES.map(r => ({ ...pill(r.id === role), icon:r.icon, label:r.en, sub:r.sub, labelLocal:roleLocal[r.id], active:r.id === role, onClick:()=>this.setState({ role:r.id, screen:'home', sheet:null }) })),
+      guBg: L === 0 ? '#fff' : 'transparent', enBg: L === 1 ? '#fff' : 'transparent',
+      setGu: ()=>this.setState({ lang:'gu' }), setEn: ()=>this.setState({ lang:'en' }), toggleLang: ()=>this.setState({ lang: L === 0 ? 'en' : 'gu' }),
+      langLabel: L === 0 ? 'EN' : 'ગુ',
+      isSub: !tabIds.includes(scr), back: ()=>this.go('home'),
+      title: titles[scr], headerSub: scr === 'home' && !isW ? `${T.society} · ${x(['અમદાવાદ','Ahmedabad'])}` : scr === 'home' ? T.society : roleLocal[role],
+      openSos: ()=>this.open('sos'),
+      sosBanner: st.sosActive && !isRes, sosBannerText: x(['SOS: B-304 – ','SOS: B-304 – ']) + x({ medical:['મેડિકલ','Medical'], fire:['આગ','Fire'], theft:['ચોરી','Theft'], lift:['લિફ્ટમાં ફસાયા','Stuck in lift'] }[st.sosType]),
+      resolveSos: ()=>{ this.setState({ sosActive:false }); this.toast(x(['સભ્યને જાણ કરી: મદદ આવી રહી છે','Resident notified: help is coming'])); },
+      s: { resHome: scr === 'home' && isRes, adminHome: scr === 'home' && isAdmin, gateHome: scr === 'home' && isW, bills: scr === 'bills', gate: scr === 'gate', community: scr === 'community', complaints: scr === 'complaints', amenities: scr === 'amenities', parking: scr === 'parking', directory: scr === 'directory', docs: scr === 'docs', help: scr === 'help', log: scr === 'log', reports: scr === 'reports', expenses: scr === 'expenses', more: scr === 'more' },
+      isSecretary: role === 'secretary', isTreasurer: role === 'treasurer', isWatchman: isW,
+      userName: x(['રાજેશભાઈ','Rajesh']),
+      dueTotalFmt: fmt(dueTotal), hasDue: dueTotal > 0, noDue: dueTotal === 0, goBills: ()=>this.go('bills'),
+      approval: approvalV ? { name: approvalV.name, purpose: x(PURPOSES.find(p=>p[0]===approvalV.p)[1]), time: approvalV.in } : null,
+      approveVisitor: ()=>{ this.setVisitor(approvalV.id, { status:'inside' }); this.toast(x(['મંજૂરી આપી – ગેટ પર જાણ કરી','Approved – gate notified'])); },
+      denyVisitor: ()=>{ this.setVisitor(approvalV.id, { status:'denied' }); this.toast(x(['પ્રવેશ નામંજૂર','Entry denied'])); },
+      resTiles, goNotices: ()=>this.setState({ screen:'community', commTab:'notices' }), goEvents: ()=>this.setState({ screen:'community', commTab:'events' }),
+      topNotice: { title:x(st.notices[0].t), body:x(st.notices[0].b), date:st.notices[0].date },
+      topEvent: { title:x(st.events[0].t), place:x(st.events[0].place), goingLabel:`${st.events[0].going} ${T.going}` },
+      adminInitials: me[0], adminName: me[1].split(' ')[0] + x(['ભાઈ','']), adminRole: me[2],
+      fundFmt: fmt(st.fund), collPct, collectedFmt: fmt(st.collected), targetFmt: fmt(st.target), defCount: st.defaulters.length,
+      goReports: ()=>this.go('reports'), goExpenses: ()=>this.go('expenses'), expTotalFmt: fmt(expTotal), pendingCount: st.pending.length,
+      adminActions: role === 'treasurer'
+        ? [{ icon:'IconBanknote', label:T.recordCash, onClick:()=>this.open('cash') }, { icon:'IconUpload', label:x(['બિલ જમા કરો','Submit a bill']), onClick:()=>this.open('bill') }, { icon:'IconBellRing', label:T.remindAll, onClick:()=>this.remindAll() }, { icon:'IconFileBarChart', label:T.reportPdf, onClick:()=>this.toast(x(['રિપોર્ટ PDF ડાઉનલોડ થયો','Report PDF downloaded'])) }]
+        : [{ icon:'IconCheckSquare', label:`${T.pendingApproval} (${st.pending.length})`, onClick:()=>this.go('expenses') }, { icon:'IconMegaphone', label:T.postNotice, onClick:()=>{ this.setState({ screen:'community', commTab:'notices' }); this.open('notice'); } }, { icon:'IconBellRing', label:T.remindAll, onClick:()=>this.remindAll() }, { icon:'IconWrench', label:T.complaints, onClick:()=>this.go('complaints') }],
+      openComplaints: st.complaints.filter(c => c.status !== 'resolved').map(c => ({ id:c.id, flat:c.flat, cat:x(COMP_CATS.find(k=>k[0]===c.cat)[1]), text:x(c.t), actionLabel: c.status === 'open' ? T.start : T.resolve, advance:()=>this.advanceComplaint(c.id) })),
+      gateStats: [{ n:st.visitors.filter(v=>v.status==='inside').length, label:T.visitorsIn }, { n:st.passes.length, label:T.expected }, { n:st.help.filter(h=>h.in && !h.out).length, label:T.helpIn }],
+      openNewVisitor: ()=>this.open('visitor'),
+      f: st.f,
+      on: Object.fromEntries(['code','q','passName','comp','vName','vFlat','nTitle','nBody','bVendor','bAmt'].map(k => [k, e => this.setF(k, e.target.value)]).concat([['nPin', v => this.setF('nPin', v)]])),
+      verifyCode: ()=>{ const p = st.passes.find(p => p.code === st.f.code.trim()); this.setState({ codeResult: p ? x(['માન્ય પાસ ✓ ','Valid pass ✓ ']) + p.name + ' → B-304' : x(['આ કોડ માન્ય નથી','This code is not valid']) }); },
+      codeResult: st.codeResult,
+      insideVisitors: st.visitors.filter(v => v.status !== 'out' && v.status !== 'denied').map(vRow),
+      allVisitors: st.visitors.map(vRow),
+      billRows: st.bills.map(b => { const on = !b.paid && st.sel[b.id]; return { icon:b.icon, title:x(b.t), due:b.due, amt:fmt(b.amt), status: b.paid ? T.paid : T.unpaid, ring: on ? '#0f172a' : '#e2e8f0', badgeBg: b.paid ? '#0f172a' : '#fff', badgeFg: b.paid ? '#fff' : '#ef4444', badgeRing: b.paid ? '#0f172a' : '#ef4444', toggle:()=>{ if (!b.paid) this.setState(s => ({ sel:{ ...s.sel, [b.id]: !s.sel[b.id] } })); } }; }),
+      openPay: ()=>{ if (selTotal > 0) this.open('pay'); else this.toast(T.selectBills); },
+      selTotalFmt: fmt(selTotal), selCount: selBills.length,
+      autopay: st.autopay, toggleAutopay: v => { this.setState({ autopay:v }); this.toast(v ? x(['ઓટો-પે ચાલુ થયું','Auto-pay turned on']) : x(['ઓટો-પે બંધ થયું','Auto-pay turned off'])); },
+      historyRows: st.history.map(h => ({ title:x(h.t), date:h.date, via:h.via, no:h.no, amt:fmt(h.amt), dl:()=>this.toast(x(['રસીદ ડાઉનલોડ થઈ: ','Receipt downloaded: ']) + h.no) })),
+      methodRows: [['upi','IconSmartphone','UPI','Google Pay · PhonePe · Paytm · BHIM'],['card','IconCreditCard',x(['ડેબિટ / ક્રેડિટ કાર્ડ','Debit / credit card']),'Visa · Mastercard · RuPay'],['net','IconLandmark',x(['નેટ બેંકિંગ','Net banking']),'SBI · HDFC · ICICI · BoB']].map(m => { const on = st.payMethod === m[0]; return { icon:m[1], label:m[2], sub:m[3], ring: on ? '#0f172a' : '#e2e8f0', ringW: on ? '2px' : '1px', dot: on ? '5px' : '1.5px', pick:()=>this.setState({ payMethod:m[0] }) }; }),
+      doPay: ()=>this.doPay(selBills, selTotal), paying: st.paying, payBtnLabel: st.paying ? x(['પ્રક્રિયા ચાલુ છે…','Processing…']) : `${T.pay} ${fmt(selTotal)}`,
+      receipt: st.receipt ? { amt: fmt(st.receipt.amt), lines:[{ k:x(['રસીદ નં.','Receipt no.']), v:st.receipt.no }, { k:x(['ફ્લેટ','Flat']), v:'B-304' }, { k:x(['પદ્ધતિ','Method']), v:st.receipt.via }, { k:x(['તારીખ','Date']), v:'08 Oct 2026, ' + st.receipt.time }] } : null,
+      dlReceipt: ()=>this.toast(x(['રસીદ PDF ડાઉનલોડ થઈ','Receipt PDF downloaded'])),
+      openPass: ()=>this.open('pass'),
+      passRows: st.passes.map(p => ({ name:p.name, when:x(p.when), code:p.code })),
+      myVisitors: st.visitors.filter(v => v.flat === 'B-304').map(vRow),
+      passWhen: [['today',T.today],['tomorrow',T.tomorrow]].map(w => ({ ...pill(st.f.passWhen === w[0]), label:w[1], pick:()=>this.setF('passWhen', w[0]) })),
+      createPass: ()=>{ const name = st.f.passName.trim() || 'Guest'; const code = String(100000 + Math.floor(Math.random() * 899999)); this.setState(s => ({ passes:[{ name, when: s.f.passWhen === 'today' ? ['આજે','Today'] : ['કાલે','Tomorrow'], code }, ...s.passes], sheet:null, f:{ ...s.f, passName:'' } })); this.toast(x(['પાસ બન્યો અને મહેમાનને મોકલ્યો: ','Pass created and shared: ']) + code); },
+      commTabs: [['notices',T.notices],['events',T.events],['polls',T.polls]].map(c => ({ label:c[1], bg: st.commTab === c[0] ? '#fff' : 'transparent', fg: st.commTab === c[0] ? '#0f172a' : '#64748b', onClick:()=>this.setState({ commTab:c[0] }) })),
+      comm: { notices: st.commTab === 'notices', events: st.commTab === 'events', polls: st.commTab === 'polls' },
+      openNotice: ()=>this.open('notice'),
+      noticeRows: st.notices.map(n => ({ title:x(n.t), body:x(n.b), date:n.date, pin:n.pin })),
+      eventRows: st.events.map(e => ({ title:x(e.t), mon:e.mon, day:e.day, when:x(e.when), place:x(e.place), goingLabel:`${e.going} ${T.going}`, variant: e.me ? 'default' : 'outline', rsvpLabel: e.me ? T.youGoing : T.imGoing, rsvp:()=>this.setState(s => ({ events: s.events.map(v => v.id === e.id ? { ...v, me:!v.me, going: v.going + (v.me ? -1 : 1) } : v) })) })),
+      pollRows: st.polls.map(p => { const tot = p.opts.reduce((a, o) => a + o[1], 0); return { q:x(p.q), meta:`${tot} ${T.votes} · ${T.endsOn} ${p.ends}`, opts: p.opts.map((o, i) => { const pct = Math.round(o[1] / tot * 100); const shown = p.voted !== null; return { label:x(o[0]), pct: shown ? pct + '%' : '', w: shown ? pct + '%' : '0%', ring: p.voted === i ? '#0f172a' : '#e2e8f0', weight: p.voted === i ? 700 : 500, vote:()=>this.vote(p.id, i) }; }) }; }),
+      openComplaint: ()=>this.open('complaint'),
+      complaintRows: (isRes ? st.complaints.filter(c => c.flat === 'B-304') : st.complaints).map(c => { const cs = compStatus[c.status]; return { id: isRes ? c.id : `${c.id} · ${c.flat}`, cat:x(COMP_CATS.find(k=>k[0]===c.cat)[1]), date:c.date, text:x(c.t), statusLabel:T[c.status], badgeBg:cs[0], badgeFg:cs[1], steps:[1,2,3].map(n => ({ bg: n <= cs[2] ? '#0f172a' : '#e2e8f0' })) }; }),
+      compCats: COMP_CATS.map(c => ({ ...pill(st.f.compCat === c[0]), label:x(c[1]), pick:()=>this.setF('compCat', c[0]) })),
+      toggleAttach: ()=>this.setState(s => ({ attached:!s.attached })),
+      attachLabel: st.attached ? x(['ફોટો જોડ્યો: leak.jpg','Photo attached: leak.jpg']) : T.photoAdd,
+      photoLabel: st.attached ? x(['ફોટો લીધો ✓','Photo captured ✓']) : T.photo,
+      billAttachLabel: st.attached ? x(['જોડ્યું: bill_oct.pdf ✓','Attached: bill_oct.pdf ✓']) : T.attach,
+      submitComplaint: ()=>this.submitComplaint(),
+      amenityRows: amenities.map(a => ({ ...pill(a.id === st.amenity), icon:a.icon, name:x(a.n), fee: a.fee ? fmt(a.fee) + (a.id === 'guest' ? x([' / રાત',' / night']) : x([' / સ્લોટ',' / slot'])) : x(['મફત','Free']), pick:()=>this.setState({ amenity:a.id, slot:null }) })),
+      dateRows: DATES.map(d => ({ ...pill(d[2] === st.date), dow:d[L], day:d[2], pick:()=>this.setState({ date:d[2], slot:null }) })),
+      slotRows: SLOTS.map(sl => { const b = bookedNow.includes(sl); const on = st.slot === sl; return { label:sl, bg: on ? '#0f172a' : b ? '#f1f5f9' : '#fff', fg: on ? '#fff' : b ? '#94a3b8' : '#0f172a', deco: b ? 'line-through' : 'none', pick:()=>{ if (!b) this.setState({ slot:sl }); } }; }),
+      bookAmenity: ()=>{ if (!st.slot) return this.toast(T.pickFirst); this.setState(s => ({ bookings:[...s.bookings, { a:s.amenity, d:s.date, s:s.slot, txt:[`${curA.n[0]} · ${s.date} ઓક્ટો · ${s.slot}`, `${curA.n[1]} · ${s.date} Oct · ${s.slot}`], fee:curA.fee }], slot:null })); this.toast(x(['બુકિંગ કન્ફર્મ થયું','Booking confirmed'])); },
+      bookLabel: st.slot ? `${T.book} · ${curA.fee ? fmt(curA.fee) : x(['મફત','Free'])}` : T.pickFirst, bookProps: { style:{ width:'100%', height:48, fontSize:15, opacity: st.slot ? 1 : 0.5 } },
+      hasBookings: st.bookings.length > 0, bookingRows: st.bookings.map(b => ({ text:x(b.txt), fee: b.fee ? fmt(b.fee) : x(['મફત','Free']) })),
+      parkRows: [{ slot:'B-P12', veh:'GJ 01 KX 4521', type:x(['કાર · બેઝમેન્ટ 1','Car · Basement 1']), icon:'IconCar' }, { slot:'B-T07', veh:'GJ 01 SN 0873', type:x(['ટુ-વ્હીલર · સ્ટિલ્ટ','Two-wheeler · Stilt']), icon:'IconZap' }],
+      guestFree: st.guestFree, guestPct: (10 - st.guestFree) * 10,
+      reqGuestParking: ()=>{ if (st.guestFree <= 0) return; this.setState(s => ({ guestFree: s.guestFree - 1 })); this.toast(x(['મહેમાન પાર્કિંગ G-0','Guest slot G-0']) + (11 - st.guestFree) + x([' ફાળવ્યું',' allotted'])); },
+      dirGroups,
+      docRows: [[['સોસાયટી બાય-લૉઝ','Society bye-laws'],'1.2 MB','2024'],[['ઓડિટ રિપોર્ટ 2025–26','Audit report 2025–26'],'860 KB','Sep 2026'],[['AGM મિનિટ્સ 2025','AGM minutes 2025'],'420 KB','Oct 2025'],[['NOC અરજી ફોર્મ','NOC application form'],'95 KB','2024'],[['પાર્કિંગ નિયમો','Parking rules'],'130 KB','Jan 2026'],[['ભાડૂઆત નોંધણી ફોર્મ','Tenant registration form'],'110 KB','2024']].map(d => ({ name:x(d[0]), size:d[1], date:d[2], dl:()=>this.toast(x(['ડાઉનલોડ થયું: ','Downloaded: ']) + x(d[0])) })),
+      helpRows: st.help.map((h, i) => { const isIn = h.in && !h.out; return { ini:x(h.name).slice(0, 2), name:x(h.name), role:x(h.role), flats:h.flats, status:helpStatus(h), showDays: !isW, days:h.days, variant: isIn ? 'outline' : 'default', markLabel: isIn ? T.markOut : T.markIn, mark:()=>this.markHelp(i) }; }),
+      methodSplit: [{ label:'UPI', amt:fmt(st.split.upi) }, { label:x(['કાર્ડ / નેટ','Card / Net']), amt:fmt(st.split.card) }, { label:x(['રોકડ','Cash']), amt:fmt(st.split.cash) }],
+      openCash: ()=>this.open('cash'), remindAll: ()=>this.remindAll(), dlReport: ()=>this.toast(x(['ઓક્ટોબર રિપોર્ટ PDF ડાઉનલોડ થયો','October report PDF downloaded'])),
+      defRows: st.defaulters.map(d => ({ flat:d.flat, name:d.name, amt:fmt(d.amt), months: `${d.months} ${x(['મહિના','month' + (d.months > 1 ? 's' : '')])}`, variant: d.reminded ? 'subtle' : 'outline', remindLabel: d.reminded ? T.reminded : T.remind, remind:()=>{ this.setState(s => ({ defaulters: s.defaulters.map(v => v.flat === d.flat ? { ...v, reminded:true } : v) })); this.toast(x(['WhatsApp અને SMS યાદી મોકલી: ','Reminder sent by WhatsApp & SMS: ']) + d.flat); } })),
+      noDefaulters: st.defaulters.length === 0,
+      catBars: Object.keys(catTot).sort((a, b) => catTot[b] - catTot[a]).map(k => ({ label:x(CATS[k]), amt:fmt(catTot[k]), w: Math.round(catTot[k] / catMax * 100) + '%' })),
+      openBill: ()=>this.open('bill'), hasPending: st.pending.length > 0,
+      pendingRows: st.pending.map((p, i) => ({ title:x(p.t), cat:x(CATS[p.cat]), by:p.by, date:p.date, amt:fmt(p.amt), file:p.file, approve:()=>this.decide(i, true), reject:()=>this.decide(i, false) })),
+      expenseRows: st.expenses.map(e => ({ icon:CAT_ICON[e.cat], title:x(e.t), date:e.date, cat:x(CATS[e.cat]), amt:fmt(e.amt) })),
+      meIni: me[0], meName: me[1], meSub: me[2], moreTiles: moreList,
+      tabs: TABS[role].map(([id, icon]) => { const on = scr === id; return { icon, label: id === 'home' ? T.home : id === 'log' ? T.visitors : id === 'help' ? T.help : T[id], color: on ? '#0f172a' : '#94a3b8', weight: on ? 700 : 500, onClick:()=>this.go(id) }; }),
+      toast: st.toast,
+      sheetOpen: !!st.sheet, sheetTitle: sheetTitles[st.sheet] || '', closeSheet: ()=>this.setState({ sheet:null }),
+      sh: { pay: st.sheet === 'pay', receipt: st.sheet === 'receipt', sos: st.sheet === 'sos', pass: st.sheet === 'pass', complaint: st.sheet === 'complaint', visitor: st.sheet === 'visitor', notice: st.sheet === 'notice', bill: st.sheet === 'bill', cash: st.sheet === 'cash' },
+      sosIdle: !st.sosSent, sosSent: st.sosSent,
+      sosTypes: [['medical','IconPlusCircle',['મેડિકલ','Medical']],['fire','IconAlertTriangle',['આગ','Fire']],['theft','IconShieldAlert',['ચોરી / ઘૂસણખોરી','Theft / intruder']],['lift','IconAlertOctagon',['લિફ્ટમાં ફસાયા','Stuck in lift']]].map(t => ({ bg: st.sosType === t[0] ? '#ef4444' : '#fff', fg: st.sosType === t[0] ? '#fff' : '#0f172a', icon:t[1], label:x(t[2]), pick:()=>this.setState({ sosType:t[0] }) })),
+      sendSos: ()=>this.setState({ sosSent:true, sosActive:true }),
+      callGuard: ()=>this.toast(x(['કૉલ થઈ રહ્યો છે: ભીખાભાઈ (ગેટ)','Calling Bhikhabhai (gate)'])),
+      purposeChips: PURPOSES.map(p => ({ ...pill(st.f.vP === p[0]), label:x(p[1]), pick:()=>this.setF('vP', p[0]) })),
+      submitVisitor: ()=>this.submitVisitor(),
+      submitNotice: ()=>{ const t = st.f.nTitle.trim(); if (!t) return this.toast(x(['શીર્ષક લખો','Add a title'])); this.setState(s => ({ notices:[{ t:[t, t], b:[s.f.nBody, s.f.nBody], date:'08 Oct', pin:s.f.nPin }, ...s.notices], sheet:null, f:{ ...s.f, nTitle:'', nBody:'', nPin:false } })); this.toast(x(['નોટિસ 120 ફ્લેટને મોકલાઈ','Notice sent to 120 flats'])); },
+      expCatChips: Object.keys(CATS).map(k => ({ ...pill(st.f.bCat === k), label:x(CATS[k]), pick:()=>this.setF('bCat', k) })),
+      submitBill: ()=>{ const amt = parseInt(st.f.bAmt, 10); const v = st.f.bVendor.trim() || 'Torrent Power – common light (Oct)'; if (!amt) return this.toast(x(['રકમ લખો','Enter an amount'])); this.setState(s => ({ pending:[...s.pending, { t:[v, v], cat:s.f.bCat, amt, by:'Nilesh Shah', date:'08 Oct', file: s.attached ? 'bill_oct.pdf' : x(['જોડાણ નથી','No attachment']) }], sheet:null, f:{ ...s.f, bVendor:'', bAmt:'' } })); this.toast(x(['બિલ સેક્રેટરીને મંજૂરી માટે મોકલ્યું','Bill sent to the secretary for approval'])); },
+      cashFlats: st.defaulters.map(d => ({ ...pill(st.f.cashFlat === d.flat), label:d.flat, pick:()=>this.setF('cashFlat', d.flat) })),
+      cashAmt: cashD ? fmt(cashD.amt) : '—',
+      recordCash: ()=>{ if (!cashD) return this.toast(x(['ફ્લેટ પસંદ કરો','Pick a flat'])); this.setState(s => ({ collected: s.collected + cashD.amt, fund: s.fund + cashD.amt, split:{ ...s.split, cash: s.split.cash + cashD.amt }, defaulters: s.defaulters.filter(d => d.flat !== cashD.flat), sheet:null, f:{ ...s.f, cashFlat:null } })); this.toast(x(['રોકડ નોંધાઈ, રસીદ મોકલી: ','Cash recorded, receipt sent: ']) + cashD.flat); },
+      wide, wideTall,
+    };
+  }
+  nav(id) { this.setState({ screen:id }); }
+  setVisitor(id, patch) { this.setState(s => ({ visitors: s.visitors.map(v => v.id === id ? { ...v, ...patch } : v) })); }
+  exitVisitor(id) { this.setVisitor(id, { status:'out', out:nowT() }); }
+  markHelp(i) { this.setState(s => ({ help: s.help.map((h, j) => { if (j !== i) return h; if (h.in && !h.out) return { ...h, out:nowT() }; return { ...h, in:nowT(), out:null, days:h.days + (h.in ? 0 : 1) }; }) })); }
+  vote(id, i) { this.setState(s => ({ polls: s.polls.map(p => { if (p.id !== id || p.voted !== null) return p; return { ...p, voted:i, opts: p.opts.map((o, j) => j === i ? [o[0], o[1] + 1] : o) }; }) })); }
+  remindAll() { this.setState(s => ({ defaulters: s.defaulters.map(d => ({ ...d, reminded:true })) })); this.toast(this.state.lang === 'gu' ? 'બધા બાકીદારોને યાદી મોકલી' : 'Reminders sent to all pending flats'); }
+  advanceComplaint(id) { this.setState(s => ({ complaints: s.complaints.map(c => c.id === id ? { ...c, status: c.status === 'open' ? 'progress' : 'resolved' } : c) })); }
+  decide(i, ok) {
+    const p = this.state.pending[i]; const gu = this.state.lang === 'gu';
+    this.setState(s => ({ pending: s.pending.filter((_, j) => j !== i), expenses: ok ? [{ cat:p.cat, t:p.t, amt:p.amt, date:'08 Oct' }, ...s.expenses] : s.expenses, fund: ok ? s.fund - p.amt : s.fund }));
+    this.toast(ok ? (gu ? 'મંજૂર – ચુકવણી માટે ખજાનચીને મોકલ્યું' : 'Approved – sent to treasurer for payment') : (gu ? 'બિલ નામંજૂર' : 'Bill rejected'));
+  }
+  doPay(sel, total) {
+    if (this.state.paying || !sel.length) return;
+    this.setState({ paying:true });
+    this._p = setTimeout(() => {
+      const via = { upi:'UPI', card:'Card', net:'Net banking' }[this.state.payMethod];
+      const no = 'SR-26-10' + String(Math.floor(Math.random() * 90) + 10);
+      const ids = sel.map(b => b.id);
+      this.setState(s => ({ paying:false, sheet:'receipt', receipt:{ amt:total, no, via, time:nowT() },
+        bills: s.bills.map(b => ids.includes(b.id) ? { ...b, paid:true } : b),
+        history: [{ t: sel.length > 1 ? ['ઓક્ટોબર બિલ (' + sel.length + ')', 'October bills (' + sel.length + ')'] : sel[0].t, amt:total, date:'08 Oct', via, no }, ...s.history],
+        collected: s.collected + total, fund: s.fund + total, split:{ ...s.split, [this.state.payMethod === 'upi' ? 'upi' : 'card']: s.split[this.state.payMethod === 'upi' ? 'upi' : 'card'] + total } }));
+    }, 1400);
+  }
+  submitComplaint() {
+    const f = this.state.f; const gu = this.state.lang === 'gu';
+    if (!f.comp.trim()) return this.toast(gu ? 'વિગત લખો' : 'Add a short description');
+    const id = 'C-' + (121 + this.state.complaints.length);
+    this.setState(s => ({ complaints:[{ id, flat:'B-304', cat:s.f.compCat, t:[s.f.comp, s.f.comp], status:'open', date:'08 Oct' }, ...s.complaints], sheet:null, f:{ ...s.f, comp:'' } }));
+    this.toast((gu ? 'ફરિયાદ નોંધાઈ: ' : 'Complaint logged: ') + id);
+  }
+  submitVisitor() {
+    const f = this.state.f; const gu = this.state.lang === 'gu';
+    const name = f.vName.trim() || 'Visitor'; const flat = (f.vFlat.trim() || 'B-304').toUpperCase();
+    const id = Date.now();
+    this.setState(s => ({ visitors:[{ id, name, flat, p:s.f.vP, in:nowT(), status:'waiting' }, ...s.visitors], sheet:null, f:{ ...s.f, vName:'', vFlat:'' } }));
+    this.toast((gu ? 'મંજૂરી માટે મોકલ્યું: ' : 'Approval request sent to ') + flat);
+    if (flat !== 'B-304') this._v = setTimeout(() => { this.setVisitor(id, { status:'inside' }); this.toast((gu ? 'સભ્યે મંજૂરી આપી: ' : 'Resident approved: ') + name); }, 3000);
+  }
+}
+</script>
+</body>
+</html>

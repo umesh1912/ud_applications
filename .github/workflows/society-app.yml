@@ -1,0 +1,61 @@
+name: Society App APK
+
+# Shivam Residency is a React + Capacitor app (not Flutter), so it builds separately from build.yml.
+on:
+  push:
+    branches: [main, society-app]
+    paths: ["web_apps/society_app/**", ".github/workflows/society-app.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+defaults:
+  run:
+    working-directory: web_apps/society_app
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web_apps/society_app/package-lock.json
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: android-actions/setup-android@v3
+
+      - run: npm ci
+
+      - name: Test API
+        run: npm test
+
+      - name: Build APK
+        run: |
+          chmod +x web/android/gradlew
+          ../../tool/ci_run.sh "apk society_app" npm run apk -w web
+          mkdir -p "$GITHUB_WORKSPACE/out"
+          cp web/android/app/build/outputs/apk/debug/app-debug.apk "$GITHUB_WORKSPACE/out/society_app.apk"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: society_app
+          path: out/society_app.apk
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: society-app-${{ github.run_number }}
+          name: Society App (Shivam Residency) ${{ github.run_number }}
+          prerelease: ${{ github.ref != 'refs/heads/main' }}
+          body: |
+            **Install on your phone:** download `society_app.apk` and open it (allow "Install unknown apps" when Android asks).
+            Offline demo: data stays on the phone. Switch between Resident, Secretary, Treasurer and Watchman under **More → Switch role**.
+          files: out/society_app.apk
