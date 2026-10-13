@@ -27,12 +27,14 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/icon/icon.png
 
 flutter_launcher_icons:
   android: true
   ios: false
   image_path: assets/icon/icon.png
-  adaptive_icon_background: "{accent}"
+  adaptive_icon_background: assets/icon/background.png
   adaptive_icon_foreground: assets/icon/foreground.png
 """)
 print("pubspec:", app)

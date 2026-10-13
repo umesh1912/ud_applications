@@ -109,14 +109,19 @@ class _WelcomeState extends State<_Welcome> {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
           children: [
-            Container(
-              width: 72,
-              height: 72,
-              decoration: BoxDecoration(
-                color: t.accent,
-                borderRadius: BorderRadius.circular(24),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(26),
+              child: Image.asset(
+                'assets/icon/icon.png',
+                width: 84,
+                height: 84,
+                errorBuilder: (_, __, ___) => Container(
+                  width: 84,
+                  height: 84,
+                  color: t.accent,
+                  child: Icon(widget.spec.icon, color: t.onAccent, size: 40),
+                ),
               ),
-              child: Icon(widget.spec.icon, color: t.onAccent, size: 36),
             ),
             const SizedBox(height: 28),
             Text(widget.spec.name, style: text.displayMedium),

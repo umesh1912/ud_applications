@@ -65,6 +65,11 @@ Package names are `com.udapps.<folder name>`, e.g. `com.udapps.doc_scanner`.
 Play also needs, per app: a privacy policy URL, screenshots, a short and full
 description, and the Data safety form (these apps collect and share no data; files stay on the phone).
 
+## Icons
+
+`python3 tool/make_icons.py` draws every app icon (needs `pip install cairosvg pillow`).
+Play Store icons (512 × 512) are in `store/`, with `store/all-icons-preview.png` showing the set.
+
 ## Running locally
 
 ```bash
