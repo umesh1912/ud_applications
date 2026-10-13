@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="_ds/shadcn-ui-design-system-22e1a246-46b4-4b56-9804-9882cdb9df20/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/shadcn-ui-design-system-22e1a246-46b4-4b56-9804-9882cdb9df20/tokens/colors.css">
+<link rel="stylesheet" href="_ds/shadcn-ui-design-system-22e1a246-46b4-4b56-9804-9882cdb9df20/tokens/typography.css">
+<link rel="stylesheet" href="_ds/shadcn-ui-design-system-22e1a246-46b4-4b56-9804-9882cdb9df20/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/shadcn-ui-design-system-22e1a246-46b4-4b56-9804-9882cdb9df20/components/components.css">
+<link rel="stylesheet" href="_ds/shadcn-ui-design-system-22e1a246-46b4-4b56-9804-9882cdb9df20/styles.css">
+<script src="_ds/shadcn-ui-design-system-22e1a246-46b4-4b56-9804-9882cdb9df20/_ds_bundle.js"></script>
+<style>body{margin:0;background:linear-gradient(180deg,#f8fafc,#eef2ff);font-family:Inter,system-ui,sans-serif;color:#0f172a}a{color:#0f172a}a:hover{color:#334155}.dv-turn{padding:40px 44px 32px;scroll-margin-top:16px}.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 8px}.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#0f172a;color:#fff;border-radius:4px;text-decoration:none}.dv-tname{font:600 13px/1.2 Inter,system-ui,sans-serif}.dv-opts{display:flex;flex-wrap:wrap;gap:36px 28px;align-items:flex-start}.dv-opt{flex:none;display:flex;flex-direction:column;gap:10px;width:340px;scroll-margin-top:16px}.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:#e2e8f0;color:#0f172a;border-radius:5px;text-decoration:none}.dv-olabel{display:flex;flex-direction:column;gap:4px;font:400 12px/1.45 Inter,system-ui,sans-serif;color:#64748b;text-wrap:pretty}.dv-opt:target .dv-oid{background:#0f172a;color:#fff}.dv-next{margin:28px 0 0;font:12px/1.5 Inter,system-ui,sans-serif;color:#64748b}</style>
+</helmet>
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Ten app concepts · color edition</span></div>
+<p style="margin:0 0 28px;max-width:720px;font-size:13px;line-height:1.55;color:#475569;text-wrap:pretty">Each concept targets a narrow, everyday problem that general-purpose apps leave unsolved: things owned but rarely used, food and money quietly wasted, people living alone, time lost on commutes. Each app now has its own color and gradient, built on the Poster gradient from the shadcn/ui system. Every screen has one working interaction.</p>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1a">
+<div class="dv-olabel"><div style="display:flex;gap:8px;align-items:baseline"><a class="dv-oid" href="#1a">1a</a><strong style="color:#0f172a;font-size:13px">Lendr — street tool library</strong></div><span>A typical drill is used for minutes in its lifetime. Lendr lets you borrow from neighbors within walking distance. Tap Request.</span></div>
+<div style="width:340px;height:700px;background:#0f172a;border-radius:46px;padding:10px;box-sizing:border-box">
+<div style="width:100%;height:100%;background:linear-gradient(180deg,#fff7ed 0%,#fff 42%);border-radius:37px;overflow:hidden;display:flex;flex-direction:column">
+<div style="display:flex;justify-content:space-between;padding:14px 26px 6px;font-size:13px;font-weight:600"><span>9:41</span><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconBattery" size="16" hint-size="16px,16px"></x-import></div>
+<div style="padding:12px 20px 0;display:flex;flex-direction:column;gap:14px;flex:1;overflow:hidden">
+<div style="display:flex;align-items:center;gap:6px;font-size:13px;color:#64748b"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconMapPin" size="14" hint-size="14px,14px"></x-import>Elm Street · 400 m radius</div>
+<div style="font-size:28px;font-weight:700;letter-spacing:-0.02em;line-height:1.1;background:linear-gradient(135deg,#f59e0b,#ea580c);-webkit-background-clip:text;background-clip:text;color:transparent">Your street owns<br>214 tools.</div>
+<div style="display:flex;align-items:center;gap:8px;height:40px;padding:0 12px;border-radius:6px;box-shadow:inset 0 0 0 1px #cbd5e1;color:#94a3b8;font-size:14px"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconSearch" size="16" hint-size="16px,16px"></x-import>Ladder, tent, sewing machine…</div>
+<div style="font-size:12px;font-weight:600;color:#64748b;letter-spacing:0.04em;text-transform:uppercase">Available now</div>
+<div style="display:flex;flex-direction:column">
+<sc-for list="{{ lendItems }}" as="it" hint-placeholder-count="4">
+<div style="display:flex;align-items:center;gap:12px;padding:11px 0;box-shadow:inset 0 -1px 0 #e2e8f0">
+<div style="width:40px;height:40px;border-radius:6px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;flex:none"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="{{ it.icon }}" size="18" hint-size="18px,18px"></x-import></div>
+<div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600">{{ it.name }}</div><div style="font-size:12px;color:#64748b">{{ it.owner }} · {{ it.dist }}</div></div>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" variant="{{ it.variant }}" on-click="{{ it.onClick }}" dc-props="{{ bs.sm }}" hint-size="84px,32px">{{ it.label }}</x-import>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="display:flex;justify-content:space-around;padding:12px 16px 26px;box-shadow:inset 0 1px 0 #e2e8f0;color:#94a3b8">
+<span style="color:#f59e0b"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconHome" size="22" hint-size="22px,22px"></x-import></span>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconMap" size="22" hint-size="22px,22px"></x-import>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconPlus" size="22" hint-size="22px,22px"></x-import>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconUser" size="22" hint-size="22px,22px"></x-import>
+</div>
+</div></div>
+</div>
+
+<div class="dv-opt" id="1b">
+<div class="dv-olabel"><div style="display:flex;gap:8px;align-items:baseline"><a class="dv-oid" href="#1b">1b</a><strong style="color:#0f172a;font-size:13px">Hush — find a quiet place</strong></div><span>Crowd-sourced noise readings for cafés, libraries and parks, for remote workers and noise-sensitive people. Switch the time of day.</span></div>
+<div style="width:340px;height:700px;background:#0f172a;border-radius:46px;padding:10px;box-sizing:border-box">
+<div style="width:100%;height:100%;background:linear-gradient(180deg,#f5f3ff 0%,#fff 42%);border-radius:37px;overflow:hidden;display:flex;flex-direction:column">
+<div style="display:flex;justify-content:space-between;padding:14px 26px 6px;font-size:13px;font-weight:600"><span>9:41</span><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconBattery" size="16" hint-size="16px,16px"></x-import></div>
+<div style="padding:12px 20px 0;display:flex;flex-direction:column;gap:16px;flex:1;overflow:hidden">
+<div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:20px;font-weight:700;letter-spacing:-0.01em;background:linear-gradient(135deg,#4e3aba,#7c3aed);-webkit-background-clip:text;background-clip:text;color:transparent">Hush</span><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconEar" size="20" hint-size="20px,20px"></x-import></div>
+<div style="display:flex;padding:4px;background:#f1f5f9;border-radius:6px;gap:4px">
+<sc-for list="{{ quietTimes }}" as="t" hint-placeholder-count="3">
+<div onClick="{{ t.onClick }}" style="flex:1;text-align:center;padding:6px 0;border-radius:3px;font-size:13px;font-weight:500;cursor:pointer;background:{{ t.bg }};color:{{ t.color }};box-shadow:{{ t.shadow }}">{{ t.label }}</div>
+</sc-for>
+</div>
+<div style="padding:22px 20px;border-radius:6px;background:linear-gradient(135deg,#4e3aba,#7c3aed);color:#fff;display:flex;flex-direction:column;gap:6px">
+<span style="font-size:12px;color:#94a3b8">Quietest near you</span>
+<div style="display:flex;align-items:baseline;gap:6px"><span style="font-size:56px;font-weight:800;letter-spacing:-0.03em;line-height:1">{{ quietTop.db }}</span><span style="font-size:16px;color:#94a3b8">dB</span></div>
+<span style="font-size:15px;font-weight:600">{{ quietTop.name }}</span>
+<span style="font-size:12px;color:#94a3b8">{{ quietTop.type }} · {{ quietTop.dist }}</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:14px">
+<sc-for list="{{ quietSpots }}" as="s" hint-placeholder-count="4">
+<div style="display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;justify-content:space-between;font-size:13px"><span style="font-weight:600">{{ s.name }}</span><span style="color:#64748b">{{ s.db }} dB</span></div>
+<div style="height:6px;border-radius:40px;background:#f1f5f9;overflow:hidden"><div style="height:100%;width:{{ s.pct }};background:linear-gradient(135deg,#4e3aba,#7c3aed);border-radius:40px;transition:width 300ms"></div></div>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="display:flex;justify-content:space-around;padding:12px 16px 26px;box-shadow:inset 0 1px 0 #e2e8f0;color:#94a3b8">
+<span style="color:#4e3aba"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconCompass" size="22" hint-size="22px,22px"></x-import></span>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconMic" size="22" hint-size="22px,22px"></x-import>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconStar" size="22" hint-size="22px,22px"></x-import>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconUser" size="22" hint-size="22px,22px"></x-import>
+</div>
+</div></div>
+</div>
+
+<div class="dv-opt" id="1c">
+<div class="dv-olabel"><div style="display:flex;gap:8px;align-items:baseline"><a class="dv-oid" href="#1c">1c</a><strong style="color:#0f172a;font-size:13px">Use-By — fridge countdown</strong></div><span>Scan a grocery receipt; the app tracks what expires next and suggests a dinner using it. Check items off as you use them.</span></div>
+<div style="width:340px;height:700px;background:#0f172a;border-radius:46px;padding:10px;box-sizing:border-box">
+<div style="width:100%;height:100%;background:linear-gradient(180deg,#ecfdf5 0%,#fff 42%);border-radius:37px;overflow:hidden;display:flex;flex-direction:column">
+<div style="display:flex;justify-content:space-between;padding:14px 26px 6px;font-size:13px;font-weight:600"><span>9:41</span><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconBattery" size="16" hint-size="16px,16px"></x-import></div>
+<div style="padding:12px 20px 0;display:flex;flex-direction:column;gap:16px;flex:1;overflow:hidden">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+<div style="flex:1;min-width:0"><div style="font-size:13px;color:#64748b">Tuesday</div><div style="font-size:22px;font-weight:700;letter-spacing:-0.02em;line-height:1.2">{{ fridgeHeadline }}</div></div>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" variant="icon" icon="IconScan" aria-label="Scan receipt" hint-size="40px,40px"></x-import>
+</div>
+<div style="display:flex;flex-direction:column;gap:2px">
+<sc-for list="{{ fridgeItems }}" as="f" hint-placeholder-count="5">
+<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;box-shadow:inset 0 -1px 0 #e2e8f0;opacity:{{ f.opacity }}">
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Checkbox" label="{{ f.name }}" checked="{{ f.used }}" on-change="{{ f.onChange }}" hint-size="160px,20px"></x-import>
+<span style="font-size:12px;font-weight:600;padding:3px 8px;border-radius:40px;background:{{ f.badgeBg }};color:{{ f.badgeColor }}">{{ f.when }}</span>
+</div>
+</sc-for>
+</div>
+<div style="border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0;padding:16px;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:#64748b"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconUtensils" size="14" hint-size="14px,14px"></x-import>TONIGHT, 20 MIN</div>
+<div style="font-size:16px;font-weight:600;line-height:1.3">Spinach &amp; feta omelette with yogurt dip</div>
+<div style="font-size:13px;color:#64748b">Uses 3 of your expiring items</div>
+</div>
+</div>
+<div style="display:flex;justify-content:space-around;padding:12px 16px 26px;box-shadow:inset 0 1px 0 #e2e8f0;color:#94a3b8">
+<span style="color:#10b981"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconClock" size="22" hint-size="22px,22px"></x-import></span>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconUtensils" size="22" hint-size="22px,22px"></x-import>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconShoppingBag" size="22" hint-size="22px,22px"></x-import>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconSettings" size="22" hint-size="22px,22px"></x-import>
+</div>
+</div></div>
+</div>
+
+<div class="dv-opt" id="1d">
+<div class="dv-olabel"><div style="display:flex;gap:8px;align-items:baseline"><a class="dv-oid" href="#1d">1d</a><strong style="color:#0f172a;font-size:13px">Kin Tapes — family oral history</strong></div><span>One question a week to ask a parent or grandparent, recorded as voice. Builds an audio archive before the stories are lost. Tap record.</span></div>
+<div style="width:340px;height:700px;background:#0f172a;border-radius:46px;padding:10px;box-sizing:border-box">
+<div style="width:100%;height:100%;background:linear-gradient(160deg,#db4e66 0%,#a24688 45%,#4e3aba 100%);border-radius:37px;overflow:hidden;display:flex;flex-direction:column;color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)">
+<div style="display:flex;justify-content:space-between;padding:14px 26px 6px;font-size:13px;font-weight:600"><span>9:41</span><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconBattery" size="16" hint-size="16px,16px"></x-import></div>
+<div style="padding:20px 24px 0;display:flex;flex-direction:column;gap:18px;flex:1;overflow:hidden">
+<div style="display:flex;align-items:center;gap:10px"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Avatar" initials="RM" size="{{ 36 }}" style="color:#0f172a" hint-size="36px,36px"></x-import><div><div style="font-size:14px;font-weight:600">Ask Rosa</div><div style="font-size:12px;color:rgba(255,255,255,.75)">Question 14 of 52</div></div></div>
+<div style="font-size:26px;font-weight:700;letter-spacing:-0.02em;line-height:1.25;text-wrap:pretty">“What did the kitchen in your first home smell like?”</div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px">
+<div style="font:600 32px Menlo,ui-monospace,monospace;letter-spacing:0.02em">{{ recTime }}</div>
+<div style="display:flex;gap:3px;align-items:center;height:36px">
+<sc-for list="{{ wave }}" as="w" hint-placeholder-count="24"><div style="width:4px;border-radius:40px;background:{{ w.color }};height:{{ w.h }};transition:height 200ms"></div></sc-for>
+</div>
+<div onClick="{{ toggleRec }}" style="width:84px;height:84px;border-radius:96px;background:{{ recBg }};display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 0 6px rgba(255,255,255,.18)"><div style="width:{{ recInner }};height:{{ recInner }};border-radius:{{ recRadius }};background:#fff;transition:all 200ms"></div></div>
+<div style="font-size:13px;color:rgba(255,255,255,.75)">{{ recHint }}</div>
+</div>
+</div>
+<div style="display:flex;justify-content:space-around;padding:12px 16px 26px;box-shadow:inset 0 1px 0 rgba(255,255,255,.18);color:rgba(255,255,255,.55)">
+<span style="color:#fff"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconMic" size="22" hint-size="22px,22px"></x-import></span>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconBookOpen" size="22" hint-size="22px,22px"></x-import>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconUsers" size="22" hint-size="22px,22px"></x-import>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconSettings" size="22" hint-size="22px,22px"></x-import>
+</div>
+</div></div>
+</div>
+
+<div class="dv-opt" id="1e">
+<div class="dv-olabel"><div style="display:flex;gap:8px;align-items:baseline"><a class="dv-oid" href="#1e">1e</a><strong style="color:#0f172a;font-size:13px">Mend — repair before replace</strong></div><span>Photograph a broken thing, get a likely diagnosis, then choose a DIY guide, a volunteer repair café or a paid fixer. Pick a route.</span></div>
+<div style="width:340px;height:700px;background:#0f172a;border-radius:46px;padding:10px;box-sizing:border-box">
+<div style="width:100%;height:100%;background:linear-gradient(180deg,#f0fdfa 0%,#fff 42%);border-radius:37px;overflow:hidden;display:flex;flex-direction:column">
+<div style="display:flex;justify-content:space-between;padding:14px 26px 6px;font-size:13px;font-weight:600"><span>9:41</span><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconBattery" size="16" hint-size="16px,16px"></x-import></div>
+<div style="padding:8px 20px 0;display:flex;flex-direction:column;gap:14px;flex:1;overflow:hidden">
+<div style="display:flex;align-items:center;gap:8px"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconChevronLeft" size="20" hint-size="20px,20px"></x-import><span style="font-size:15px;font-weight:600">Diagnosis</span></div>
+<div style="height:150px;border-radius:6px;background:repeating-linear-gradient(135deg,#f1f5f9 0 10px,#f8fafc 10px 20px);display:flex;align-items:flex-end;padding:10px;box-sizing:border-box"><span style="font:500 11px Menlo,ui-monospace,monospace;color:#64748b">your photo · desk lamp</span></div>
+<div><div style="font-size:22px;font-weight:700;letter-spacing:-0.02em">Loose inline switch</div><div style="font-size:13px;color:#64748b;margin-top:2px">Likely fix: replace a $4 rocker switch</div></div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<sc-for list="{{ mendRoutes }}" as="r" hint-placeholder-count="3">
+<div onClick="{{ r.onClick }}" style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:6px;cursor:pointer;box-shadow:{{ r.ring }};transition:box-shadow 150ms">
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="{{ r.icon }}" size="18" hint-size="18px,18px"></x-import>
+<div style="flex:1"><div style="font-size:14px;font-weight:600">{{ r.title }}</div><div style="font-size:12px;color:#64748b">{{ r.meta }}</div></div>
+<span style="font-size:14px;font-weight:600">{{ r.cost }}</span>
+</div>
+</sc-for>
+</div>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" dc-props="{{ bs.mend }}" hint-size="100%,40px">{{ mendCta }}</x-import>
+</div>
+<div style="height:24px"></div>
+</div></div>
+</div>
+
+<div class="dv-opt" id="1f">
+<div class="dv-olabel"><div style="display:flex;gap:8px;align-items:baseline"><a class="dv-oid" href="#1f">1f</a><strong style="color:#0f172a;font-size:13px">Plotswap — trade garden surplus</strong></div><span>Home gardeners always grow too much of one thing. Swipe-style offers from nearby plots; trade zucchini for tomatoes, no money involved.</span></div>
+<div style="width:340px;height:700px;background:#0f172a;border-radius:46px;padding:10px;box-sizing:border-box">
+<div style="width:100%;height:100%;background:linear-gradient(180deg,#f7fee7 0%,#fff 42%);border-radius:37px;overflow:hidden;display:flex;flex-direction:column">
+<div style="display:flex;justify-content:space-between;padding:14px 26px 6px;font-size:13px;font-weight:600"><span>9:41</span><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconBattery" size="16" hint-size="16px,16px"></x-import></div>
+<div style="padding:12px 20px 0;display:flex;flex-direction:column;gap:16px;flex:1;overflow:hidden">
+<div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:20px;font-weight:700;background:linear-gradient(135deg,#65a30d,#15803d);-webkit-background-clip:text;background-clip:text;color:transparent">Plotswap</span><span style="font-size:13px;color:#64748b">{{ swapCount }} swaps this season</span></div>
+<div style="display:flex;gap:8px;align-items:center;padding:10px 12px;background:#fff;border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0;font-size:13px"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconSprout" size="16" hint-size="16px,16px"></x-import><span>You offer: <strong>Zucchini, basil</strong></span></div>
+<div style="position:relative;flex:1;max-height:340px">
+<div style="position:absolute;inset:16px 14px -8px;background:#fff;border-radius:8px;box-shadow:inset 0 0 0 1px #e2e8f0"></div>
+<div style="position:absolute;inset:8px 7px 0;background:#fff;border-radius:8px;box-shadow:inset 0 0 0 1px #e2e8f0"></div>
+<div style="position:absolute;inset:0 0 8px;background:#fff;border-radius:8px;box-shadow:inset 0 0 0 1px #e2e8f0,0 4px 6px rgba(0,0,0,.09);display:flex;flex-direction:column;overflow:hidden">
+<div style="flex:1;background:repeating-linear-gradient(135deg,#f1f5f9 0 10px,#f8fafc 10px 20px);display:flex;align-items:flex-end;padding:10px"><span style="font:500 11px Menlo,ui-monospace,monospace;color:#64748b">photo · {{ offer.what }}</span></div>
+<div style="padding:16px;display:flex;flex-direction:column;gap:4px">
+<div style="font-size:20px;font-weight:700;letter-spacing:-0.01em">{{ offer.what }}</div>
+<div style="font-size:13px;color:#64748b">{{ offer.who }} · {{ offer.dist }}</div>
+<div style="font-size:13px;margin-top:6px">Wants: <strong>{{ offer.wants }}</strong></div>
+</div>
+</div>
+</div>
+<div style="display:flex;gap:12px;justify-content:center;padding-bottom:8px">
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" variant="outline" on-click="{{ passOffer }}" dc-props="{{ bs.half }}" hint-size="130px,40px">Pass</x-import>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" on-click="{{ takeOffer }}" dc-props="{{ bs.swap }}" hint-size="130px,40px">Propose swap</x-import>
+</div>
+</div>
+<div style="display:flex;justify-content:space-around;padding:12px 16px 26px;box-shadow:inset 0 1px 0 #e2e8f0;color:#94a3b8;background:#fff">
+<span style="color:#65a30d"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconRepeat" size="22" hint-size="22px,22px"></x-import></span>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconMap" size="22" hint-size="22px,22px"></x-import>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconMessageCircle" size="22" hint-size="22px,22px"></x-import>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconUser" size="22" hint-size="22px,22px"></x-import>
+</div>
+</div></div>
+</div>
+
+<div class="dv-opt" id="1g">
+<div class="dv-olabel"><div style="display:flex;gap:8px;align-items:baseline"><a class="dv-oid" href="#1g">1g</a><strong style="color:#0f172a;font-size:13px">Ride Lingo — lessons sized to your commute</strong></div><span>Reads your transit route and fits a language lesson exactly between your stops, so it always ends when you get off. Answer the card.</span></div>
+<div style="width:340px;height:700px;background:#0f172a;border-radius:46px;padding:10px;box-sizing:border-box">
+<div style="width:100%;height:100%;background:linear-gradient(180deg,#eff6ff 0%,#fff 42%);border-radius:37px;overflow:hidden;display:flex;flex-direction:column">
+<div style="display:flex;justify-content:space-between;padding:14px 26px 6px;font-size:13px;font-weight:600"><span>9:41</span><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconBattery" size="16" hint-size="16px,16px"></x-import></div>
+<div style="padding:12px 20px 0;display:flex;flex-direction:column;gap:18px;flex:1;overflow:hidden">
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;justify-content:space-between;font-size:13px"><span style="font-weight:600">Line 4 → Central</span><span style="color:#64748b">14 min left</span></div>
+<div style="position:relative;height:16px;display:flex;align-items:center">
+<div style="position:absolute;left:0;right:0;height:2px;background:#e2e8f0"></div>
+<div style="position:absolute;left:0;width:40%;height:2px;background:linear-gradient(135deg,#2563eb,#0ea5e9)"></div>
+<div style="position:relative;display:flex;justify-content:space-between;width:100%">
+<div style="width:10px;height:10px;border-radius:96px;background:linear-gradient(135deg,#2563eb,#0ea5e9)"></div><div style="width:10px;height:10px;border-radius:96px;background:linear-gradient(135deg,#2563eb,#0ea5e9)"></div><div style="width:14px;height:14px;border-radius:96px;background:#fff;box-shadow:inset 0 0 0 4px #2563eb;margin-top:-2px"></div><div style="width:10px;height:10px;border-radius:96px;background:#e2e8f0"></div><div style="width:10px;height:10px;border-radius:96px;background:#e2e8f0"></div><div style="width:10px;height:10px;border-radius:96px;background:#e2e8f0"></div>
+</div>
+</div>
+<div style="font-size:12px;color:#64748b">Card 4 of 9 · Spanish · ordering food</div>
+</div>
+<div style="padding:24px 20px;border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0;display:flex;flex-direction:column;gap:6px">
+<span style="font-size:12px;color:#64748b">How do you say</span>
+<span style="font-size:24px;font-weight:700;letter-spacing:-0.02em;line-height:1.2">“The check, please.”</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<sc-for list="{{ quizOpts }}" as="q" hint-placeholder-count="3">
+<div onClick="{{ q.onClick }}" style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-radius:6px;font-size:15px;font-weight:500;cursor:pointer;background:{{ q.bg }};color:{{ q.color }};box-shadow:{{ q.ring }}"><span>{{ q.text }}</span><span style="font-size:12px">{{ q.tag }}</span></div>
+</sc-for>
+</div>
+<div style="font-size:13px;color:#64748b;text-align:center">{{ quizNote }}</div>
+</div>
+<div style="display:flex;justify-content:space-around;padding:12px 16px 26px;box-shadow:inset 0 1px 0 #e2e8f0;color:#94a3b8">
+<span style="color:#2563eb"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconNavigation" size="22" hint-size="22px,22px"></x-import></span>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconLanguages" size="22" hint-size="22px,22px"></x-import>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconHeadphones" size="22" hint-size="22px,22px"></x-import>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconUser" size="22" hint-size="22px,22px"></x-import>
+</div>
+</div></div>
+</div>
+
+<div class="dv-opt" id="1h">
+<div class="dv-olabel"><div style="display:flex;gap:8px;align-items:baseline"><a class="dv-oid" href="#1h">1h</a><strong style="color:#0f172a;font-size:13px">Wear Count — cost per wear</strong></div><span>Log what you wear and see each item's real cost per wear drop. Surfaces clothes you forgot you own before you buy more. Tap Wore today.</span></div>
+<div style="width:340px;height:700px;background:#0f172a;border-radius:46px;padding:10px;box-sizing:border-box">
+<div style="width:100%;height:100%;background:linear-gradient(180deg,#fdf2f8 0%,#fff 42%);border-radius:37px;overflow:hidden;display:flex;flex-direction:column">
+<div style="display:flex;justify-content:space-between;padding:14px 26px 6px;font-size:13px;font-weight:600"><span>9:41</span><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconBattery" size="16" hint-size="16px,16px"></x-import></div>
+<div style="padding:12px 20px 0;display:flex;flex-direction:column;gap:16px;flex:1;overflow:hidden">
+<div style="font-size:24px;font-weight:700;letter-spacing:-0.02em;background:linear-gradient(135deg,#db4e66,#a24688);-webkit-background-clip:text;background-clip:text;color:transparent;align-self:flex-start">Closet</div>
+<div style="padding:14px;border-radius:6px;background:#f1f5f9;display:flex;gap:12px;align-items:center">
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconShirt" size="20" hint-size="20px,20px"></x-import>
+<div style="font-size:13px;line-height:1.4"><strong>11 items</strong> not worn in 90 days. The grey wool coat is one.</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<sc-for list="{{ closet }}" as="c" hint-placeholder-count="4">
+<div style="border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0;overflow:hidden;display:flex;flex-direction:column">
+<div style="height:88px;background:repeating-linear-gradient(135deg,#f1f5f9 0 8px,#f8fafc 8px 16px)"></div>
+<div style="padding:10px;display:flex;flex-direction:column;gap:2px">
+<span style="font-size:13px;font-weight:600">{{ c.name }}</span>
+<span style="font-size:20px;font-weight:700;letter-spacing:-0.01em">{{ c.cpw }}<span style="font-size:11px;font-weight:500;color:#64748b"> /wear</span></span>
+<span style="font-size:11px;color:#64748b">{{ c.wears }} wears · paid {{ c.price }}</span>
+<div onClick="{{ c.onClick }}" style="margin-top:6px;text-align:center;font-size:12px;font-weight:600;padding:6px 0;border-radius:6px;cursor:pointer;background:{{ c.bg }};color:{{ c.color }}">{{ c.label }}</div>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="display:flex;justify-content:space-around;padding:12px 16px 26px;box-shadow:inset 0 1px 0 #e2e8f0;color:#94a3b8">
+<span style="color:#db4e66"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconShirt" size="22" hint-size="22px,22px"></x-import></span>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconCalendar" size="22" hint-size="22px,22px"></x-import>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconCamera" size="22" hint-size="22px,22px"></x-import>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconUser" size="22" hint-size="22px,22px"></x-import>
+</div>
+</div></div>
+</div>
+
+<div class="dv-opt" id="1i">
+<div class="dv-olabel"><div style="display:flex;gap:8px;align-items:baseline"><a class="dv-oid" href="#1i">1i</a><strong style="color:#0f172a;font-size:13px">Still Here — daily check-in</strong></div><span>For people living alone. One tap a day says you're fine; if you miss your window, your chosen circle gets a gentle alert. Tap the circle.</span></div>
+<div style="width:340px;height:700px;background:#0f172a;border-radius:46px;padding:10px;box-sizing:border-box">
+<div style="width:100%;height:100%;background:linear-gradient(180deg,#fff1f2 0%,#fff 42%);border-radius:37px;overflow:hidden;display:flex;flex-direction:column">
+<div style="display:flex;justify-content:space-between;padding:14px 26px 6px;font-size:13px;font-weight:600"><span>9:41</span><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconBattery" size="16" hint-size="16px,16px"></x-import></div>
+<div style="padding:16px 24px 24px;display:flex;flex-direction:column;gap:20px;flex:1;overflow:hidden">
+<div><div style="font-size:13px;color:#64748b">Good morning, Lena</div><div style="font-size:22px;font-weight:700;letter-spacing:-0.02em">{{ ciTitle }}</div></div>
+<div style="flex:1;display:flex;align-items:center;justify-content:center">
+<div onClick="{{ toggleCheckin }}" style="width:200px;height:200px;border-radius:200px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:{{ ciBg }};color:{{ ciColor }};box-shadow:{{ ciRing }};transition:all 250ms">
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="{{ ciIcon }}" size="40" hint-size="40px,40px"></x-import>
+<span style="font-size:20px;font-weight:700">{{ ciLabel }}</span>
+<span style="font-size:12px;opacity:0.7">{{ ciSub }}</span>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="font-size:12px;font-weight:600;color:#64748b;letter-spacing:0.04em">YOUR CIRCLE</div>
+<div style="display:flex;gap:-4px;align-items:center;gap:8px">
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Avatar" initials="JK" size="{{ 32 }}" hint-size="32px,32px"></x-import>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Avatar" initials="MO" size="{{ 32 }}" hint-size="32px,32px"></x-import>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Avatar" initials="TS" size="{{ 32 }}" hint-size="32px,32px"></x-import>
+<span style="font-size:13px;color:#64748b">Alerted if no check-in by 11:00</span>
+</div>
+</div>
+<div style="padding:14px 16px;border-radius:6px;box-shadow:inset 0 0 0 1px #e2e8f0">
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Switch" label="Count phone movement as a check-in" default-checked="{{ true }}" hint-size="100%,24px"></x-import>
+</div>
+</div>
+</div></div>
+</div>
+
+<div class="dv-opt" id="1j">
+<div class="dv-olabel"><div style="display:flex;gap:8px;align-items:baseline"><a class="dv-oid" href="#1j">1j</a><strong style="color:#0f172a;font-size:13px">Trialtrap — forgotten subscriptions</strong></div><span>Finds recurring charges and free trials about to convert, with one-tap cancel links. Shows what you've saved so far. Cancel something.</span></div>
+<div style="width:340px;height:700px;background:#0f172a;border-radius:46px;padding:10px;box-sizing:border-box">
+<div style="width:100%;height:100%;background:linear-gradient(180deg,#faf5ff 0%,#fff 42%);border-radius:37px;overflow:hidden;display:flex;flex-direction:column">
+<div style="display:flex;justify-content:space-between;padding:14px 26px 6px;font-size:13px;font-weight:600"><span>9:41</span><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconBattery" size="16" hint-size="16px,16px"></x-import></div>
+<div style="padding:12px 20px 0;display:flex;flex-direction:column;gap:16px;flex:1;overflow:hidden">
+<div style="display:flex;flex-direction:column;gap:2px">
+<span style="font-size:13px;color:#64748b">You pay every month</span>
+<span style="font-size:44px;font-weight:800;letter-spacing:-0.03em;line-height:1.1;background:linear-gradient(135deg,#7c3aed,#c026d3);-webkit-background-clip:text;background-clip:text;color:transparent">{{ subsTotal }}</span>
+<span style="font-size:13px;font-weight:600">{{ subsSaved }}</span>
+</div>
+<div style="padding:14px;border-radius:6px;box-shadow:inset 0 0 0 1px #ef4444;display:flex;gap:12px;align-items:center">
+<span style="color:#ef4444"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconBell" size="18" hint-size="18px,18px"></x-import></span>
+<div style="font-size:13px;line-height:1.4"><strong>Photo editor trial</strong> becomes $11.99/mo in 2 days.</div>
+</div>
+<div style="display:flex;flex-direction:column">
+<sc-for list="{{ subs }}" as="s" hint-placeholder-count="5">
+<div style="display:flex;align-items:center;gap:12px;padding:10px 0;box-shadow:inset 0 -1px 0 #e2e8f0">
+<div style="flex:1;min-width:0;opacity:{{ s.opacity }}"><div style="font-size:14px;font-weight:600;text-decoration:{{ s.strike }}">{{ s.name }}</div><div style="font-size:12px;color:#64748b">{{ s.meta }}</div></div>
+<span style="font-size:14px;font-weight:600;white-space:nowrap;opacity:{{ s.opacity }}">{{ s.price }}</span>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Button" variant="{{ s.variant }}" on-click="{{ s.onClick }}" dc-props="{{ bs.xs }}" hint-size="68px,30px">{{ s.label }}</x-import>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="display:flex;justify-content:space-around;padding:12px 16px 26px;box-shadow:inset 0 1px 0 #e2e8f0;color:#94a3b8">
+<span style="color:#7c3aed"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconWallet" size="22" hint-size="22px,22px"></x-import></span>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconCalendar" size="22" hint-size="22px,22px"></x-import>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconBell" size="22" hint-size="22px,22px"></x-import>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconSettings" size="22" hint-size="22px,22px"></x-import>
+</div>
+</div></div>
+</div>
+
+</div>
+<p class="dv-next">Try next: "build a full flow for <a class="dv-oid" href="#1i">1i</a>" · "3 visual riffs on <a class="dv-oid" href="#1d">1d</a>" · "onboarding screens for <a class="dv-oid" href="#1a">1a</a>"</p>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { lend: {}, time: 0, used: {}, rec: false, sec: 0, route: 0, offer: 0, swaps: 3, quiz: null, wears: {}, checked: false, cancelled: {} };
+  componentWillUnmount() { clearInterval(this.t); }
+  toggleRec = () => {
+    if (this.state.rec) { clearInterval(this.t); this.setState({ rec: false }); }
+    else { this.setState({ rec: true }); this.t = setInterval(() => this.setState(s => ({ sec: s.sec + 1 })), 1000); }
+  };
+  renderVals() {
+    const s = this.state, set = (p) => this.setState(p);
+    const lend = [
+      { id: 1, name: 'Cordless drill', owner: 'Maya, no. 14', dist: '60 m', icon: 'IconWrench' },
+      { id: 2, name: 'Extension ladder', owner: 'Tom, no. 22', dist: '120 m', icon: 'IconHammer' },
+      { id: 3, name: 'Pressure washer', owner: 'Priya, no. 3', dist: '210 m', icon: 'IconDroplet' },
+      { id: 4, name: '4-person tent', owner: 'Ade, no. 41', dist: '380 m', icon: 'IconHome' },
+    ].map(i => ({ ...i, label: s.lend[i.id] ? 'Requested' : 'Request', variant: s.lend[i.id] ? 'subtle' : 'outline',
+      onClick: () => set({ lend: { ...s.lend, [i.id]: !s.lend[i.id] } }) }));
+
+    const times = ['Now', 'Morning', 'Evening'];
+    const spotsBase = [
+      { name: 'Reading room, Central Library', type: 'Library', dist: '0.6 km', db: [34, 31, 38] },
+      { name: 'Linden Park, east benches', type: 'Park', dist: '0.9 km', db: [41, 36, 48] },
+      { name: 'Fold Coffee, back room', type: 'Café', dist: '0.3 km', db: [52, 44, 61] },
+      { name: 'St. Anne cloister', type: 'Courtyard', dist: '1.4 km', db: [38, 33, 35] },
+    ];
+    const spots = spotsBase.map(p => ({ ...p, db: p.db[s.time], pct: Math.round(p.db[s.time] / 70 * 100) + '%' })).sort((a, b) => a.db - b.db);
+
+    const fridgeBase = [
+      { id: 1, name: 'Baby spinach', days: 0 }, { id: 2, name: 'Greek yogurt', days: 1 },
+      { id: 3, name: 'Feta', days: 2 }, { id: 4, name: 'Chicken thighs', days: 3 }, { id: 5, name: 'Strawberries', days: 4 },
+    ];
+    const fridge = fridgeBase.map(f => {
+      const u = !!s.used[f.id], urgent = f.days <= 1;
+      return { ...f, used: u, opacity: u ? 0.45 : 1, when: u ? 'Used' : f.days === 0 ? 'Today' : f.days === 1 ? 'Tomorrow' : f.days + ' days',
+        badgeBg: u ? '#f1f5f9' : urgent ? '#ef4444' : '#f1f5f9', badgeColor: u ? '#64748b' : urgent ? '#fff' : '#0f172a',
+        onChange: () => set({ used: { ...s.used, [f.id]: !u } }) };
+    });
+    const left = fridge.filter(f => !f.used && f.days <= 2).length;
+
+    const mm = String(Math.floor(s.sec / 60)).padStart(2, '0'), ss = String(s.sec % 60).padStart(2, '0');
+    const wave = Array.from({ length: 24 }, (_, i) => ({ h: (s.rec ? 8 + Math.abs(Math.sin((i + s.sec * 3) * 1.7)) * 28 : 4) + 'px', color: s.rec ? '#fff' : 'rgba(255,255,255,.35)' }));
+
+    const routes = [
+      { title: 'Fix it yourself', meta: 'Step-by-step guide · 15 min', cost: '$4', icon: 'IconBook', cta: 'Open the guide' },
+      { title: 'Repair café', meta: 'Sat 10:00 · Elm Hall · volunteers', cost: 'Free', icon: 'IconUsers', cta: 'Reserve a Saturday slot' },
+      { title: 'Local fixer', meta: 'Hassan R. · 4.9 · today', cost: '$25', icon: 'IconWrench', cta: 'Book Hassan for today' },
+    ].map((r, i) => ({ ...r, ring: i === s.route ? 'inset 0 0 0 2px #0d9488' : 'inset 0 0 0 1px #e2e8f0', onClick: () => set({ route: i }) }));
+
+    const offers = [
+      { what: 'Heirloom tomatoes, 2 kg', who: 'Ana', dist: '3 gardens away', wants: 'Zucchini' },
+      { what: 'Rhubarb, 6 stalks', who: 'Gerd', dist: 'Allotment 12', wants: 'Basil or eggs' },
+      { what: 'Runner bean seeds', who: 'Kofi', dist: '0.5 km', wants: 'Any herbs' },
+    ];
+    const next = () => set({ offer: (s.offer + 1) % offers.length });
+
+    const qOpts = [{ t: 'La cuenta, por favor.', ok: true }, { t: 'La carta, por favor.' }, { t: 'El cambio, por favor.' }]
+      .map((q, i) => {
+        const picked = s.quiz === i, reveal = s.quiz !== null;
+        let bg = '#fff', color = '#0f172a', ring = 'inset 0 0 0 1px #e2e8f0', tag = '';
+        if (reveal && q.ok) { bg = 'linear-gradient(135deg,#2563eb,#0ea5e9)'; color = '#fff'; ring = 'none'; tag = 'Correct'; }
+        else if (picked) { ring = 'inset 0 0 0 1px #ef4444'; color = '#ef4444'; tag = 'Not quite'; }
+        return { text: q.t, bg, color, ring, tag, onClick: () => set({ quiz: i }) };
+      });
+
+    const closetBase = [
+      { id: 1, name: 'Denim jacket', price: 90, w: 18 }, { id: 2, name: 'Wool coat', price: 240, w: 3 },
+      { id: 3, name: 'White sneakers', price: 110, w: 64 }, { id: 4, name: 'Linen shirt', price: 55, w: 7 },
+    ];
+    const closet = closetBase.map(c => {
+      const on = !!s.wears[c.id], w = c.w + (on ? 1 : 0);
+      return { name: c.name, price: '$' + c.price, wears: w, cpw: '$' + (c.price / w).toFixed(2), label: on ? 'Logged today' : 'Wore today',
+        bg: on ? 'linear-gradient(135deg,#db4e66,#a24688)' : '#fdf2f8', color: on ? '#fff' : '#a24688', onClick: () => set({ wears: { ...s.wears, [c.id]: !on } }) };
+    });
+
+    const subsBase = [
+      { id: 1, name: 'Photo editor', meta: 'Converts Oct 15', p: 11.99 },
+      { id: 2, name: 'Streaming', meta: 'Unused 74 days', p: 15.49 },
+      { id: 3, name: 'Fitness app', meta: 'Unused 5 months', p: 9.99 },
+      { id: 4, name: 'Cloud 2 TB', meta: '140 GB used', p: 9.99 },
+      { id: 5, name: 'Music', meta: 'Used daily', p: 10.99 },
+    ];
+    const subs = subsBase.map(x => {
+      const c = !!s.cancelled[x.id];
+      return { name: x.name, meta: c ? 'Cancelled' : x.meta, price: '$' + x.p.toFixed(2), opacity: c ? 0.4 : 1, strike: c ? 'line-through' : 'none',
+        label: c ? 'Undo' : 'Cancel', variant: c ? 'ghost' : 'outline', onClick: () => set({ cancelled: { ...s.cancelled, [x.id]: !c } }) };
+    });
+    const total = subsBase.filter(x => !s.cancelled[x.id]).reduce((a, x) => a + x.p, 0);
+    const saved = subsBase.filter(x => s.cancelled[x.id]).reduce((a, x) => a + x.p, 0) * 12;
+
+    return {
+      bs: { sm: { style: { height: 32, padding: '0 12px', fontSize: 13 } }, xs: { style: { height: 30, padding: '0 10px', fontSize: 12 } },
+        full: { style: { width: '100%' } }, mend: { style: { width: '100%', background: 'linear-gradient(135deg,#0d9488,#0891b2)', color: '#fff' } },
+        swap: { style: { width: 130, background: 'linear-gradient(135deg,#65a30d,#15803d)', color: '#fff' } }, half: { style: { width: 130 } } },
+      lendItems: lend,
+      quietTimes: times.map((t, i) => ({ label: t, bg: i === s.time ? '#fff' : 'transparent', color: i === s.time ? '#4e3aba' : '#64748b',
+        shadow: i === s.time ? '0 1px 2px rgba(15,23,42,.1)' : 'none', onClick: () => set({ time: i }) })),
+      quietTop: spots[0], quietSpots: spots,
+      fridgeItems: fridge, fridgeHeadline: left ? left + (left === 1 ? ' thing expires' : ' things expire') + ' in 48 h' : 'Nothing urgent. Nice.',
+      recTime: mm + ':' + ss, wave, toggleRec: this.toggleRec,
+      recBg: s.rec ? '#ef4444' : 'rgba(255,255,255,.2)', recInner: s.rec ? '26px' : '30px', recRadius: s.rec ? '4px' : '96px',
+      recHint: s.rec ? 'Recording · tap to stop' : s.sec ? 'Saved to Rosa’s tapes · tap to continue' : 'Tap to start recording',
+      mendRoutes: routes, mendCta: routes[s.route].cta,
+      offer: offers[s.offer], swapCount: s.swaps, passOffer: next, takeOffer: () => this.setState(p => ({ swaps: p.swaps + 1, offer: (p.offer + 1) % offers.length })),
+      quizOpts: qOpts, quizNote: s.quiz === null ? 'Tap an answer' : s.quiz === 0 ? 'Next card at Market St.' : '“La carta” is the menu.',
+      closet,
+      ciTitle: s.checked ? 'You’re checked in.' : 'Check in when you’re up.',
+      ciBg: s.checked ? 'linear-gradient(135deg,#fb7185,#f97316)' : '#fff', ciColor: s.checked ? '#fff' : '#f97316',
+      ciRing: s.checked ? '0 0 0 12px #ffe4e6' : 'inset 0 0 0 2px #fb7185, 0 0 0 12px #fff1f2',
+      ciIcon: s.checked ? 'IconCheck' : 'IconHand', ciLabel: s.checked ? 'All good' : 'I’m okay', ciSub: s.checked ? 'Today, 9:41' : 'Window until 11:00',
+      toggleCheckin: () => set({ checked: !s.checked }),
+      subs, subsTotal: '$' + total.toFixed(2), subsSaved: saved ? 'Saving $' + saved.toFixed(0) + ' a year' : '5 active · 1 trial ending soon',
+    };
+  }
+}
+</script>
+</body>
+</html>

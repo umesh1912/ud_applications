@@ -1,0 +1,36 @@
+:root{
+--font-sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+--font-mono:Menlo,ui-monospace,SFMono-Regular,Consolas,monospace;
+--fw-regular:400; /* @kind font */
+--fw-medium:500; /* @kind font */
+--fw-semibold:600; /* @kind font */
+--fw-bold:700; /* @kind font */
+--fw-extrabold:800; /* @kind font */
+/* Type scale — Typography page (size / line-height / tracking) */
+--text-display-size:48px;--text-display-lh:60px;--text-display-tracking:-0.012em;
+--text-h1-size:48px;--text-h1-lh:48px;--text-h1-tracking:-0.012em;
+--text-h2-size:30px;--text-h2-lh:36px;--text-h2-tracking:-0.007em;
+--text-h3-size:24px;--text-h3-lh:32px;--text-h3-tracking:-0.006em;
+--text-h4-size:20px;--text-h4-lh:28px;--text-h4-tracking:-0.005em;
+--text-lead-size:20px;--text-lead-lh:28px;
+--text-large-size:18px;--text-large-lh:28px;
+--text-p-size:16px;--text-p-lh:28px;
+--text-body-size:16px;--text-body-lh:24px;
+--text-sm-size:14px;--text-sm-lh:20px;
+--text-small-size:14px;--text-small-lh:14px;
+--text-xs-size:12px;--text-xs-lh:16px;
+}
+.type-display{font:800 48px/60px var(--font-sans);letter-spacing:-0.012em;color:var(--black)}
+.type-h1{font:800 48px/48px var(--font-sans);letter-spacing:-0.012em;color:var(--slate-900)}
+.type-h2{font:600 30px/36px var(--font-sans);letter-spacing:-0.007em;color:var(--slate-900)}
+.type-h3{font:600 24px/32px var(--font-sans);letter-spacing:-0.006em;color:var(--slate-900)}
+.type-h4{font:600 20px/28px var(--font-sans);letter-spacing:-0.005em;color:var(--slate-900)}
+.type-p{font:400 16px/28px var(--font-sans);color:var(--slate-900)}
+.type-blockquote{font:italic 400 16px/24px var(--font-sans);color:var(--slate-900);border-left:2px solid var(--gray-quote);padding-left:26.714px;margin:0}
+.type-list{font:400 16px/24px var(--font-sans);color:var(--black);display:flex;flex-direction:column;gap:8px;margin:0;padding-left:24px}
+.type-lead{font:400 20px/28px var(--font-sans);color:var(--black)}
+.type-subtitle{font:400 20px/28px var(--font-sans);color:var(--slate-600)}
+.type-large{font:600 18px/28px var(--font-sans);color:var(--black)}
+.type-small{font:500 14px/14px var(--font-sans);color:var(--black)}
+.type-subtle{font:400 14px/20px var(--font-sans);color:var(--slate-500)}
+.type-code{font:700 14px/20px var(--font-mono);color:var(--black);background:var(--slate-100);border-radius:3px;padding:3px 4px}

@@ -1,0 +1,26 @@
+body {
+  margin: 0;
+  background: #ecebe6;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  color: #1a1a1a;
+  min-height: 100vh;
+}
+a { color: #1a1a1a; }
+a:hover { color: #555; }
+*::-webkit-scrollbar { width: 0; height: 0; }
+.no-scrollbar { scrollbar-width: none; }
+
+.layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 32px 24px;
+}
+
+.hover-white:hover { background: #fff !important; }
+
+/* Inside the Android apps: no grey tap flash, no text selection on long-press of buttons. */
+* { -webkit-tap-highlight-color: transparent; }
+[style*="cursor: pointer"] { -webkit-user-select: none; user-select: none; }

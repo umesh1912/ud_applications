@@ -1,0 +1,2 @@
+/* Inter is the only UI face in the source file. No font binaries ship with the .fig, so Inter loads from Google Fonts (same family, not a substitute). Menlo (inline code) is a macOS system font; falls back to the platform mono. */
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap");

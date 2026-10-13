@@ -1,0 +1,12 @@
+[
+  { "index": 0, "slug": "lendr", "name": "Lendr", "tagline": "Borrow tools from neighbors on your street", "bg": "#fffdf5", "dark": false },
+  { "index": 1, "slug": "hush", "name": "Hush", "tagline": "Find a quiet place nearby", "bg": "#0b1020", "dark": true },
+  { "index": 2, "slug": "use_by", "name": "Use-By", "tagline": "Use food before it expires", "bg": "#e6f4e8", "dark": false },
+  { "index": 3, "slug": "kin_tapes", "name": "Kin Tapes", "tagline": "Record family stories in their own voice", "bg": "#f3ead8", "dark": false },
+  { "index": 4, "slug": "mend", "name": "Mend", "tagline": "Repair it before you replace it", "bg": "#1d3f94", "dark": true },
+  { "index": 5, "slug": "plotswap", "name": "Plotswap", "tagline": "Trade garden surplus with neighbors", "bg": "#f3efe2", "dark": false },
+  { "index": 6, "slug": "ride_lingo", "name": "Ride Lingo", "tagline": "Language lessons that end at your stop", "bg": "#ffffff", "dark": false },
+  { "index": 7, "slug": "wear_count", "name": "Wear Count", "tagline": "Cost per wear for your closet", "bg": "#ffffff", "dark": false },
+  { "index": 8, "slug": "still_here", "name": "Still Here", "tagline": "A daily check-in for people living alone", "bg": "#fff3ea", "dark": false },
+  { "index": 9, "slug": "trialtrap", "name": "Trialtrap", "tagline": "Catch forgotten subscriptions and trials", "bg": "#0a0a0a", "dark": true }
+]

@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&amp;family=Space+Mono:wght@400;700&amp;family=Instrument+Serif:ital@0;1&amp;family=DM+Sans:wght@400;500;700&amp;family=Bricolage+Grotesque:wght@400;600;800&amp;family=Playfair+Display:ital,wght@0,700;1,700&amp;family=Courier+Prime:wght@400;700&amp;family=IBM+Plex+Sans:wght@400;600;700&amp;family=IBM+Plex+Mono:wght@400;600&amp;family=Young+Serif&amp;family=Nunito:wght@400;600;800;900&amp;family=Barlow+Condensed:wght@500;600;700;800&amp;family=Barlow:wght@400;500;600&amp;family=Bodoni+Moda:ital,wght@0,400;0,500;1,400&amp;family=Jost:wght@400;500;600&amp;family=Space+Grotesk:wght@400;500;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap">
+<link rel="stylesheet" href="_ds/shadcn-ui-design-system-22e1a246-46b4-4b56-9804-9882cdb9df20/styles.css">
+<script src="_ds/shadcn-ui-design-system-22e1a246-46b4-4b56-9804-9882cdb9df20/_ds_bundle.js"></script>
+<script src="apps-data.js"></script>
+<style>body{margin:0;background:#ecebe6;font-family:'DM Sans',system-ui,sans-serif;color:#1a1a1a;min-height:100vh}a{color:#1a1a1a}a:hover{color:#555}*::-webkit-scrollbar{width:0;height:0}</style>
+</helmet>
+<div style="display:flex;flex-wrap:wrap;gap:32px;justify-content:center;align-items:flex-start;padding:32px 24px">
+
+<div style="width:250px;display:flex;flex-direction:column;gap:14px">
+<div><div style="font:600 11px 'JetBrains Mono',monospace;color:#777;letter-spacing:0.08em">10 APPS · 10 STYLES</div><div style="font:400 30px/1.1 'Instrument Serif',serif">Prototypes</div></div>
+<div style="display:flex;flex-direction:column;gap:4px">
+<sc-for list="{{ appList }}" as="ap" hint-placeholder-count="10">
+<div onClick="{{ ap.onClick }}" style="display:flex;align-items:center;gap:12px;padding:9px 10px;border-radius:8px;cursor:pointer;background:{{ ap.bg }}" style-hover="background:#fff">
+<div style="width:30px;height:30px;border-radius:7px;flex:none;background:{{ ap.sw1 }};box-shadow:inset -10px -10px 0 {{ ap.sw2 }}"></div>
+<div style="min-width:0"><div style="font-size:15px;font-weight:600;font-family:{{ ap.font }}">{{ ap.name }}</div><div style="font-size:11.5px;color:#777">{{ ap.style }}</div></div>
+</div>
+</sc-for>
+</div>
+</div>
+
+<sc-if value="{{ ready }}" hint-placeholder-val="{{ true }}">
+<div style="width:360px;height:740px;background:{{ T.bezel }};border-radius:50px;padding:10px;box-sizing:border-box;flex:none;box-shadow:0 30px 60px -20px rgba(0,0,0,.4)">
+<div style="width:100%;height:100%;border-radius:41px;overflow:hidden;display:flex;flex-direction:column;position:relative;background:{{ T.bg }};background-image:{{ T.bgImg }};background-size:{{ T.bgSize }};color:{{ T.ink }};font-family:{{ T.fb }}">
+<div style="display:flex;justify-content:space-between;padding:14px 28px 6px;font-size:13px;font-weight:600;flex:none;font-family:{{ T.fb }}"><span>9:41</span><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconBattery" size="16" hint-size="16px,16px"></x-import></div>
+<div style="flex:1;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;padding-bottom:{{ T.scrollPad }}">
+
+<sc-if value="{{ is.onboard }}">
+<div style="flex:1;display:flex;flex-direction:column">
+<sc-if value="{{ v.onbTop }}">
+<div style="margin:6px 14px 0;height:300px;border-radius:{{ T.r }};background:{{ T.accent }};color:{{ T.onAccent }};display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;box-shadow:{{ T.blockShadow }}">
+<div style="position:absolute;width:260px;height:260px;border-radius:50%;right:-80px;top:-90px;background:{{ T.accent2 }};opacity:0.9"></div>
+<div style="position:relative"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="{{ slide.icon }}" size="96" hint-size="96px,96px"></x-import></div>
+<span style="position:absolute;left:18px;bottom:14px;font-family:{{ T.fl }};font-size:12px;letter-spacing:0.08em">{{ slideNo }}</span>
+</div>
+</sc-if>
+<div style="flex:1;display:flex;flex-direction:column;padding:20px 24px 28px;gap:16px">
+<div style="display:flex;justify-content:space-between;align-items:center"><span style="{{ S.brand }}">{{ A.name }}</span><span onClick="{{ skipOnboard }}" style="{{ S.link }}">Skip</span></div>
+<div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:16px">
+<sc-if value="{{ v.onbCenter }}"><div style="width:120px;height:120px;border-radius:{{ T.markR }};background:{{ T.accent }};color:{{ T.onAccent }};display:flex;align-items:center;justify-content:center;box-shadow:{{ T.blockShadow }}"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="{{ slide.icon }}" size="52" hint-size="52px,52px"></x-import></div></sc-if>
+<div style="{{ S.h1 }}">{{ slide.title }}</div>
+<div style="{{ S.body }}">{{ slide.body }}</div>
+</div>
+<div style="display:flex;gap:6px"><sc-for list="{{ dots }}" as="d" hint-placeholder-count="3"><div style="height:6px;border-radius:{{ T.dotR }};width:{{ d.w }};background:{{ d.bg }};transition:width 200ms"></div></sc-for></div>
+<div onClick="{{ nextSlide }}" style="{{ S.btn }}">{{ slideCta }}</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ is.home }}">
+<div style="padding:8px 20px 20px;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;justify-content:space-between;align-items:center"><span style="{{ S.brandLg }}">{{ A.name }}</span><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconBell" size="20" hint-size="20px,20px"></x-import></div>
+
+<sc-if value="{{ v.heroBlock }}">
+<div style="background:{{ T.accent }};color:{{ T.onAccent }};padding:20px;box-shadow:inset 0 0 0 2px {{ T.ink }},6px 6px 0 {{ T.ink }};display:flex;flex-direction:column;gap:8px;margin-right:6px">
+<span style="{{ S.labelOn }}">{{ hero.k }}</span><span style="{{ S.big }}">{{ hero.v }}</span><span style="font-size:13px">{{ hero.sub }}</span>
+</div>
+</sc-if>
+<sc-if value="{{ v.heroRing }}">
+<div style="position:relative;height:270px;display:flex;align-items:center;justify-content:center">
+<div style="position:absolute;width:270px;height:270px;border-radius:50%;box-shadow:inset 0 0 0 1px {{ T.accent }};opacity:0.18"></div>
+<div style="position:absolute;width:206px;height:206px;border-radius:50%;box-shadow:inset 0 0 0 1px {{ T.accent }};opacity:0.35"></div>
+<div style="position:absolute;width:142px;height:142px;border-radius:50%;background:{{ T.accent }};opacity:0.12"></div>
+<div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;max-width:220px"><span style="{{ S.label }}">{{ hero.k }}</span><span style="{{ S.big }}">{{ hero.v }}</span><span style="font-size:13px;color:{{ T.muted }}">{{ hero.sub }}</span></div>
+</div>
+</sc-if>
+<sc-if value="{{ v.heroCard }}">
+<div style="position:relative;overflow:hidden;background:{{ T.accent }};color:{{ T.onAccent }};border-radius:{{ T.r }};padding:24px 22px;display:flex;flex-direction:column;gap:6px">
+<div style="position:absolute;width:150px;height:150px;border-radius:50%;right:-40px;top:-50px;background:{{ T.accent2 }}"></div>
+<span style="{{ S.labelOnRel }}">{{ hero.k }}</span><span style="{{ S.bigRel }}">{{ hero.v }}</span><span style="font-size:14px;position:relative;opacity:0.9">{{ hero.sub }}</span>
+</div>
+</sc-if>
+<sc-if value="{{ v.heroTape }}">
+<div style="background:{{ T.surface }};border-radius:6px;padding:14px;box-shadow:inset 0 0 0 1px {{ T.line }},0 10px 20px -14px rgba(59,36,24,.5);display:flex;flex-direction:column;gap:12px">
+<div style="background:{{ T.accent2 }};border-radius:3px;padding:10px 12px;display:flex;flex-direction:column;gap:2px"><span style="{{ S.labelInk }}">{{ hero.k }} · side A</span><span style="{{ S.h2 }}">{{ hero.v }}</span></div>
+<div style="display:flex;align-items:center;justify-content:center;gap:40px;padding:6px 0;background:{{ T.ink }};border-radius:40px;margin:0 30px">
+<div style="width:38px;height:38px;border-radius:50%;background:{{ T.surface }};box-shadow:inset 0 0 0 10px {{ T.accent2 }}"></div>
+<div style="width:38px;height:38px;border-radius:50%;background:{{ T.surface }};box-shadow:inset 0 0 0 4px {{ T.accent2 }}"></div>
+</div>
+<span style="font-style:italic;font-size:14px;line-height:1.4;font-family:{{ T.fh }}">{{ hero.sub }}</span>
+<sc-if value="{{ hero.hasCta }}"><div onClick="{{ heroTap }}" style="{{ S.btnSm }}">{{ hero.cta }}</div></sc-if>
+</div>
+</sc-if>
+<sc-if value="{{ v.heroSpec }}">
+<div style="border:1.5px dashed {{ T.line }};border-radius:2px;padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px;position:relative">
+<span style="{{ S.specTag }}">FIG. 01 — SUMMARY</span>
+<div style="grid-column:1/-1;display:flex;flex-direction:column;gap:2px"><span style="{{ S.label }}">{{ hero.k }}</span><span style="{{ S.big }}">{{ hero.v }}</span></div>
+<div style="grid-column:1/-1;border-top:1px solid {{ T.line }};padding-top:10px;font-family:{{ T.fl }};font-size:12px;color:{{ T.accent }}">→ {{ hero.sub }}</div>
+</div>
+</sc-if>
+<sc-if value="{{ v.heroGiant }}">
+<div style="display:flex;flex-direction:column;gap:6px;padding:8px 0">
+<span style="{{ S.label }}">{{ hero.k }}</span>
+<span style="{{ S.big }}">{{ hero.v }}</span>
+<div style="display:flex;align-items:center;gap:10px"><div style="width:40px;height:6px;background:{{ T.accent }};border-radius:{{ T.dotR }}"></div><span style="font-size:14px;color:{{ T.muted }}">{{ hero.sub }}</span></div>
+</div>
+</sc-if>
+<sc-if value="{{ v.heroCover }}">
+<div style="position:relative;height:290px;background:repeating-linear-gradient(135deg,{{ T.ph1 }} 0 12px,{{ T.ph2 }} 12px 24px);display:flex;flex-direction:column;justify-content:space-between;padding:16px;box-sizing:border-box;box-shadow:inset 0 0 0 1px {{ T.line }}">
+<div style="display:flex;justify-content:space-between"><span style="{{ S.labelInk }}">Issue 10 · Autumn</span><span style="{{ S.labelA2 }}">{{ hero.k }}</span></div>
+<div><div style="{{ S.big }}">{{ hero.v }}</div><div style="font-family:{{ T.fh }};font-style:italic;font-size:18px;margin-top:4px">{{ hero.sub }}</div></div>
+</div>
+</sc-if>
+<sc-if value="{{ v.heroCircle }}">
+<div style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:6px 0">
+<span style="{{ S.label }}">{{ hero.k }}</span>
+<div onClick="{{ heroTap }}" style="width:230px;height:230px;border-radius:50%;background:{{ heroCircleBg }};color:{{ heroCircleInk }};box-shadow:0 0 0 14px {{ T.surface }},0 0 0 15px {{ T.line }};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;text-align:center;transition:all 250ms">
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="{{ heroCircleIcon }}" size="44" hint-size="44px,44px"></x-import>
+<span style="{{ S.h2 }}">{{ heroCircleLabel }}</span>
+</div>
+<span style="font-size:16px;color:{{ T.muted }};text-align:center;max-width:260px">{{ hero.sub }}</span>
+</div>
+</sc-if>
+
+<div style="{{ S.label }}">{{ A.homeTitle }}</div>
+
+<sc-if value="{{ v.listRows }}">
+<div style="display:flex;flex-direction:column">
+<sc-for list="{{ homeItems }}" as="it" hint-placeholder-count="4">
+<div onClick="{{ it.onClick }}" style="display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:{{ T.rowLine }};cursor:pointer">
+<div style="width:42px;height:42px;border-radius:{{ T.rs }};background:{{ T.iconBg }};color:{{ T.iconInk }};box-shadow:{{ T.iconRing }};display:flex;align-items:center;justify-content:center;flex:none"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="{{ A.itemIcon }}" size="20" hint-size="20px,20px"></x-import></div>
+<div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:{{ T.tw }}">{{ it.t }}</div><div style="font-size:12px;color:{{ T.muted }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ it.s }}</div></div>
+<span style="{{ S.badge }}">{{ it.r }}</span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ v.listCards }}">
+<div style="display:flex;flex-direction:column;gap:12px">
+<sc-for list="{{ homeItems }}" as="it" hint-placeholder-count="4">
+<div onClick="{{ it.onClick }}" style="{{ S.cardRow }}">
+<div style="width:62px;height:62px;border-radius:{{ T.rs }};background:{{ T.accent2 }};color:{{ T.onAccent2 }};display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;font-weight:800;line-height:1.1;flex:none;padding:4px;box-sizing:border-box">{{ it.r }}</div>
+<div style="flex:1;min-width:0"><div style="font-size:17px;font-weight:{{ T.tw }}">{{ it.t }}</div><div style="font-size:13px;color:{{ T.muted }}">{{ it.s }}</div></div>
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconChevronRight" size="20" hint-size="20px,20px"></x-import>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ v.listTracks }}">
+<div style="display:flex;flex-direction:column">
+<sc-for list="{{ homeItems }}" as="it" hint-placeholder-count="4">
+<div onClick="{{ it.onClick }}" style="display:flex;align-items:baseline;gap:14px;padding:14px 0;border-bottom:1px dotted {{ T.muted }};cursor:pointer">
+<span style="font-family:{{ T.fl }};font-size:13px;color:{{ T.accent }};font-weight:700">{{ it.code }}</span>
+<div style="flex:1;min-width:0"><div style="font-family:{{ T.fh }};font-style:italic;font-weight:700;font-size:19px">{{ it.t }}</div><div style="font-size:12px;color:{{ T.muted }}">{{ it.s }}</div></div>
+<span style="font-family:{{ T.fl }};font-size:13px">{{ it.r }}</span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ v.listTickets }}">
+<div style="display:flex;flex-direction:column;gap:10px">
+<sc-for list="{{ homeItems }}" as="it" hint-placeholder-count="4">
+<div onClick="{{ it.onClick }}" style="display:flex;align-items:stretch;border:1.5px dashed {{ T.line }};border-radius:2px;cursor:pointer">
+<div style="width:52px;display:flex;align-items:center;justify-content:center;border-right:1.5px dashed {{ T.line }};font-family:{{ T.fl }};font-size:12px;color:{{ T.accent }}">#{{ it.code }}</div>
+<div style="flex:1;padding:12px;min-width:0"><div style="font-size:15px;font-weight:700">{{ it.t }}</div><div style="font-family:{{ T.fl }};font-size:11px;color:{{ T.muted }};text-transform:uppercase;letter-spacing:0.05em">{{ it.s }}</div></div>
+<div style="display:flex;align-items:center;padding:0 12px"><span style="{{ S.badge }}">{{ it.r }}</span></div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ v.listTiles }}">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:{{ T.tileGap }}">
+<sc-for list="{{ homeItems }}" as="it" hint-placeholder-count="4">
+<div onClick="{{ it.onClick }}" style="display:flex;flex-direction:column;gap:8px;cursor:pointer">
+<div style="height:{{ T.tileH }};border-radius:{{ T.r }};background:repeating-linear-gradient(135deg,{{ T.ph1 }} 0 10px,{{ T.ph2 }} 10px 20px);box-shadow:{{ T.tileRing }};position:relative"><span style="{{ S.tileBadge }}">{{ it.r }}</span></div>
+<div><div style="font-size:15px;font-weight:{{ T.tw }};font-family:{{ T.tileFont }};line-height:1.2">{{ it.t }}</div><div style="font-size:12px;color:{{ T.muted }};margin-top:2px">{{ it.s }}</div></div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ v.listBoard }}">
+<div style="display:flex;flex-direction:column;border-top:3px solid {{ T.ink }}">
+<sc-for list="{{ homeItems }}" as="it" hint-placeholder-count="4">
+<div onClick="{{ it.onClick }}" style="display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid {{ T.ink }};cursor:pointer">
+<div style="width:30px;height:30px;border-radius:50%;background:{{ T.accent }};color:#fff;display:flex;align-items:center;justify-content:center;font-family:{{ T.fh }};font-weight:800;font-size:16px;flex:none">{{ it.code }}</div>
+<div style="flex:1;min-width:0"><div style="font-family:{{ T.fh }};font-weight:700;font-size:20px;text-transform:uppercase;line-height:1">{{ it.t }}</div><div style="font-size:12px;color:{{ T.muted }};margin-top:2px">{{ it.s }}</div></div>
+<span style="font-family:{{ T.fh }};font-weight:800;font-size:22px;background:{{ T.ink }};color:{{ T.accent2 }};padding:2px 8px">{{ it.r }}</span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ is.tab2 }}">
+<div style="padding:8px 20px 20px;display:flex;flex-direction:column;gap:18px">
+<div style="{{ S.h1 }}">{{ tab2.title }}</div>
+<div style="height:160px;border-radius:{{ T.r }};background:repeating-linear-gradient(135deg,{{ T.ph1 }} 0 12px,{{ T.ph2 }} 12px 24px);box-shadow:{{ T.tileRing }};display:flex;align-items:flex-end;padding:12px;box-sizing:border-box"><span style="font:500 11px 'JetBrains Mono',monospace;color:{{ T.muted }}">{{ tab2.ph }}</span></div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<sc-for list="{{ tab2Items }}" as="it" hint-placeholder-count="3">
+<div style="{{ S.cardRow }}">
+<div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:{{ T.tw }}">{{ it.t }}</div><div style="font-size:12px;color:{{ T.muted }}">{{ it.s }}</div></div>
+<span style="{{ S.badge }}">{{ it.r }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ is.detail }}">
+<div style="padding:4px 20px 24px;display:flex;flex-direction:column;gap:16px;flex:1">
+<div onClick="{{ goHome }}" style="{{ S.back }}"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconChevronLeft" size="20" hint-size="20px,20px"></x-import>Back</div>
+<div style="height:190px;border-radius:{{ T.r }};background:repeating-linear-gradient(135deg,{{ T.ph1 }} 0 12px,{{ T.ph2 }} 12px 24px);box-shadow:{{ T.tileRing }};display:flex;align-items:flex-end;padding:12px;box-sizing:border-box"><span style="font:500 11px 'JetBrains Mono',monospace;color:{{ T.muted }}">photo · {{ item.t }}</span></div>
+<div style="display:flex;flex-direction:column;gap:6px"><div style="{{ S.h1 }}">{{ item.t }}</div><div style="font-size:13px;color:{{ T.muted }}">{{ item.s }}</div></div>
+<div style="{{ S.body }}">{{ item.d }}</div>
+<div style="{{ S.card }}">
+<sc-for list="{{ item.facts }}" as="f" hint-placeholder-count="3">
+<div style="display:flex;justify-content:space-between;padding:10px 0;font-size:14px;border-bottom:1px solid {{ T.line }}"><span style="color:{{ T.muted }}">{{ f.l }}</span><span style="font-weight:700">{{ f.v }}</span></div>
+</sc-for>
+</div>
+<div style="flex:1"></div>
+<div onClick="{{ doAction }}" style="{{ S.btn }}">{{ A.action }}</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ is.create }}">
+<div style="padding:4px 20px 24px;display:flex;flex-direction:column;gap:20px;flex:1">
+<div style="display:flex;justify-content:space-between;align-items:center"><span onClick="{{ goHome }}" style="cursor:pointer;display:flex"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconX" size="22" hint-size="22px,22px"></x-import></span><span style="{{ S.label }}">{{ stepLabel }}</span></div>
+<div style="height:6px;border-radius:{{ T.dotR }};background:{{ T.line }};overflow:hidden"><div style="height:100%;width:{{ stepPct }};background:{{ T.accent }};transition:width 250ms"></div></div>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="{{ S.labelAccent }}">{{ A.create.title }}</span><span style="{{ S.h1 }}">{{ step.q }}</span></div>
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+<sc-for list="{{ stepOpts }}" as="o" hint-placeholder-count="4">
+<div onClick="{{ o.onClick }}" style="{{ o.style }}">{{ o.label }}</div>
+</sc-for>
+</div>
+<div style="flex:1"></div>
+<div style="display:flex;gap:10px">
+<sc-if value="{{ hasPrev }}"><div onClick="{{ prevStep }}" style="{{ S.btnGhostHalf }}">Back</div></sc-if>
+<div onClick="{{ nextStep }}" style="{{ S.btnNext }}">Continue</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ is.review }}">
+<div style="padding:4px 20px 24px;display:flex;flex-direction:column;gap:20px;flex:1">
+<div onClick="{{ prevStep }}" style="{{ S.back }}"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconChevronLeft" size="20" hint-size="20px,20px"></x-import>Edit</div>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="{{ S.labelAccent }}">{{ A.create.title }}</span><span style="{{ S.h1 }}">Check and confirm</span></div>
+<div style="{{ S.card }}">
+<sc-for list="{{ reviewRows }}" as="r" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column;gap:3px;padding:12px 0;border-bottom:1px solid {{ T.line }}"><span style="font-size:12px;color:{{ T.muted }}">{{ r.q }}</span><span style="font-size:16px;font-weight:700">{{ r.a }}</span></div>
+</sc-for>
+</div>
+<div style="flex:1"></div>
+<div onClick="{{ submitCreate }}" style="{{ S.btn }}">{{ A.create.cta }}</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ is.confirm }}">
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 28px 28px;gap:16px;text-align:center">
+<div style="width:104px;height:104px;border-radius:{{ T.markR }};background:{{ T.accent }};color:{{ T.onAccent }};display:flex;align-items:center;justify-content:center;box-shadow:{{ T.blockShadow }}"><x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="IconCheck" size="48" hint-size="48px,48px"></x-import></div>
+<div style="{{ S.h1Top }}">{{ conf.t }}</div>
+<div style="{{ S.body }}">{{ conf.b }}</div>
+<div style="height:20px"></div>
+<div onClick="{{ goHome }}" style="{{ S.btnStretch }}">Done</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ is.settings }}">
+<div style="padding:8px 20px 20px;display:flex;flex-direction:column;gap:18px">
+<div style="{{ S.h1 }}">Profile</div>
+<div style="display:flex;align-items:center;gap:14px">
+<div style="width:60px;height:60px;border-radius:{{ T.markR }};background:{{ T.accent }};color:{{ T.onAccent }};display:flex;align-items:center;justify-content:center;font-family:{{ T.fh }};font-size:20px;font-weight:700;flex:none;box-shadow:{{ T.blockShadow }}">{{ A.user.i }}</div>
+<div><div style="{{ S.h2 }}">{{ A.user.n }}</div><div style="font-size:13px;color:{{ T.muted }};margin-top:2px">{{ A.user.m }}</div></div>
+</div>
+<div style="{{ S.label }}">Settings</div>
+<div style="{{ S.card }}">
+<sc-for list="{{ settingsRows }}" as="st" hint-placeholder-count="3">
+<div onClick="{{ st.onClick }}" style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid {{ T.line }};cursor:pointer">
+<span style="flex:1;font-size:14px;line-height:1.35">{{ st.label }}</span>
+<div style="width:44px;height:26px;border-radius:{{ T.toggleR }};background:{{ st.track }};box-shadow:{{ T.toggleRing }};position:relative;flex:none;transition:background 150ms"><div style="position:absolute;top:3px;left:{{ st.x }};width:20px;height:20px;border-radius:{{ T.toggleR }};background:{{ st.knob }};transition:left 150ms"></div></div>
+</div>
+</sc-for>
+</div>
+<div onClick="{{ replayOnboard }}" style="{{ S.btnGhost }}">Replay onboarding</div>
+<div onClick="{{ replayOnboard }}" style="text-align:center;font-size:14px;font-weight:600;color:#e5484d;cursor:pointer;padding:6px">Sign out</div>
+</div>
+</sc-if>
+
+</div>
+
+<sc-if value="{{ v.tabBar }}">
+<div style="display:flex;justify-content:space-around;padding:10px 12px 24px;background:{{ T.tabBg }};border-top:{{ T.tabLine }};flex:none">
+<sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="4">
+<div onClick="{{ tb.onClick }}" style="display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;width:68px;color:{{ tb.color }}">
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="{{ tb.icon }}" size="22" hint-size="22px,22px"></x-import>
+<span style="font-family:{{ T.fl }};font-size:10.5px;font-weight:700;letter-spacing:0.06em;text-transform:{{ T.tabCase }}">{{ tb.label }}</span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ v.tabPill }}">
+<div style="position:absolute;left:24px;right:24px;bottom:22px;height:62px;border-radius:999px;background:{{ T.tabBg }};box-shadow:{{ T.tabShadow }};display:flex;align-items:center;justify-content:space-around;padding:0 8px">
+<sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="4">
+<div onClick="{{ tb.onClick }}" title="{{ tb.label }}" style="width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;background:{{ tb.bg }};color:{{ tb.color }};transition:background 150ms">
+<x-import component-from-global-scope="ShadcnUiDesignSystem_22e1a2.Icon" name="{{ tb.icon }}" size="21" hint-size="21px,21px"></x-import>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ v.tabText }}">
+<div style="display:flex;justify-content:space-around;padding:14px 16px 26px;border-top:1px solid {{ T.line }};background:{{ T.tabBg }};flex:none">
+<sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="4">
+<div onClick="{{ tb.onClick }}" style="cursor:pointer;font-family:{{ T.tabFont }};font-size:{{ T.tabSize }};font-style:{{ T.tabStyle }};letter-spacing:{{ T.tabLs }};text-transform:{{ T.tabCase }};color:{{ tb.color }};padding-bottom:4px;border-bottom:2px solid {{ tb.under }}">{{ tb.label }}</div>
+</sc-for>
+</div>
+</sc-if>
+</div>
+</div>
+</sc-if>
+
+<div style="width:270px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;gap:6px"><div style="width:28px;height:28px;border-radius:6px;background:{{ T.accent }};box-shadow:inset 0 0 0 1px rgba(0,0,0,.1)"></div><div style="width:28px;height:28px;border-radius:6px;background:{{ T.accent2 }};box-shadow:inset 0 0 0 1px rgba(0,0,0,.1)"></div><div style="width:28px;height:28px;border-radius:6px;background:{{ T.bg }};box-shadow:inset 0 0 0 1px rgba(0,0,0,.1)"></div><div style="width:28px;height:28px;border-radius:6px;background:{{ T.ink }}"></div></div>
+<div style="font-size:30px;line-height:1.05;font-family:{{ T.fh }};font-weight:{{ T.hw }};font-style:{{ T.hi }};text-transform:{{ T.ht }}">{{ A.name }}</div>
+<div style="font:600 11px 'JetBrains Mono',monospace;color:#555;letter-spacing:0.06em;text-transform:uppercase">{{ T.style }} · {{ T.fonts }}</div>
+<div style="font-size:14px;line-height:1.55;color:#444;text-wrap:pretty">{{ A.about }}</div>
+<div style="font:600 11px 'JetBrains Mono',monospace;color:#777;letter-spacing:0.08em">JUMP TO SCREEN</div>
+<div style="display:flex;flex-direction:column;gap:2px">
+<sc-for list="{{ screenList }}" as="sc" hint-placeholder-count="8">
+<div onClick="{{ sc.onClick }}" style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:6px;cursor:pointer;font-size:14px;font-weight:500;background:{{ sc.bg }}" style-hover="background:#fff">
+<span style="font:600 11px 'JetBrains Mono',monospace;color:#999;width:18px">{{ sc.n }}</span>{{ sc.label }}
+</div>
+</sc-for>
+</div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const TH = [
+ { style:'Neo-brutalist', fonts:'Archivo Black / Space Mono', bezel:'#111', bg:'#fffdf5', ink:'#111111', muted:'#4a4a4a', line:'#111111', surface:'#ffffff', accent:'#ffd60a', accent2:'#ff5c00', onAccent:'#111111', onAccent2:'#111', accentText:'#111',
+   fh:"'Archivo Black',sans-serif", hw:400, ht:'uppercase', hls:'-0.01em', fb:"'Space Mono',monospace", fl:"'Space Mono',monospace", r:'0px', rs:'0px', markR:'0px', dotR:'0px', toggleR:'0px', h1:30, big:54,
+   card:{background:'#fff',boxShadow:'inset 0 0 0 2px #111, 4px 4px 0 #111',padding:'4px 16px'}, blockShadow:'6px 6px 0 #111', btn:{background:'#111',color:'#ffd60a',borderRadius:0,boxShadow:'4px 4px 0 #ff5c00',textTransform:'uppercase',letterSpacing:'0.04em'},
+   chipOn:{background:'#111',color:'#ffd60a',boxShadow:'3px 3px 0 #ff5c00'}, chipOff:{background:'#fff',boxShadow:'inset 0 0 0 2px #111'}, chipR:0,
+   hero:'Block', list:'Rows', tab:'Bar', onb:'Top', rowLine:'2px solid #111', iconBg:'#ffd60a', iconInk:'#111', iconRing:'inset 0 0 0 2px #111', tw:700,
+   badge:{background:'#111',color:'#ffd60a'}, ph1:'#ffd60a', ph2:'#fffdf5', tileRing:'inset 0 0 0 2px #111', tabBg:'#fffdf5', tabLine:'2px solid #111', tabActive:'#111', tabIdle:'#9a9a9a', tabCase:'uppercase', toggleRing:'inset 0 0 0 2px #111', trackOn:'#111', knobOn:'#ffd60a', trackOff:'#fff', knobOff:'#111' },
+ { style:'Night calm', fonts:'Instrument Serif / DM Sans', bezel:'#1c2040', bg:'#0b1020', ink:'#ecebff', muted:'#9ea2c9', line:'rgba(255,255,255,.09)', surface:'#151b36', accent:'#a99bff', accent2:'#5eead4', onAccent:'#0b1020', onAccent2:'#0b1020', accentText:'#a99bff',
+   fh:"'Instrument Serif',serif", hw:400, ht:'none', hls:'-0.01em', fb:"'DM Sans',sans-serif", fl:"'DM Sans',sans-serif", r:'22px', rs:'14px', markR:'50%', dotR:'40px', toggleR:'40px', h1:36, big:84,
+   card:{background:'#151b36',boxShadow:'inset 0 0 0 1px rgba(255,255,255,.06)',padding:'4px 18px'}, blockShadow:'0 0 60px -10px rgba(169,155,255,.6)', btn:{background:'#a99bff',color:'#0b1020',borderRadius:999},
+   chipOn:{background:'#a99bff',color:'#0b1020'}, chipOff:{background:'#151b36',color:'#ecebff',boxShadow:'inset 0 0 0 1px rgba(255,255,255,.12)'}, chipR:999,
+   hero:'Ring', list:'Rows', tab:'Pill', onb:'Center', rowLine:'1px solid rgba(255,255,255,.08)', iconBg:'#151b36', iconInk:'#a99bff', iconRing:'none', tw:500,
+   badge:{background:'transparent',color:'#5eead4',boxShadow:'inset 0 0 0 1px rgba(94,234,212,.4)'}, ph1:'#151b36', ph2:'#0b1020', tileRing:'inset 0 0 0 1px rgba(255,255,255,.08)', tabBg:'rgba(30,36,70,.92)', tabShadow:'0 10px 30px rgba(0,0,0,.5)', tabActive:'#0b1020', tabIdle:'#9ea2c9', tabPillOn:'#a99bff', toggleRing:'none', trackOn:'#a99bff', knobOn:'#0b1020', trackOff:'#262d52', knobOff:'#9ea2c9', scrollPad:'90px' },
+ { style:'Fresh & chunky', fonts:'Bricolage Grotesque', bezel:'#12321f', bg:'#e6f4e8', ink:'#12321f', muted:'#4d6a57', line:'#cfe6d4', surface:'#ffffff', accent:'#1fae54', accent2:'#ff7a59', onAccent:'#ffffff', onAccent2:'#fff', accentText:'#12823f',
+   fh:"'Bricolage Grotesque',sans-serif", hw:800, ht:'none', hls:'-0.035em', fb:"'Bricolage Grotesque',sans-serif", fl:"'Bricolage Grotesque',sans-serif", lls:'0', ltt:'none', lsz:14, r:'28px', rs:'20px', markR:'36px', dotR:'40px', toggleR:'40px', h1:34, big:64,
+   card:{background:'#fff',boxShadow:'0 10px 24px -14px rgba(18,50,31,.3)',padding:'6px 18px',borderRadius:24}, blockShadow:'0 16px 30px -14px rgba(31,174,84,.6)', btn:{background:'#12321f',color:'#fff',borderRadius:999,fontSize:17},
+   chipOn:{background:'#1fae54',color:'#fff'}, chipOff:{background:'#fff',color:'#12321f'}, chipR:999,
+   hero:'Card', list:'Cards', tab:'Pill', onb:'Top', tw:800, badge:{background:'#ff7a59',color:'#fff'}, ph1:'#d2ecd8', ph2:'#e6f4e8', tileRing:'none', tabBg:'#ffffff', tabShadow:'0 10px 30px -10px rgba(18,50,31,.35)', tabActive:'#fff', tabIdle:'#4d6a57', tabPillOn:'#1fae54', cardRow:{background:'#fff',borderRadius:24,boxShadow:'0 10px 24px -14px rgba(18,50,31,.3)'}, toggleRing:'none', trackOn:'#1fae54', knobOn:'#fff', trackOff:'#cfe6d4', knobOff:'#fff', scrollPad:'90px' },
+ { style:'Vintage cassette', fonts:'Playfair Display / Courier Prime', bezel:'#3b2418', bg:'#f3ead8', ink:'#3b2418', muted:'#7a5c48', line:'#dccaa9', surface:'#fbf5e8', accent:'#c4472d', accent2:'#e0a33a', onAccent:'#fbf5e8', onAccent2:'#3b2418', accentText:'#c4472d',
+   fh:"'Playfair Display',serif", hw:700, hi:'italic', ht:'none', hls:'-0.01em', fb:"'Courier Prime',monospace", fl:"'Courier Prime',monospace", r:'4px', rs:'4px', markR:'50%', dotR:'0px', toggleR:'4px', h1:32, big:56,
+   card:{background:'#fbf5e8',boxShadow:'inset 0 0 0 1px #dccaa9',padding:'4px 16px'}, blockShadow:'0 0 0 6px #f3ead8, 0 0 0 7px #c4472d', btn:{background:'#c4472d',color:'#fbf5e8',borderRadius:4,fontFamily:"'Courier Prime',monospace",letterSpacing:'0.08em',textTransform:'uppercase'},
+   chipOn:{background:'#3b2418',color:'#f3ead8'}, chipOff:{background:'transparent',color:'#3b2418',boxShadow:'inset 0 0 0 1px #7a5c48'}, chipR:4,
+   hero:'Tape', list:'Tracks', tab:'Text', onb:'Center', tw:700, badge:{background:'#e0a33a',color:'#3b2418'}, ph1:'#ead9ba', ph2:'#f3ead8', tileRing:'inset 0 0 0 1px #dccaa9', tabBg:'#f3ead8', tabActive:'#c4472d', tabIdle:'#7a5c48', tabFont:"'Playfair Display',serif", tabSize:'16px', tabStyle:'italic', tabLs:'0', tabCase:'none', toggleRing:'inset 0 0 0 1px #7a5c48', trackOn:'#c4472d', knobOn:'#fbf5e8', trackOff:'#fbf5e8', knobOff:'#7a5c48' },
+ { style:'Blueprint', fonts:'IBM Plex Sans / Plex Mono', bezel:'#0b1d4d', bg:'#1d3f94', bgImg:'linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px)', bgSize:'20px 20px', ink:'#f0f6ff', muted:'#b7cbf5', line:'rgba(255,255,255,.4)', surface:'rgba(255,255,255,.05)', accent:'#facc15', accent2:'#7dd3fc', onAccent:'#0b1d4d', onAccent2:'#0b1d4d', accentText:'#facc15',
+   fh:"'IBM Plex Sans',sans-serif", hw:700, ht:'none', hls:'-0.02em', fb:"'IBM Plex Sans',sans-serif", fl:"'IBM Plex Mono',monospace", r:'2px', rs:'2px', markR:'2px', dotR:'0px', toggleR:'2px', h1:30, big:60,
+   card:{background:'rgba(255,255,255,.04)',border:'1.5px dashed rgba(255,255,255,.4)',padding:'4px 14px',borderRadius:2}, blockShadow:'0 0 0 6px rgba(250,204,21,.18)', btn:{background:'#facc15',color:'#0b1d4d',borderRadius:2,fontFamily:"'IBM Plex Mono',monospace",textTransform:'uppercase',letterSpacing:'0.06em'},
+   chipOn:{background:'#facc15',color:'#0b1d4d'}, chipOff:{background:'transparent',color:'#f0f6ff',border:'1.5px dashed rgba(255,255,255,.5)'}, chipR:2,
+   hero:'Spec', list:'Tickets', tab:'Bar', onb:'Center', tw:700, badge:{background:'#facc15',color:'#0b1d4d'}, ph1:'rgba(255,255,255,.08)', ph2:'transparent', tileRing:'inset 0 0 0 1.5px rgba(255,255,255,.4)', tabBg:'#16357d', tabLine:'1.5px dashed rgba(255,255,255,.4)', tabActive:'#facc15', tabIdle:'#b7cbf5', tabCase:'uppercase', cardRow:{border:'1.5px dashed rgba(255,255,255,.4)',borderRadius:2}, toggleRing:'inset 0 0 0 1.5px rgba(255,255,255,.5)', trackOn:'#facc15', knobOn:'#0b1d4d', trackOff:'transparent', knobOff:'#b7cbf5' },
+ { style:'Organic garden', fonts:'Young Serif / Nunito', bezel:'#2d3b1f', bg:'#f3efe2', ink:'#2d3b1f', muted:'#66704f', line:'#ddd6bd', surface:'#fffdf6', accent:'#5a7d2a', accent2:'#e9a03b', onAccent:'#fffdf6', onAccent2:'#2d3b1f', accentText:'#5a7d2a',
+   fh:"'Young Serif',serif", hw:400, ht:'none', hls:'-0.01em', fb:"'Nunito',sans-serif", fl:"'Nunito',sans-serif", lls:'0.02em', ltt:'none', lsz:13, r:'28px 28px 28px 8px', rs:'18px 18px 18px 4px', markR:'60% 40% 55% 45% / 50% 60% 40% 50%', dotR:'40px', toggleR:'40px', h1:31, big:68,
+   card:{background:'#fffdf6',boxShadow:'inset 0 0 0 1.5px #ddd6bd',padding:'4px 18px',borderRadius:'24px 24px 24px 6px'}, blockShadow:'none', btn:{background:'#5a7d2a',color:'#fffdf6',borderRadius:'24px 24px 24px 6px',fontSize:16},
+   chipOn:{background:'#5a7d2a',color:'#fffdf6'}, chipOff:{background:'#fffdf6',color:'#2d3b1f',boxShadow:'inset 0 0 0 1.5px #ddd6bd'}, chipR:'20px 20px 20px 4px',
+   hero:'Card', list:'Tiles', tab:'Pill', onb:'Top', tw:800, badge:{background:'#e9a03b',color:'#2d3b1f'}, ph1:'#e5dfc6', ph2:'#f3efe2', tileRing:'none', tileH:'130px', tileGap:'14px', tileFont:"'Young Serif',serif", tabBg:'#2d3b1f', tabShadow:'0 10px 24px -10px rgba(45,59,31,.6)', tabActive:'#2d3b1f', tabIdle:'#cfd6b8', tabPillOn:'#e9a03b', cardRow:{background:'#fffdf6',boxShadow:'inset 0 0 0 1.5px #ddd6bd',borderRadius:'22px 22px 22px 6px'}, toggleRing:'none', trackOn:'#5a7d2a', knobOn:'#fffdf6', trackOff:'#ddd6bd', knobOff:'#fffdf6', scrollPad:'90px' },
+ { style:'Transit signage', fonts:'Barlow Condensed / Barlow', bezel:'#0a0a0a', bg:'#ffffff', ink:'#0a0a0a', muted:'#555555', line:'#e2e2e2', surface:'#f2f2f2', accent:'#0057ff', accent2:'#ffcc00', onAccent:'#ffffff', onAccent2:'#0a0a0a', accentText:'#0057ff',
+   fh:"'Barlow Condensed',sans-serif", hw:800, ht:'uppercase', hls:'0', fb:"'Barlow',sans-serif", fl:"'Barlow Condensed',sans-serif", lls:'0.1em', lsz:13, r:'0px', rs:'0px', markR:'50%', dotR:'0px', toggleR:'0px', h1:40, big:112,
+   card:{background:'#f2f2f2',padding:'4px 16px'}, blockShadow:'none', btn:{background:'#0057ff',color:'#fff',borderRadius:0,fontFamily:"'Barlow Condensed',sans-serif",fontSize:20,textTransform:'uppercase',letterSpacing:'0.04em',fontWeight:700},
+   chipOn:{background:'#0a0a0a',color:'#ffcc00'}, chipOff:{background:'#f2f2f2',color:'#0a0a0a'}, chipR:0,
+   hero:'Giant', list:'Board', tab:'Bar', onb:'Top', tw:600, badge:{background:'#ffcc00',color:'#0a0a0a'}, ph1:'#f2f2f2', ph2:'#ffffff', tileRing:'inset 0 0 0 2px #0a0a0a', tabBg:'#0a0a0a', tabLine:'none', tabActive:'#ffcc00', tabIdle:'#8a8a8a', tabCase:'uppercase', cardRow:{background:'#f2f2f2'}, toggleRing:'none', trackOn:'#0057ff', knobOn:'#fff', trackOff:'#e2e2e2', knobOff:'#fff' },
+ { style:'Fashion editorial', fonts:'Bodoni Moda / Jost', bezel:'#000', bg:'#ffffff', ink:'#000000', muted:'#6b6b6b', line:'#e6e6e6', surface:'#ffffff', accent:'#000000', accent2:'#c8102e', onAccent:'#ffffff', onAccent2:'#fff', accentText:'#c8102e',
+   fh:"'Bodoni Moda',serif", hw:400, ht:'none', hls:'-0.03em', fb:"'Jost',sans-serif", fl:"'Jost',sans-serif", lls:'0.22em', lsz:10.5, r:'0px', rs:'0px', markR:'0px', dotR:'0px', toggleR:'0px', h1:38, big:96,
+   card:{boxShadow:'inset 0 1px 0 #000, inset 0 -1px 0 #000',padding:'4px 0'}, blockShadow:'none', btn:{background:'#000',color:'#fff',borderRadius:0,textTransform:'uppercase',letterSpacing:'0.22em',fontSize:12,fontWeight:500},
+   chipOn:{background:'#000',color:'#fff'}, chipOff:{background:'#fff',color:'#000',boxShadow:'inset 0 0 0 1px #000'}, chipR:0,
+   hero:'Cover', list:'Tiles', tab:'Text', onb:'Center', tw:500, badge:{background:'#fff',color:'#000',boxShadow:'inset 0 0 0 1px #000'}, ph1:'#efefef', ph2:'#f8f8f8', tileRing:'none', tileH:'190px', tileGap:'16px 12px', tileFont:"'Bodoni Moda',serif", tabBg:'#fff', tabActive:'#000', tabIdle:'#9a9a9a', tabFont:"'Jost',sans-serif", tabSize:'10.5px', tabStyle:'normal', tabLs:'0.2em', tabCase:'uppercase', cardRow:{boxShadow:'inset 0 -1px 0 #000'}, toggleRing:'inset 0 0 0 1px #000', trackOn:'#000', knobOn:'#fff', trackOff:'#fff', knobOff:'#000' },
+ { style:'Warm & accessible', fonts:'Nunito Black', bezel:'#3d1f14', bg:'#fff3ea', ink:'#3d1f14', muted:'#86533f', line:'#f5d8c6', surface:'#ffffff', accent:'#ff6b4a', accent2:'#ffb547', onAccent:'#ffffff', onAccent2:'#3d1f14', accentText:'#d9482a',
+   fh:"'Nunito',sans-serif", hw:900, ht:'none', hls:'-0.02em', fb:"'Nunito',sans-serif", fl:"'Nunito',sans-serif", lls:'0.02em', ltt:'none', lsz:15, lw:800, r:'32px', rs:'24px', markR:'50%', dotR:'40px', toggleR:'40px', h1:34, big:60, bodySize:18,
+   card:{background:'#fff',boxShadow:'0 3px 0 #f5d8c6',padding:'6px 20px',borderRadius:28}, blockShadow:'0 0 0 12px #ffe1d3', btn:{background:'#ff6b4a',color:'#fff',borderRadius:999,fontSize:19,height:60,fontWeight:900},
+   chipOn:{background:'#ff6b4a',color:'#fff'}, chipOff:{background:'#fff',color:'#3d1f14',boxShadow:'0 3px 0 #f5d8c6'}, chipR:999, chipSize:17,
+   hero:'Circle', list:'Cards', tab:'Bar', onb:'Center', tw:900, badge:{background:'#ffb547',color:'#3d1f14'}, ph1:'#ffe6d8', ph2:'#fff3ea', tileRing:'none', tabBg:'#ffffff', tabLine:'none', tabActive:'#ff6b4a', tabIdle:'#b98b78', tabCase:'none', cardRow:{background:'#fff',borderRadius:28,boxShadow:'0 3px 0 #f5d8c6'}, toggleRing:'none', trackOn:'#ff6b4a', knobOn:'#fff', trackOff:'#f5d8c6', knobOff:'#fff' },
+ { style:'Neon fintech', fonts:'Space Grotesk / JetBrains Mono', bezel:'#262626', bg:'#0a0a0a', ink:'#f5f5f5', muted:'#8f8f8f', line:'#262626', surface:'#151515', accent:'#c6ff00', accent2:'#ff4fd8', onAccent:'#0a0a0a', onAccent2:'#0a0a0a', accentText:'#c6ff00',
+   fh:"'Space Grotesk',sans-serif", hw:700, ht:'none', hls:'-0.04em', fb:"'Space Grotesk',sans-serif", fl:"'JetBrains Mono',monospace", lls:'0.06em', r:'16px', rs:'12px', markR:'28px', dotR:'40px', toggleR:'40px', h1:32, big:76,
+   card:{background:'#151515',boxShadow:'inset 0 0 0 1px #262626',padding:'4px 16px',borderRadius:16}, blockShadow:'0 0 40px -6px rgba(198,255,0,.55)', btn:{background:'#c6ff00',color:'#0a0a0a',borderRadius:14},
+   chipOn:{background:'#c6ff00',color:'#0a0a0a'}, chipOff:{background:'#151515',color:'#f5f5f5',boxShadow:'inset 0 0 0 1px #333'}, chipR:12,
+   hero:'Giant', list:'Rows', tab:'Pill', onb:'Top', rowLine:'1px solid #1f1f1f', iconBg:'#151515', iconInk:'#c6ff00', iconRing:'inset 0 0 0 1px #262626', tw:500,
+   badge:{background:'transparent',color:'#c6ff00',fontFamily:"'JetBrains Mono',monospace"}, ph1:'#151515', ph2:'#0a0a0a', tileRing:'inset 0 0 0 1px #262626', tabBg:'#151515', tabShadow:'0 0 0 1px #262626, 0 12px 30px rgba(0,0,0,.6)', tabActive:'#0a0a0a', tabIdle:'#8f8f8f', tabPillOn:'#c6ff00', cardRow:{background:'#151515',borderRadius:16,boxShadow:'inset 0 0 0 1px #262626'}, toggleRing:'none', trackOn:'#c6ff00', knobOn:'#0a0a0a', trackOff:'#262626', knobOff:'#8f8f8f', scrollPad:'90px' },
+];
+const SCREENS = [['onboard','Onboarding'],['home','Home'],['tab2','Second tab'],['detail','Detail'],['create','Create flow'],['review','Review'],['confirm','Confirmation'],['settings','Profile & settings']];
+const KEY = 'tenapps-proto-v2';
+const CODES = [['01','02','03','04'],['A1','A2','B1','B2'],['01','02','03','04'],['4','4','12','X']];
+
+class Component extends DCLogic {
+  state = (() => { const d = { app:0, screen:'onboard', slide:0, item:0, step:0, picks:{}, conf:null, heroDone:{}, sw:{} }; try { return { ...d, ...JSON.parse(localStorage.getItem(KEY) || '{}') }; } catch (e) { return d; } })();
+  componentDidMount() { if (!window.TEN_APPS) this.poll = setInterval(() => { if (window.TEN_APPS) { clearInterval(this.poll); this.forceUpdate(); } }, 50); }
+  componentWillUnmount() { clearInterval(this.poll); }
+  componentDidUpdate() { const { app, screen } = this.state; try { localStorage.setItem(KEY, JSON.stringify({ app, screen })); } catch (e) {} }
+  go = (screen, extra) => this.setState({ screen, ...(extra || {}) });
+  renderVals() {
+    const APPS = window.TEN_APPS;
+    const s = this.state, set = (p) => this.setState(p);
+    const appList = (APPS || []).map((x, i) => ({ name: x.name, style: TH[i].style, font: TH[i].fh, sw1: TH[i].accent, sw2: TH[i].accent2, bg: i === s.app ? '#fff' : 'transparent',
+      onClick: () => set({ app: i, screen: 'onboard', slide: 0, step: 0, picks: {}, conf: null }) }));
+    if (!APPS) return { ready: false, appList, T: TH[0], A: {}, screenList: [] };
+    const A = APPS[s.app], T0 = TH[s.app];
+    const T = { hi:'normal', scrollPad:'0px', bgImg:'none', bgSize:'auto', tileH:'150px', tileGap:'12px', tileFont:T0.fb, tabFont:T0.fl, tabSize:'12px', tabStyle:'normal', tabLs:'0.06em', tabLine:'1px solid '+T0.line, tabShadow:'none', rowLine:'1px solid '+T0.line, iconBg:T0.surface, iconInk:T0.accent, iconRing:'none', ...T0 };
+    const f = (t) => t.replace('{item}', A.items[s.item].t);
+    const hs = { fontFamily: T.fh, fontWeight: T.hw, fontStyle: T.hi, textTransform: T.ht, letterSpacing: T.hls, lineHeight: 1.05, textWrap: 'pretty' };
+    const lab = { fontFamily: T.fl, fontSize: T.lsz || 11, fontWeight: T.lw || 700, letterSpacing: T.lls || '0.08em', textTransform: T.ltt || 'uppercase', color: T.muted };
+    const btnBase = { display:'flex', alignItems:'center', justifyContent:'center', height:52, padding:'0 20px', cursor:'pointer', fontFamily:T.fb, fontWeight:700, fontSize:15, boxSizing:'border-box', userSelect:'none' };
+    const btn = { ...btnBase, ...T.btn };
+    const ghost = { ...btnBase, ...T.btn, background:'transparent', color:T.ink, boxShadow:'inset 0 0 0 1.5px '+T.ink };
+    const badge = { fontFamily:T.fl, fontSize:12, fontWeight:700, padding:'4px 9px', borderRadius:T.rs, whiteSpace:'nowrap', ...T.badge };
+    const S = {
+      h1: { ...hs, fontSize: T.h1 }, h2: { ...hs, fontSize: Math.round(T.h1 * 0.7) }, big: { ...hs, fontSize: T.big, lineHeight: 0.95 },
+      brand: { ...hs, fontSize: 18 }, brandLg: { ...hs, fontSize: 24 },
+      label: lab, labelOn: { ...lab, color: T.onAccent, opacity: 0.85 }, labelStr: `font-family:${T.fl};font-size:11px;letter-spacing:0.08em;color:${T.muted}`,
+      body: { fontSize: T.bodySize || 15.5, lineHeight: 1.5, color: T.muted, textWrap: 'pretty' },
+      link: { fontSize: 14, fontWeight: 600, color: T.muted, cursor: 'pointer', fontFamily: T.fl },
+      back: { display:'flex', alignItems:'center', gap:6, cursor:'pointer', fontSize:14, fontWeight:600, color:T.muted, fontFamily:T.fl },
+      card: { borderRadius: T.r, ...T.card, display:'flex', flexDirection:'column' },
+      cardRow: { display:'flex', alignItems:'center', gap:14, padding:14, cursor:'pointer', borderRadius:T.r, ...(T.cardRow || T.card), ...(T.cardRow ? {} : { padding:14 }) },
+      btn, btnSm: { ...btn, height: 40, fontSize: 13 }, btnGhost: ghost, btnGhostHalf: { ...ghost, width: 110, flex: 'none' },
+      btnNext: { ...btn, flex: 1, opacity: s.picks[s.step] ? 1 : 0.4, cursor: s.picks[s.step] ? 'pointer' : 'not-allowed' },
+      labelOnRel: { ...lab, color: T.onAccent, opacity: 0.85, position: 'relative' }, bigRel: { ...hs, fontSize: T.big, lineHeight: 0.95, position: 'relative' },
+      labelInk: { ...lab, color: T.ink }, labelA2: { ...lab, color: T.accent2 }, labelAccent: { ...lab, color: T.accentText },
+      h1Top: { ...hs, fontSize: T.h1, marginTop: 12 }, btnStretch: { ...btn, alignSelf: 'stretch' },
+      specTag: { position: 'absolute', top: -9, left: 12, background: T.bg, padding: '0 6px', fontFamily: T.fl, fontSize: 11, letterSpacing: '0.08em', color: T.muted },
+      tileBadge: { position: 'absolute', left: 8, top: 8, fontFamily: T.fl, fontSize: 11, fontWeight: 700, padding: '3px 8px', background: T.badge.background === 'transparent' ? T.bg : T.badge.background, color: T.badge.color, boxShadow: T.badge.boxShadow || 'none' },
+      badge, badgeStr: `font-family:${T.fl};font-size:11px;font-weight:700;padding:3px 8px;background:${T.badge.background === 'transparent' ? T.bg : T.badge.background};color:${T.badge.color}`,
+    };
+    const slide = A.onboard[s.slide];
+    const n = A.create.steps.length, step = A.create.steps[Math.min(s.step, n - 1)], pick = s.picks[s.step];
+    const done = !!s.heroDone[s.app] && A.hero.done;
+    const hero = done ? { ...A.hero.done, hasCta: false } : { ...A.hero, hasCta: !!A.hero.cta };
+    const tabScreen = ['home','tab2','create','settings'], activeTab = tabScreen.indexOf(s.screen);
+    const confirm = s.conf || A.conf;
+    const codes = CODES[{ Tracks:1, Board:3 }[T.list] || 0];
+    const showTabs = ['home','tab2','settings'].includes(s.screen);
+    const v = {}; ['Block','Ring','Card','Tape','Spec','Giant','Cover','Circle'].forEach(k => v['hero' + k] = T.hero === k);
+    ['Rows','Cards','Tracks','Tickets','Tiles','Board'].forEach(k => v['list' + k] = T.list === k);
+    ['Bar','Pill','Text'].forEach(k => v['tab' + k] = showTabs && T.tab === k);
+    v.onbTop = T.onb === 'Top'; v.onbCenter = T.onb === 'Center';
+    if (!showTabs) T.scrollPad = '0px';
+    return {
+      ready: true, A, T, S, v, hero, appList,
+      is: Object.fromEntries(SCREENS.map(([k]) => [k, s.screen === k])),
+      screenList: SCREENS.map(([k, l], i) => ({ n: String(i + 1).padStart(2, '0'), label: l, bg: s.screen === k ? '#fff' : 'transparent',
+        onClick: () => set({ screen: k, slide: 0, step: k === 'create' ? 0 : s.step, conf: k === 'confirm' ? A.conf : s.conf }) })),
+      slide: { icon: slide[0], title: slide[1], body: slide[2] }, slideNo: `0${s.slide + 1} / 0${A.onboard.length}`,
+      dots: A.onboard.map((_, i) => ({ w: i === s.slide ? '28px' : '8px', bg: i === s.slide ? T.accent : T.line })),
+      slideCta: s.slide === A.onboard.length - 1 ? 'Get started' : 'Continue',
+      nextSlide: () => s.slide < A.onboard.length - 1 ? set({ slide: s.slide + 1 }) : this.go('home'),
+      skipOnboard: () => this.go('home'), replayOnboard: () => this.go('onboard', { slide: 0 }),
+      heroTap: () => A.hero.cta && set({ heroDone: { ...s.heroDone, [s.app]: !s.heroDone[s.app] } }),
+      heroCircleBg: done ? T.accent : T.surface, heroCircleInk: done ? T.onAccent : T.accentText,
+      heroCircleIcon: done ? 'IconCheck' : 'IconHand', heroCircleLabel: done ? hero.v : (A.hero.cta || hero.v),
+      homeItems: A.items.map((it, i) => ({ ...it, code: codes[i], onClick: () => this.go('detail', { item: i }) })),
+      tab2: A.tab2, tab2Items: A.tab2.items.map(([t, sub, r]) => ({ t, s: sub, r })),
+      item: { ...A.items[s.item], facts: A.items[s.item].f.map(([l, vv]) => ({ l, v: vv })) },
+      doAction: () => this.go('confirm', { conf: { t: A.conf.t, b: f(A.conf.b) } }),
+      conf: { t: confirm.t, b: f(confirm.b) }, goHome: () => this.go('home'),
+      step, stepLabel: `Step ${Math.min(s.step + 1, n)} of ${n}`, stepPct: Math.round(((s.step + 1) / (n + 1)) * 100) + '%',
+      stepOpts: step.o.map(o => ({ label: o, style: { padding: '12px 16px', borderRadius: T.chipR, fontSize: T.chipSize || 14, fontWeight: 600, cursor: 'pointer', fontFamily: T.fb, transition: 'all 150ms', ...(pick === o ? T.chipOn : { color: T.ink, ...T.chipOff }) },
+        onClick: () => set({ picks: { ...s.picks, [s.step]: o } }) })),
+      hasPrev: s.step > 0,
+      prevStep: () => s.screen === 'review' ? this.go('create', { step: n - 1 }) : set({ step: Math.max(0, s.step - 1) }),
+      nextStep: () => { if (!pick) return; s.step < n - 1 ? set({ step: s.step + 1 }) : this.go('review'); },
+      reviewRows: A.create.steps.map((st, i) => ({ q: st.q, a: s.picks[i] || '—' })),
+      submitCreate: () => this.go('confirm', { conf: A.create.conf, picks: {}, step: 0 }),
+      settingsRows: A.settings.map((label, i) => { const k = s.app + '-' + i, on = s.sw[k] ?? i !== 2;
+        return { label, track: on ? T.trackOn : T.trackOff, knob: on ? T.knobOn : T.knobOff, x: on ? '21px' : '3px', onClick: () => set({ sw: { ...s.sw, [k]: !on } }) }; }),
+      tabs: A.tabs.map(([icon, label], i) => { const on = i === activeTab;
+        return { icon, label, color: on ? T.tabActive : T.tabIdle, bg: on ? (T.tabPillOn || 'transparent') : 'transparent', under: on ? T.tabActive : 'transparent',
+          onClick: () => i === 2 ? this.go('create', { step: 0, picks: {} }) : this.go(tabScreen[i]) }; }),
+    };
+  }
+}
+</script>
+</body>
+</html>
