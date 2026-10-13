@@ -315,6 +315,20 @@ def main():
         full.convert("RGB").save(out / "icon.png")
         full.convert("RGB").resize((512, 512), Image.LANCZOS).save(store / f"{app}-512.png")
 
+        # launch-screen logo: rounded icon tile with a soft shadow, 768 px
+        # (flutter_native_splash treats it as 4x, so it shows at 192 dp)
+        tile = full.resize((560, 560), Image.LANCZOS)
+        from PIL import ImageDraw as _D
+        m = Image.new("L", (560, 560), 0)
+        _D.Draw(m).rounded_rectangle((0, 0, 559, 559), radius=140, fill=255)
+        tile.putalpha(m)
+        splash = Image.new("RGBA", (768, 768), (0, 0, 0, 0))
+        sh = Image.new("RGBA", (768, 768), (0, 0, 0, 0))
+        sh.paste(Image.new("RGBA", (560, 560), (0, 0, 0, 70)), (104, 120), m)
+        splash.alpha_composite(sh.filter(ImageFilter.GaussianBlur(24)))
+        splash.alpha_composite(tile, (104, 104))
+        splash.save(out / "splash.png")
+
         # preview: rounded "squircle" like a phone launcher
         thumb = full.resize((180, 180), Image.LANCZOS)
         mask = Image.new("L", (180, 180), 0)

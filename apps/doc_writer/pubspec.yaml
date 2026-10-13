@@ -19,6 +19,7 @@ dependencies:
 
 dev_dependencies:
   flutter_launcher_icons: any
+  flutter_native_splash: any
 
 flutter:
   uses-material-design: true
@@ -31,3 +32,16 @@ flutter_launcher_icons:
   image_path: assets/icon/icon.png
   adaptive_icon_background: assets/icon/background.png
   adaptive_icon_foreground: assets/icon/foreground.png
+
+flutter_native_splash:
+  color: "#F6F1E7"
+  color_dark: "#14130F"
+  image: assets/icon/splash.png
+  android_12:
+    color: "#F6F1E7"
+    color_dark: "#14130F"
+    image: assets/icon/foreground.png
+    icon_background_color: "#5A4A3A"
+    icon_background_color_dark: "#5A4A3A"
+  ios: false
+  web: false

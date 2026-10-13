@@ -97,6 +97,7 @@ jobs:
         run: |
           ../../tool/ci_run.sh "pub get $APP" flutter pub get
           ../../tool/ci_run.sh "icons $APP" dart run flutter_launcher_icons
+          ../../tool/ci_run.sh "splash $APP" dart run flutter_native_splash:create
 
       - name: Analyze
         working-directory: apps/${{ matrix.app }}
@@ -128,6 +129,8 @@ jobs:
     if: always() && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v5
+
       - uses: actions/download-artifact@v4
         with:
           path: out
@@ -136,12 +139,13 @@ jobs:
       - name: List files
         run: ls -la out || true
 
+      - name: Write download page
+        run: python3 tool/release_notes.py "build-${{ github.run_number }}" > notes.md
+
       - uses: softprops/action-gh-release@v2
         if: hashFiles('out/*') != ''
         with:
           tag_name: build-${{ github.run_number }}
           name: Build ${{ github.run_number }}
-          body: |
-            **Install on your phone:** download `<app>.apk`. Very old phones (32-bit) need `<app>-old-phones.apk`.
-            **Google Play Console:** upload `<app>.aab`.
+          body_path: notes.md
           files: out/*
