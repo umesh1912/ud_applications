@@ -1,0 +1,4 @@
+[
+  { "slug": "careloop", "role": "patient", "name": "CareLoop", "tagline": "Consult top doctors by video or in clinic, keep every record in one place", "bg": "#F4F7F6", "dark": false },
+  { "slug": "careloop_pro", "role": "doctor", "name": "CareLoop Pro", "tagline": "Run your practice: patient queue, video consults, e-prescriptions and earnings", "bg": "#0E1330", "dark": true }
+]

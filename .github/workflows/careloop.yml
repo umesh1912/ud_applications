@@ -1,0 +1,125 @@
+name: CareLoop APKs
+
+# web_apps/careloop is one React + Capacitor codebase built as two Android apps:
+# CareLoop (patients, VITE_ROLE=patient) and CareLoop Pro (doctors, VITE_ROLE=doctor).
+on:
+  push:
+    branches: [main, careloop]
+    paths: ["web_apps/careloop/**", ".github/workflows/careloop.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+defaults:
+  run:
+    working-directory: web_apps/careloop
+
+jobs:
+  apk:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { slug: careloop, role: patient, name: CareLoop }
+          - { slug: careloop_pro, role: doctor, name: CareLoop Pro }
+    env:
+      APP: ${{ matrix.slug }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web_apps/careloop/package-lock.json
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      # ubuntu-latest ships the Android SDK (ANDROID_HOME).
+
+      - run: npm ci
+      - run: pip install pillow
+
+      - name: Build web app
+        run: |
+          npm run typecheck
+          VITE_ROLE=${{ matrix.role }} npx vite build
+
+      - name: Generate Android project
+        run: |
+          npx cap add android
+          chmod +x android/gradlew
+
+      - name: Add upload key (only if secrets are set)
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 -d > android/upload-keystore.jks
+            {
+              echo "storePassword=$KEYSTORE_PASSWORD"
+              echo "keyPassword=$KEYSTORE_PASSWORD"
+              echo "keyAlias=${KEY_ALIAS:-upload}"
+              echo "storeFile=upload-keystore.jks"
+            } > android/key.properties
+            echo "Upload key added."
+          else
+            echo "No KEYSTORE_BASE64 secret: building a debug-signed APK."
+          fi
+
+      - name: Icons, theme and version
+        run: python3 tool/prepare_android.py "$APP" ${{ github.run_number }}
+
+      - name: Build APK
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/out"
+          if [ -f android/key.properties ]; then
+            (cd android && ../../../tool/ci_run.sh "apk $APP" ./gradlew assembleRelease bundleRelease)
+            cp android/app/build/outputs/apk/release/app-release.apk "$GITHUB_WORKSPACE/out/$APP.apk"
+            cp android/app/build/outputs/bundle/release/app-release.aab "$GITHUB_WORKSPACE/out/$APP.aab"
+          else
+            (cd android && ../../../tool/ci_run.sh "apk $APP" ./gradlew assembleDebug)
+            cp android/app/build/outputs/apk/debug/app-debug.apk "$GITHUB_WORKSPACE/out/$APP.apk"
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: careloop-${{ matrix.slug }}
+          path: out/*
+
+  release:
+    name: Publish downloads
+    needs: apk
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: out
+          pattern: careloop-*
+          merge-multiple: true
+
+      - name: Write download page
+        working-directory: .
+        run: |
+          ls -la out || true
+          python3 web_apps/careloop/tool/release_notes.py "careloop-${{ github.run_number }}" "${{ github.ref_name }}" out > notes.md
+
+      - uses: softprops/action-gh-release@v2
+        if: hashFiles('out/*') != ''
+        with:
+          tag_name: careloop-${{ github.run_number }}
+          name: CareLoop ${{ github.run_number }}
+          prerelease: ${{ github.ref != 'refs/heads/main' }}
+          body_path: notes.md
+          files: out/*

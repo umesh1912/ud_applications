@@ -1,0 +1,5 @@
+node_modules
+dist
+*.tsbuildinfo
+# Generated per app by `npx cap add android` (see tool/prepare_android.py)
+android/

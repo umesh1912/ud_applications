@@ -28,6 +28,8 @@ Every app works offline and keeps files on the phone. Languages: English, हि
 
 **Shivam Residency** (`web_apps/society_app`) is a society management app (maintenance and bills, visitors and gate passes, complaints, notices, events, polls, amenity booking, expenses, SOS) for residents, the secretary, the treasurer and the watchman. Unlike the apps above it is built with React and Capacitor, so it has its own workflow (`society-app.yml`) and its APK appears as a separate "Society App" release.
 
+**CareLoop** (`web_apps/careloop`) is a telehealth pair for India and the US: **CareLoop** for patients (book video or clinic visits, prescriptions, medicines, lab tests, family records, Plus membership) and **CareLoop Pro** for doctors (patient queue, video consults, e-prescriptions, schedule, earnings, plans). It is one React and Capacitor codebase built as two Android apps by `careloop.yml`; the APKs appear in the "CareLoop" releases.
+
 Shared code lives in `packages/ud_core` (theme, fonts, translations, widgets, file helpers).
 
 ## Getting the APKs
