@@ -46,17 +46,33 @@ jobs:
       - run: npm ci
       - run: pip install pillow
 
+      - name: Test security rules
+        run: npx firebase emulators:exec --only firestore --project demo-careloop "npm run test:rules"
+
+      # The APK must point at your real Firebase project (src/firebase-config.ts), not the local emulator.
+      - name: Check Firebase config
+        id: cfg
+        run: |
+          if grep -q "projectId: 'demo-" src/firebase-config.ts; then
+            echo "::warning title=Firebase not configured::Paste your Firebase web config into web_apps/careloop/src/firebase-config.ts to build installable APKs."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Build web app
         run: |
           npm run typecheck
           VITE_ROLE=${{ matrix.role }} npx vite build
 
       - name: Generate Android project
+        if: steps.cfg.outputs.ready == 'true'
         run: |
           npx cap add android
           chmod +x android/gradlew
 
       - name: Add upload key (only if secrets are set)
+        if: steps.cfg.outputs.ready == 'true'
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -76,9 +92,11 @@ jobs:
           fi
 
       - name: Icons, theme and version
+        if: steps.cfg.outputs.ready == 'true'
         run: python3 tool/prepare_android.py "$APP" ${{ github.run_number }}
 
       - name: Build APK
+        if: steps.cfg.outputs.ready == 'true'
         run: |
           mkdir -p "$GITHUB_WORKSPACE/out"
           if [ -f android/key.properties ]; then
@@ -91,9 +109,34 @@ jobs:
           fi
 
       - uses: actions/upload-artifact@v4
+        if: steps.cfg.outputs.ready == 'true'
         with:
           name: careloop-${{ matrix.slug }}
           path: out/*
+
+  # Deploys firebase/firestore.rules and indexes when a service-account key is set as the
+  # FIREBASE_SERVICE_ACCOUNT secret (Firebase console → Project settings → Service accounts → Generate key).
+  deploy-rules:
+    name: Deploy Firestore rules
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/careloop'
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web_apps/careloop/package-lock.json
+      - run: npm ci
+      - name: Deploy rules and indexes
+        env:
+          SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$SA" ]; then echo "No FIREBASE_SERVICE_ACCOUNT secret: paste firebase/firestore.rules into the Firebase console instead."; exit 0; fi
+          PROJECT=$(sed -n "s/.*projectId: '\([^']*\)'.*/\1/p" src/firebase-config.ts | head -1)
+          case "$PROJECT" in demo-*) echo "Firebase config not set yet."; exit 0;; esac
+          echo "$SA" > "$RUNNER_TEMP/sa.json"
+          GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json" npx firebase deploy --only firestore --project "$PROJECT" --non-interactive
 
   release:
     name: Publish downloads

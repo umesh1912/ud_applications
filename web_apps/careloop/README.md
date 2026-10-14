@@ -1,103 +1,110 @@
 # CareLoop: telehealth for patients and doctors
 
-Two Android apps from one React + Capacitor codebase, for India and the United States:
+Two Android apps on one Firebase backend, for India and the United States:
 
 | | App | For |
 |:-:|---|---|
-| <img src="store/careloop-512.png" width="56"> | **CareLoop** (`com.udapps.careloop`) | Patients: find a doctor, book video or clinic visits, pay, join the call, get prescriptions, order medicines and lab tests, keep the family's records |
-| <img src="store/careloop_pro-512.png" width="56"> | **CareLoop Pro** (`com.udapps.careloop_pro`) | Doctors: today's queue, instant consult requests, video consults with notes, e-prescriptions, patient charts, schedule and fees, earnings and payouts |
+| <img src="store/careloop-512.png" width="56"> | **CareLoop** (`com.udapps.careloop`) | Patients: sign up, find verified doctors, book video or clinic visits or an instant consult, pay, join the video visit, get prescriptions, chat with the doctor, order medicines and lab tests, keep family records |
+| <img src="store/careloop_pro-512.png" width="56"> | **CareLoop Pro** (`com.udapps.careloop_pro`) | Doctors: sign up with a license, get verified, set hours and fees, take booked and instant consults, write e-prescriptions, chat with patients, track earnings and request payouts. Admins approve doctors in the same app. |
 
-**Get the APKs:** open this repository's **Releases** page. The newest "CareLoop N" release has `careloop.apk` and `careloop_pro.apk`. `.github/workflows/careloop.yml` builds both on every push that touches this folder.
+Everything is real and shared between the apps through Firebase. A booking a patient makes appears on the doctor's schedule. A prescription the doctor signs appears in the patient's records. Messages arrive in each other's inboxes.
 
-On first launch you pick **India** or the **United States**. That sets the doctors, the currency, the payment methods (UPI, cards and net banking in India; insurance, cards and HSA/FSA in the US), the prices and the compliance notes.
+## Set up (once)
 
-## What's in each app
+1. **Create a Firebase project.** In console.firebase.google.com, add a project.
+   - **Authentication**: enable **Email/Password**. Optionally enable **Phone**, which needs the Blaze plan for real SMS; test numbers work on the free plan.
+   - **Firestore Database**: create it in production mode.
+   - **Project settings → Your apps**: add a **Web** app and copy its config.
+2. **Paste the config** into `src/firebase-config.ts`, replacing the `demo-careloop` placeholder.
+3. **Apply the security rules and the index.** Do one of these:
+   - In the console: copy `firebase/firestore.rules` into Firestore → Rules → Publish. Then add an index exemption under Firestore → Indexes → Single field → **messages / to**, with collection group scope enabled.
+   - Or automatically: add a service-account key as the GitHub secret `FIREBASE_SERVICE_ACCOUNT`; `careloop.yml` then runs `firebase deploy --only firestore` on every push.
+4. **Make yourself an admin.** Sign up in CareLoop Pro with your email. In Firestore → `users` → your document, set `role` to `admin`. Reopen the app and you'll see the doctor-verification console.
+5. **Push.** `.github/workflows/careloop.yml` tests the rules, builds both APKs and publishes a **CareLoop N** release. Until step 2 is done, it skips the APKs, because they'd point at the local test server.
 
-**CareLoop (patient)**
-- Onboarding: country, phone number with an auto-read one-time code, and a short profile.
-- Home: the next visit with a live **Join** button, quick actions, browse by symptom, top doctors, a vitals snapshot and an emergency notice.
-- Find and book: search with filters (specialty, available today, video or clinic, sort by rating or fee) and doctor profiles with stats, reviews, clinic details and a date and time picker. Checkout lets you choose the family member, the reason and the payment method, shows the price breakdown (Plus discount, booking fee, GST, insurance copay), then confirms.
-- **Instant consult**: pick a concern and get matched to the next available GP.
-- Video visit with mute, camera and speaker controls. Afterwards you rate the doctor and get a signed digital prescription.
-- From the prescription you can order the medicines (cart, discount and delivery tracking) or book the prescribed tests at home.
-- Records: prescriptions, lab reports with flagged values, and vitals trends you can log. You can also upload outside records.
-- Visits: upcoming and past visits, cancel with refund, reschedule, clinic token, a free 7-day follow-up chat, and invoices.
-- Profile: **CareLoop Plus** membership, family members, orders, reminders and country switch.
+### Payments
 
-**CareLoop Pro (doctor)**
-- License sign-in with a medical council number (India) or state license/NPI (US).
-- Today: an online toggle for instant consults, today's earnings, an "Up next" patient card with vitals and allergy alerts, and a timeline of the day's queue.
-- **Instant consult requests** arrive while the doctor is online, showing what the doctor would earn; accept starts the call.
-- Video consult with a notes panel holding the patient summary. Ending the call opens the **e-prescription builder**: diagnosis chips, a medicine picker with dose, duration and instructions plus allergy checks, tests, advice templates (a Pro feature) and follow-up. Then **review, sign and send**, which adds the fee to earnings.
-- Schedule: a week view, working days, morning/afternoon/evening sessions, slot length, blocked days off, and fee editing with market comparisons.
-- Patients: search, and charts with vitals, conditions, allergies and visit history.
-- Earnings: withdrawable balance, a 7-day revenue chart, the platform fee breakdown, payouts, and a Pro upgrade prompt that shows the savings.
-- Plans: Starter, Pro and Clinic/Practice, each showing what the doctor would keep per month.
+With no keys, checkout runs as a **test checkout**: real validation and processing, marked "Test mode", and no money moves. To take payments:
+
+- **India (Razorpay):** set `PAYMENTS.razorpayKeyId` in `src/firebase-config.ts` (an `rzp_test_…` or live key). Checkout opens Razorpay with UPI, cards and net banking.
+- **US (Stripe):** needs the Cloud Functions in `functions/` (Blaze plan):
+  ```bash
+  firebase functions:secrets:set STRIPE_SECRET_KEY        # and RAZORPAY_KEY_ID / RAZORPAY_KEY_SECRET for server-side Razorpay orders
+  cd functions && npm install && npm run deploy
+  ```
+  Then set `PAYMENTS.stripePublishableKey` and `PAYMENTS.functionsDeployed = true`.
+
+Refunds for cancelled visits are flagged on the booking (`payment.status = refund-pending`). Issue them from your Razorpay or Stripe dashboard.
+
+### Video visits
+
+Each visit has its own private, random room on **Jitsi Meet** (meet.jit.si), which is free and needs no account. On Android it opens in Chrome, where the camera and microphone work. The first person to join a room may be asked by Jitsi to sign in (Google, GitHub and others) to start it. For your own branding and no sign-in, run your own Jitsi server or use 8x8 JaaS, and change the URL in `openVideoRoom` in `src/lib/care.ts`.
+
+## How it works
+
+| Data (Firestore) | Who can see it |
+|---|---|
+| `users/{uid}`: profile, health basics, family, vitals, Plus | that person; admins |
+| `doctors/{uid}`: public profile, fees, hours, rating | everyone signed in once approved; pending ones only themselves and admins |
+| `appointments/{id}` and `/messages`: visit, prescription, chat | the patient and the doctor on the visit only |
+| `slots/{doctor_time}` | used to block double-booking: each time can be booked once |
+| `instantRequests/{id}` | the patient; approved doctors while it's open (the first to accept wins) |
+| `reports`, `orders` | the patient only |
+| `payouts` | the doctor only |
+
+`tests/rules.test.ts` checks these rules against the emulator (17 tests): people can't read others' visits or records, change their own role, approve themselves, write prescriptions as a patient, double-book a slot, take an instant request someone already accepted, or send messages on someone else's visit.
+
+**Accounts.** Email and password, with password reset and email verification; or a phone code. Each app checks the role: a patient account opening CareLoop Pro is told to use the patient app, and the other way round.
 
 ## How it makes money
 
 | Stream | India | United States |
 |---|---|---|
-| **Commission on every consult** (doctor side) | 20% Starter, 10% Pro, 8% Clinic | same |
-| **Doctor subscriptions** (SaaS) | Pro ₹1,999/mo · Clinic ₹4,999/mo | Pro $49/mo · Practice $149/mo |
-| **Patient booking fee** | ₹29 + GST per booking | $3 per booking |
-| **CareLoop Plus** (patient membership) | ₹299/mo or ₹1,999/yr | $14.99/mo or $119/yr |
-| **Pharmacy margin** on medicine orders | 15% discount still leaves partner margin; delivery fee | delivery fee + partner margin |
-| **Lab test packages** with home collection | package margin + ₹99 collection | package margin + $15 collection |
-| Insurance (US) | n/a | per-visit billing with copay shown before booking |
+| Commission on every consult | 20% Starter, 10% Pro, 8% Clinic | same |
+| Doctor subscriptions | Pro ₹1,999/mo · Clinic ₹4,999/mo | Pro $49/mo · Practice $149/mo |
+| Patient booking fee | ₹29 + GST | $3 |
+| Instant consults (flat fee) | ₹399 | $49 |
+| CareLoop Plus (patients) | ₹299/mo or ₹1,999/yr | $14.99/mo or $119/yr |
+| Medicines and lab tests | partner margin + delivery/collection fees | same |
 
-The apps nudge these streams at the moments they make sense:
-- Plus offers appear at checkout ("Save ₹129 on this visit") and on Home.
-- Pro offers appear in Earnings ("Keep ₹23,972 more a month") and on locked prescription templates.
+The apps show these at the moments they matter:
+- Plus is offered at checkout ("Save ₹129 with Plus") and on Home.
+- Pro is offered in Earnings ("Keep ₹X more a month") and on locked prescription templates.
 - Every prescription ends with **Order medicines** and **Book tests**.
 
-## What's simulated
-
-These are complete, working prototypes with sample data and no server:
-- Payments, the one-time code, video, chat replies and payouts are simulated.
-- The patient and doctor apps don't talk to each other.
-- All data stays on the phone (localStorage).
-
-A real launch needs:
-- **Backend and data:** a backend (accounts, bookings, queue, records); HIPAA (US) or DPDP Act (India) hosting and consent.
-- **Video:** a video provider such as Twilio, Agora or 100ms, behind `src/ui/call.tsx`.
-- **Payments and insurance:** Razorpay or Cashfree in India, Stripe in the US, and an insurance eligibility API in the US.
-- **Prescriptions:** e-prescribing rules: India's Telemedicine Practice Guidelines; Surescripts/EPCS in the US.
-- **Doctors and partners:** doctor credential checks, and pharmacy and lab partners.
-
-## Run it
+## Develop
 
 ```bash
 npm install
-npm run dev              # both apps side by side in phone frames
-npm run dev:patient      # just the patient app, full screen
-npm run dev:doctor       # just the doctor app, full screen
-npm run build            # typecheck + build
+npm run emulators            # Firebase Auth + Firestore emulators (needs Java)
+npm run dev:emulator         # both apps side by side at http://localhost:5173 (each frame has its own login)
+npm run test:rules           # security rules tests (with the emulators running)
+npm run build                # typecheck + build
 ```
 
-## Build an APK locally
+`?app=patient` or `?app=doctor` opens one app full screen. With a `demo-` project id in `src/firebase-config.ts`, the app always uses the emulators.
 
-You need JDK 21 and the Android SDK (`ANDROID_HOME`), plus `pip install pillow`.
+### Build an APK locally
+
+You need JDK 21 and the Android SDK, plus `pip install pillow`.
 
 ```bash
-VITE_ROLE=patient npx vite build          # or VITE_ROLE=doctor
-APP=careloop npx cap add android           # or APP=careloop_pro; android/ is generated, not committed
-python3 tool/prepare_android.py careloop   # icons, launch screen, bar colours, version
-cd android && ./gradlew assembleDebug      # app/build/outputs/apk/debug/app-debug.apk
+VITE_ROLE=patient npx vite build           # or VITE_ROLE=doctor
+APP=careloop npx cap add android            # or APP=careloop_pro
+python3 tool/prepare_android.py careloop
+cd android && ./gradlew assembleDebug
 ```
-
-The Android back button steps back through screens, then to the first tab, then closes the app.
 
 ## Layout
 
 ```
-apps.json              the two apps: slug, role, name, colours (used by capacitor.config.ts and tool/)
-src/data/region.ts     India / US: currency, payment methods, fees, Plus and doctor plan pricing
-src/data/catalog.ts    specialties, doctors, slots, lab packages, medicines
-src/ui/                design system (theme.css), components (kit.tsx), video call, charts, icon registry
-src/patient/           CareLoop: state + onboarding, home, find/book, visits, records, shop, profile
-src/doctor/            CareLoop Pro: state + today/consult/prescribe, schedule, patients, earnings, plans
-tool/                  icon drawing (make_icons.py), Android setup, release notes
+src/firebase-config.ts   your Firebase web config + payment keys
+firebase/                Firestore security rules and indexes
+functions/               payment Cloud Functions (Razorpay orders, Stripe payment intents)
+src/lib/                 Firebase setup, auth, live queries, booking/chat/video helpers, payments, data model
+src/ui/                  design system, sign-up/log-in screens, charts, icons
+src/patient/             CareLoop screens
+src/doctor/              CareLoop Pro screens, including doctor onboarding and the admin console
+tests/rules.test.ts      security rules tests
+tool/                    icon drawing, Android setup, release notes
 ```
-
-`python3 tool/make_icons.py` (needs `pip install cairosvg pillow`) redraws both icons as adaptive-icon layers in `icons/` and the 512 px Play Store icons in `store/`.

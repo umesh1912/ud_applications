@@ -1,0 +1,129 @@
+rules_version = '2';
+
+// CareLoop security rules. Paste into Firebase console → Firestore → Rules (or `firebase deploy --only firestore:rules`).
+//
+// Who can see what:
+//   users/{uid}            the person themselves; admins
+//   doctors/{uid}          approved doctors: any signed-in user; pending ones: themselves and admins
+//   appointments/{id}      only the patient and the doctor on it (and its chat messages)
+//   slots/{doctor_time}    any signed-in user (to show taken times); one booking per slot
+//   instantRequests/{id}   the patient who asked; doctors in the network while it is open
+//   reports, orders        the patient only
+//   payouts                the doctor only
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function me() { return request.auth.uid; }
+    function myProfile() { return get(/databases/$(database)/documents/users/$(me())).data; }
+    function isAdmin() { return signedIn() && exists(/databases/$(database)/documents/users/$(me())) && myProfile().role == 'admin'; }
+    function isDoctor() { return signedIn() && exists(/databases/$(database)/documents/doctors/$(me())); }
+    function approvedDoctor() { return isDoctor() && get(/databases/$(database)/documents/doctors/$(me())).data.status == 'approved'; }
+    function changed() { return request.resource.data.diff(resource.data).affectedKeys(); }
+
+    // ------------------------------------------------------------------ people
+    match /users/{uid} {
+      allow read: if (signedIn() && me() == uid) || isAdmin();
+      // Anyone can create their own profile as a patient or doctor; admin is granted in the console.
+      allow create: if signedIn() && me() == uid
+        && request.resource.data.role in ['patient', 'doctor']
+        && request.resource.data.region in ['IN', 'US'];
+      // The role never changes from the app.
+      allow update: if signedIn() && me() == uid && !('role' in changed());
+    }
+
+    match /doctors/{uid} {
+      allow read: if signedIn() && (resource.data.status == 'approved' || me() == uid || isAdmin());
+      allow create: if signedIn() && me() == uid
+        && request.resource.data.status == 'pending'
+        && request.resource.data.ratingSum == 0 && request.resource.data.ratingCount == 0;
+      // Doctors edit their own profile but not their approval or rating (a rejected doctor may resubmit).
+      allow update: if (signedIn() && me() == uid && !changed().hasAny(['ratingSum', 'ratingCount', 'uid'])
+            && (!('status' in changed()) || (resource.data.status == 'rejected' && request.resource.data.status == 'pending')))
+        // Admins approve or reject.
+        || (isAdmin() && changed().hasOnly(['status', 'reviewedAt']))
+        // Patients add one rating (1–5) after a visit.
+        || (signedIn() && changed().hasOnly(['ratingSum', 'ratingCount'])
+            && request.resource.data.ratingCount == resource.data.ratingCount + 1
+            && request.resource.data.ratingSum - resource.data.ratingSum >= 1
+            && request.resource.data.ratingSum - resource.data.ratingSum <= 5);
+    }
+
+    // ------------------------------------------------------------------ booking
+    match /slots/{slotId} {
+      allow read: if signedIn();
+      // A slot document can only be created once, so a time can't be double-booked.
+      allow create: if signedIn()
+        && (request.resource.data.patientId == me() || request.resource.data.doctorId == me())
+        && slotId == request.resource.data.doctorId + '_' + string(request.resource.data.t);
+      allow delete: if signedIn() && (resource.data.patientId == me() || resource.data.doctorId == me());
+    }
+
+    match /appointments/{id} {
+      function isParty() { return signedIn() && (resource.data.patientId == me() || resource.data.doctorId == me()); }
+      allow read: if isParty();
+      // Patients book; doctors create the appointment when they accept an instant request.
+      allow create: if signedIn()
+        && (request.resource.data.patientId == me() || (request.resource.data.doctorId == me() && request.resource.data.instant == true))
+        && request.resource.data.status == 'booked';
+      allow update: if
+        // Patient: cancel, check in, rate, pay.
+        (signedIn() && resource.data.patientId == me()
+          && changed().hasOnly(['status', 'rating', 'review', 'payment', 'updatedAt', 'joinedAt'])
+          && request.resource.data.status in ['booked', 'waiting', 'cancelled', 'completed', 'in-consult']
+          && (request.resource.data.status == resource.data.status || request.resource.data.status in ['waiting', 'cancelled']))
+        // Doctor: run the consult and write the prescription.
+        || (signedIn() && resource.data.doctorId == me()
+          && changed().hasOnly(['status', 'rx', 'notes', 'updatedAt', 'startedAt', 'endedAt']));
+
+      match /messages/{mid} {
+        function parent() { return get(/databases/$(database)/documents/appointments/$(id)).data; }
+        allow read: if signedIn() && (parent().patientId == me() || parent().doctorId == me());
+        // Sender is me, recipient is the other person on this visit.
+        allow create: if signedIn() && request.resource.data.from == me()
+          && ((parent().patientId == me() && request.resource.data.to == parent().doctorId)
+           || (parent().doctorId == me() && request.resource.data.to == parent().patientId));
+      }
+    }
+
+    // Inbox: messages addressed to me across all my visits.
+    match /{path=**}/messages/{mid} {
+      allow read: if signedIn() && (resource.data.to == me() || resource.data.from == me());
+    }
+
+    match /reviews/{apptId} {
+      allow read: if signedIn();
+      allow create: if signedIn() && request.resource.data.patientId == me()
+        && get(/databases/$(database)/documents/appointments/$(apptId)).data.patientId == me()
+        && get(/databases/$(database)/documents/appointments/$(apptId)).data.status == 'completed'
+        && request.resource.data.rating >= 1 && request.resource.data.rating <= 5;
+    }
+
+    match /instantRequests/{id} {
+      allow read: if signedIn() && (resource.data.patientId == me() || (approvedDoctor() && (resource.data.status == 'open' || resource.data.doctorId == me())));
+      allow create: if signedIn() && request.resource.data.patientId == me() && request.resource.data.status == 'open';
+      allow update: if
+        (signedIn() && resource.data.patientId == me() && changed().hasOnly(['status', 'updatedAt']) && request.resource.data.status == 'cancelled')
+        // The first doctor to accept wins; it can't be taken over afterwards.
+        || (approvedDoctor() && resource.data.status == 'open'
+          && request.resource.data.status == 'accepted' && request.resource.data.doctorId == me()
+          && changed().hasOnly(['status', 'doctorId', 'doctorName', 'apptId', 'updatedAt']));
+    }
+
+    // ------------------------------------------------------------------ patient-owned
+    match /reports/{id} {
+      allow read, delete: if signedIn() && resource.data.patientId == me();
+      allow create, update: if signedIn() && request.resource.data.patientId == me();
+    }
+    match /orders/{id} {
+      allow read: if signedIn() && resource.data.patientId == me();
+      allow create: if signedIn() && request.resource.data.patientId == me();
+    }
+
+    // ------------------------------------------------------------------ doctor-owned
+    match /payouts/{id} {
+      allow read: if signedIn() && resource.data.doctorId == me();
+      allow create: if approvedDoctor() && request.resource.data.doctorId == me() && request.resource.data.status == 'requested';
+    }
+  }
+}

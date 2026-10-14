@@ -6,31 +6,34 @@ import '@fontsource/plus-jakarta-sans/latin-600.css';
 import '@fontsource/plus-jakarta-sans/latin-700.css';
 import '@fontsource/plus-jakarta-sans/latin-800.css';
 import './ui/theme.css';
+import { ROLE } from './lib/role';
+import { AuthProvider } from './lib/auth';
 import { PatientApp } from './patient/App';
 import { DoctorApp } from './doctor/App';
 
-/** VITE_ROLE picks the app for an Android build; without it, both run side by side for review. */
-const role = import.meta.env.VITE_ROLE;
-
+/** Dev only: both apps side by side, each in its own frame with its own sign-in. */
 function Viewer() {
+  const q = location.search.includes('emulator') ? '&emulator' : '';
   return (
     <div className="viewer">
-      <div>
-        <div className="label">CareLoop<span>Patient app</span></div>
-        <div className="device"><PatientApp storageKey="careloop-viewer-patient" /></div>
-      </div>
-      <div>
-        <div className="label">CareLoop Pro<span>Doctor app</span></div>
-        <div className="device"><DoctorApp storageKey="careloop-viewer-doctor" /></div>
-      </div>
+      {(['patient', 'doctor'] as const).map((r) => (
+        <div key={r}>
+          <div className="label">{r === 'patient' ? 'CareLoop' : 'CareLoop Pro'}<span>{r === 'patient' ? 'Patient app' : 'Doctor app'}</span></div>
+          <div className="device"><iframe title={r} src={`?app=${r}${q}`} style={{ width: '100%', height: '100%', border: 0, borderRadius: 44, background: '#fff' }} /></div>
+        </div>
+      ))}
     </div>
   );
 }
 
-document.documentElement.style.background = role === 'doctor' ? '#0e1330' : role === 'patient' ? '#f4f7f6' : '#e8ebf0';
+document.documentElement.style.background = ROLE === 'doctor' ? '#0e1330' : ROLE === 'patient' ? '#f4f7f6' : '#e8ebf0';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    {role === 'patient' ? <PatientApp /> : role === 'doctor' ? <DoctorApp /> : <Viewer />}
+    {ROLE === 'viewer' ? <Viewer /> : (
+      <AuthProvider>
+        {ROLE === 'patient' ? <PatientApp /> : <DoctorApp />}
+      </AuthProvider>
+    )}
   </StrictMode>,
 );

@@ -8,12 +8,18 @@
     "dev:patient": "VITE_ROLE=patient vite",
     "dev:doctor": "VITE_ROLE=doctor vite",
     "build": "tsc -b && vite build",
-    "typecheck": "tsc -b"
+    "typecheck": "tsc -b",
+    "emulators": "firebase emulators:start --only auth,firestore --project demo-careloop",
+    "dev:emulator": "VITE_EMULATOR=1 vite",
+    "test:rules": "tsx --test tests/rules.test.ts",
+    "deploy:rules": "firebase deploy --only firestore:rules"
   },
   "dependencies": {
     "@capacitor/app": "^7.1.2",
+    "@capacitor/browser": "^7.0.5",
     "@capacitor/core": "^7.6.9",
     "@fontsource/plus-jakarta-sans": "^5.3.0",
+    "firebase": "^12.19.0",
     "lucide-react": "^0.460.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"
@@ -21,10 +27,13 @@
   "devDependencies": {
     "@capacitor/android": "^7.6.9",
     "@capacitor/cli": "^7.6.9",
+    "@firebase/rules-unit-testing": "^5.0.2",
     "@types/node": "^22.20.5",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^5.2.0",
+    "firebase-tools": "^15.33.0",
+    "tsx": "^4.23.15",
     "typescript": "^5.9.3",
     "vite": "^7.3.7"
   }

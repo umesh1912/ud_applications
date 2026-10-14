@@ -184,3 +184,26 @@ export const medicineByName = (n: string) => MEDICINES.find((m) => m.name === n)
 export const COMMON_TESTS = ['CBC', 'CRP', 'Dengue NS1', 'Malaria antigen', 'Chest X-ray', 'HbA1c', 'Lipid profile', 'Thyroid profile', 'Urine routine', 'Vitamin D'];
 export const DOSES = ['1-0-1', '1-0-0', '0-0-1', '1-1-1', 'SOS'];
 export const DURATIONS = ['3 days', '5 days', '7 days', '14 days', '1 month'];
+
+/** Drug families for allergy checks: an allergy to the family name also covers its members. */
+const ALLERGY_CLASSES: Record<string, string[]> = {
+  penicillin: ['penicillin', 'amoxicillin', 'ampicillin', 'cloxacillin', 'piperacillin'],
+  sulfa: ['sulfamethoxazole', 'sulfasalazine', 'sulfadiazine'],
+  nsaid: ['ibuprofen', 'diclofenac', 'naproxen', 'aspirin', 'aceclofenac'],
+  ibuprofen: ['ibuprofen'],
+  aspirin: ['aspirin'],
+  cephalosporin: ['cefixime', 'cefuroxime', 'ceftriaxone', 'cephalexin'],
+  macrolide: ['azithromycin', 'clarithromycin', 'erythromycin'],
+};
+
+/** The allergy a medicine conflicts with, if any. */
+export function allergyConflict(medicine: string, allergies: string | undefined): string | null {
+  if (!allergies || allergies.toLowerCase() === 'none') return null;
+  const med = medicine.toLowerCase();
+  for (const raw of allergies.toLowerCase().split(/[,;/]+/).map((x) => x.trim()).filter(Boolean)) {
+    const key = Object.keys(ALLERGY_CLASSES).find((k) => raw.includes(k));
+    const members = key ? ALLERGY_CLASSES[key] : [raw];
+    if (members.some((m) => m.length > 3 && med.includes(m))) return raw;
+  }
+  return null;
+}

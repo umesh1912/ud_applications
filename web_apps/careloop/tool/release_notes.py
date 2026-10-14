@@ -14,7 +14,7 @@ dl = f"https://github.com/{REPO}/releases/download/{tag}"
 
 print("## CareLoop: doctor and patient apps\n")
 print("Tap **Download** on your Android phone, open the file and tap **Install** "
-      "(allow “Install unknown apps” if Android asks). Pick India or the United States on first launch.\n")
+      "(allow “Install unknown apps” if Android asks). Create an account in each app to start.\n")
 print("| | App | |")
 print("|:-:|---|---|")
 for a in json.loads((ROOT / "apps.json").read_text()):
@@ -25,4 +25,4 @@ for a in json.loads((ROOT / "apps.json").read_text()):
     who = "For patients" if a["role"] == "patient" else "For doctors"
     print(f'| <img src="{raw}/{slug}-512.png" width="64" height="64" alt="{a["name"]}"> '
           f"| **{a['name']}** · {who}<br>{a['tagline']} | {link} |")
-print("\n<sub>Working prototypes with sample data: no accounts, payments are simulated, nothing leaves the phone.</sub>")
+print("\n<sub>Real accounts on Firebase. Payments run in test mode until live keys are added; video visits use Jitsi Meet.</sub>")
