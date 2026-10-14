@@ -2,20 +2,17 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } fro
 import { Icon } from './ds';
 import { AppCtx, type Ctx, type Sheet, type Ui } from './ctx';
 import { ApiError, api, download } from './lib/api';
-import { E, SOS_SHORT, TABS, strings, type Pair, type Role } from './lib/i18n';
-import type { AppState } from './lib/types';
+import { errorText } from './lib/errors';
+import { SOS_SHORT, TABS, strings, type Pair, type Role } from './lib/i18n';
+import type { AppState, Membership } from './lib/types';
 import { SheetHost } from './Sheets';
 import { AdminHome, GateHome, ResidentHome } from './screens/Home';
 import { Amenities, Bills, Complaints, Gate, Parking } from './screens/Resident';
 import { Community, Directory, Docs, Help, More, VisitorLog } from './screens/Shared';
-import { Expenses, Reports } from './screens/Admin';
+import { Expenses, MembersScreen, Reports, SettingsScreen } from './screens/Admin';
 import { btnReset, C } from './ui';
 
-const ERRORS: Record<string, keyof typeof E> = {
-  phone_unknown: 'phoneUnknown', phone_invalid: 'phoneInvalid', otp_invalid: 'otpInvalid', otp_expired: 'otpExpired', slot_taken: 'slotTaken',
-  parking_full: 'parkingFull', flat_unknown: 'flatUnknown', offline: 'offline', no_flat: 'noFlat', poll_closed: 'pollClosed', offline_file: 'offlineFile',
-};
-export const errorText = (e: unknown, L: 0 | 1) => (E[ERRORS[e instanceof ApiError ? e.code : ''] ?? 'error'] as Pair)[L];
+export { errorText };
 
 const initialUi = (today: string): Ui => ({
   screen: 'home', sheet: null, commTab: 'notices', unselected: [], payMethod: 'upi', paying: false, receipt: null,
@@ -26,9 +23,10 @@ const initialUi = (today: string): Ui => ({
 export interface PhoneProps {
   st: AppState; lang: 'gu' | 'en'; setLang: (l: 'gu' | 'en') => void; framed: boolean; offline: boolean;
   refresh: () => Promise<void>; switchRole: (r: Role) => void; logout: () => void; onUnauthorized: () => void;
+  memberships: Membership[]; switchSociety: (memberId: number) => void; addSociety: () => void;
 }
 
-export function Phone({ st, lang, setLang, framed, offline, refresh, switchRole, logout, onUnauthorized }: PhoneProps) {
+export function Phone({ st, lang, setLang, framed, offline, refresh, switchRole, logout, onUnauthorized, memberships, switchSociety, addSociety }: PhoneProps) {
   const L = lang === 'gu' ? 0 : 1;
   const T = useMemo(() => strings(L), [L]);
   const x = useCallback((p: Pair) => p[L], [L]);
@@ -61,7 +59,7 @@ export function Phone({ st, lang, setLang, framed, offline, refresh, switchRole,
       }
     },
     dl: (path, name, okMsg) => { download(path, name).then(() => okMsg && toast(okMsg), e => toast(errorText(e, L))); },
-    switchRole, logout,
+    switchRole, logout, memberships, switchSociety, addSociety,
   };
 
   const isW = ctx.isW, isAdmin = ctx.isAdmin;
@@ -71,6 +69,7 @@ export function Phone({ st, lang, setLang, framed, offline, refresh, switchRole,
     home: isW ? x(['મુખ્ય ગેટ', 'Main gate']) : isAdmin ? x(['ડેશબોર્ડ', 'Dashboard']) : x([st.society.gu, st.society.en]),
     bills: T.bills, gate: T.gatePass, community: T.community, more: T.more, reports: T.reports, expenses: T.expenses, log: T.visitors,
     help: T.dailyHelp, complaints: T.complaints, amenities: T.amenities, parking: T.parking, directory: T.directory, docs: T.docs,
+    members: T.members, settings: T.settings,
   };
   const roleLocal = { resident: T.resident, secretary: T.secretary, treasurer: T.treasurer, watchman: T.watchman }[role];
   const society = x([st.society.gu, st.society.en]);
@@ -81,6 +80,7 @@ export function Phone({ st, lang, setLang, framed, offline, refresh, switchRole,
     bills: <Bills />, gate: <Gate />, community: <Community />, complaints: <Complaints />, amenities: <Amenities />, parking: <Parking />,
     directory: <Directory />, docs: <Docs />, help: <Help />, log: <VisitorLog />, more: <More />,
     reports: isAdmin ? <Reports /> : null, expenses: isAdmin ? <Expenses /> : null,
+    members: role === 'secretary' ? <MembersScreen /> : null, settings: isAdmin ? <SettingsScreen /> : null,
   };
 
   const sos = st.sos && !ctx.isRes ? st.sos : null;

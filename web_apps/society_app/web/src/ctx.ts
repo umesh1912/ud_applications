@@ -1,8 +1,9 @@
 import { createContext, useContext } from 'react';
 import type { Pair, Role, Strings } from './lib/i18n';
-import type { AppState } from './lib/types';
+import type { AppState, Membership } from './lib/types';
 
-export type Sheet = 'pay' | 'receipt' | 'sos' | 'pass' | 'complaint' | 'visitor' | 'notice' | 'bill' | 'cash';
+export type Sheet = 'pay' | 'upi' | 'receipt' | 'sos' | 'pass' | 'complaint' | 'visitor' | 'notice' | 'bill' | 'cash'
+  | 'charge' | 'event' | 'poll' | 'staff' | 'vehicle' | 'contact' | 'doc';
 export type CommTab = 'notices' | 'events' | 'polls';
 
 export interface Receipt { id: number; amt: number; no: string; via: string; time: string; date: string }
@@ -27,6 +28,7 @@ export interface Ctx {
   run: <T>(fn: () => Promise<T>) => Promise<T | undefined>;
   dl: (path: string, name: string, okMsg: string) => void;
   switchRole: (r: Role) => void; logout: () => void;
+  memberships: Membership[]; switchSociety: (memberId: number) => void; addSociety: () => void;
 }
 
 export const AppCtx = createContext<Ctx>(null!);

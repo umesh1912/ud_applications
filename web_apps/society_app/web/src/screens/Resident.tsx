@@ -6,11 +6,11 @@ import { addDays, dayMon, dayMonLocal, dow, fmt } from '../lib/format';
 import { btnReset, C, Card, Empty, IconBox, IconBtn, Label, Lines, pill, ring, Row, Stack, wide, wideTall } from '../ui';
 import { COMPLAINT_STATUS, useVisitorText, VisitorBadge } from './common';
 
-const METHOD_LABEL: Record<string, string> = { upi: 'UPI', card: 'Card', net: 'Net banking', cash: 'Cash' };
+const METHOD_LABEL: Record<string, string> = { upi: 'UPI', card: 'Card', net: 'Net banking', cash: 'Cash', cheque: 'Cheque', bank: 'Bank' };
 
 export function Bills() {
   const { st, T, x, ui, set, open, toast, run, dl } = useApp();
-  const due = st.bills.filter(b => !b.paid);
+  const due = st.bills.filter(b => !b.paid && !b.claimed);
   const selected = due.filter(b => !ui.unselected.includes(b.id));
   const selTotal = selected.reduce((a, b) => a + b.amount, 0);
   const toggle = (id: number) => set(u => ({ unselected: u.unselected.includes(id) ? u.unselected.filter(i => i !== id) : [...u.unselected, id] }));
@@ -22,31 +22,34 @@ export function Bills() {
     <Stack gap={12}>
       <div style={{ fontSize: 13, color: C.muted }}>{T.selectBills}</div>
       {st.bills.map(b => {
-        const on = !b.paid && !ui.unselected.includes(b.id);
+        const open_ = !b.paid && !b.claimed;
+        const on = open_ && !ui.unselected.includes(b.id);
         return (
-          <button key={b.id} onClick={() => !b.paid && toggle(b.id)} aria-pressed={on}
-            style={{ ...btnReset, background: '#fff', boxShadow: ring(on ? C.ink : C.line), borderRadius: 6, padding: 14, display: 'flex', gap: 12, alignItems: 'center', textAlign: 'left', cursor: b.paid ? 'default' : 'pointer' }}>
+          <button key={b.id} onClick={() => open_ && toggle(b.id)} aria-pressed={on}
+            style={{ ...btnReset, background: '#fff', boxShadow: ring(on ? C.ink : C.line), borderRadius: 6, padding: 14, display: 'flex', gap: 12, alignItems: 'center', textAlign: 'left', cursor: open_ ? 'pointer' : 'default' }}>
             <IconBox name={b.icon} />
             <Lines title={x([b.titleGu, b.titleEn])} sub={`${T.dueBy} ${dayMon(b.due)}`} />
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
               <div style={{ fontSize: 15, fontWeight: 700 }}>{fmt(b.amount)}</div>
-              <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 40, background: b.paid ? C.ink : '#fff', color: b.paid ? '#fff' : C.red, boxShadow: ring(b.paid ? C.ink : C.red) }}>{b.paid ? T.paid : T.unpaid}</span>
+              <span style={{ fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 40, background: b.paid ? C.ink : '#fff', color: b.paid ? '#fff' : C.red, boxShadow: ring(b.paid ? C.ink : C.red), ...(b.claimed && !b.paid ? { background: C.soft, color: C.body, boxShadow: 'none' } : {}) }}>{b.paid ? T.paid : b.claimed ? T.verifying : T.unpaid}</span>
             </div>
           </button>
         );
       })}
-      {due.length > 0 && <Button style={wideTall} onClick={() => selTotal > 0 ? open('pay') : toast(T.selectBills)}>{T.pay} {fmt(selTotal)}</Button>}
-      <Card style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 4 }}>
+      {due.length > 0 && <Button style={wideTall} onClick={() => selTotal > 0 ? open(st.onlinePay ? 'pay' : 'upi') : toast(T.selectBills)}>{T.pay} {fmt(selTotal)}</Button>}
+      {st.onlinePay && <Card style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 4 }}>
         <Switch label={T.autopay} checked={st.autopay} onChange={autopay} />
         <div style={{ fontSize: 12, color: C.muted, paddingLeft: 52 }}>{T.autopaySub}</div>
-      </Card>
+      </Card>}
       <Label style={{ marginTop: 8 }}>{T.history}</Label>
       <Card>
         {st.history.map(h => (
           <Row key={h.id}>
-            <Lines titleWeight={500} title={x([h.titleGu, h.titleEn])} sub={`${dayMon(h.createdAt)} · ${METHOD_LABEL[h.method] ?? h.method} · ${h.receiptNo}`} />
+            <Lines titleWeight={500} title={x([h.titleGu, h.titleEn])} sub={`${dayMon(h.createdAt)} · ${METHOD_LABEL[h.method] ?? h.method} · ${h.status === 'pending' ? T.verifying : h.receiptNo}`} />
             <div style={{ fontSize: 14, fontWeight: 600 }}>{fmt(h.amount)}</div>
-            <IconBtn name="IconDownload" label={T.receiptPdf} onClick={() => dl(`/payments/${h.id}/receipt.pdf`, `${h.receiptNo}.pdf`, x(['રસીદ ડાઉનલોડ થઈ: ', 'Receipt downloaded: ']) + h.receiptNo)} />
+            {h.status === 'confirmed'
+              ? <IconBtn name="IconDownload" label={T.receiptPdf} onClick={() => dl(`/payments/${h.id}/receipt.pdf`, `${h.receiptNo}.pdf`, x(['રસીદ ડાઉનલોડ થઈ: ', 'Receipt downloaded: ']) + h.receiptNo)} />
+              : <div style={{ width: 32 }} />}
           </Row>
         ))}
       </Card>
@@ -171,7 +174,7 @@ export function Amenities() {
 }
 
 export function Parking() {
-  const { st, T, x, toast, run } = useApp();
+  const { st, T, x, toast, run, open } = useApp();
   const request = async () => {
     if (st.guestFree <= 0) return toast(x(['મહેમાન પાર્કિંગ ભરાઈ ગયું', 'Guest parking is full']));
     const r = await run(() => api<{ slot: string }>('POST', '/guest-parking'));
@@ -180,13 +183,15 @@ export function Parking() {
   return (
     <Stack gap={10}>
       {st.parking.map(p => (
-        <Card key={p.slot} style={{ padding: 14, display: 'flex', gap: 12, alignItems: 'center' }}>
+        <Card key={p.id} style={{ padding: 14, display: 'flex', gap: 12, alignItems: 'center' }}>
           <div style={{ width: 56, height: 56, borderRadius: 6, background: C.ink, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 13, flex: 'none' }}>{p.slot}</div>
-          <Stack gap={2} style={{ flex: 1 }}><div style={{ fontFamily: 'Menlo,ui-monospace,monospace', fontWeight: 700, fontSize: 15 }}>{p.vehicle}</div><div style={{ fontSize: 12, color: C.muted }}>{x([p.locGu, p.locEn])}</div></Stack>
+          <Stack gap={2} style={{ flex: 1 }}><div style={{ fontFamily: 'Menlo,ui-monospace,monospace', fontWeight: 700, fontSize: 15 }}>{p.vehicle}</div><div style={{ fontSize: 12, color: C.muted }}>{p.kind === 'car' ? T.car : T.twoWheeler}{p.location ? ` · ${p.location}` : ''}</div></Stack>
           <Icon name={p.kind === 'car' ? 'IconCar' : 'IconZap'} size={22} />
+          <IconBtn name="IconX" label={T.remove} onClick={() => run(() => api('DELETE', `/vehicles/${p.id}`)).then(r => r && toast(T.deleted))} />
         </Card>
       ))}
       {!st.parking.length && <Card><Empty>{T.noParking}</Empty></Card>}
+      {st.me.flat && <Button variant="outline" icon="IconPlus" style={wide} onClick={() => open('vehicle')}>{T.addVehicle}</Button>}
       <Card style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 10 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ fontSize: 14, fontWeight: 600 }}>{T.guestParking}</span><span style={{ fontSize: 14, color: C.muted }}>{st.guestFree} / {st.guestTotal} {T.free}</span></div>
         <Progress value={(st.guestTotal - st.guestFree) / st.guestTotal * 100} />

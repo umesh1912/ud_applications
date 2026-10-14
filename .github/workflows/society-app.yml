@@ -39,7 +39,11 @@ jobs:
         run: npm test
 
       - name: Build APK
+        env:
+          # Repository variable (Settings → Secrets and variables → Actions → Variables). Unset = offline demo APK.
+          CAP_SERVER_URL: ${{ vars.SOCIETY_APP_URL }}
         run: |
+          echo "Server: ${CAP_SERVER_URL:-none (offline demo)}"
           chmod +x web/android/gradlew
           ../../tool/ci_run.sh "apk society_app" npm run apk -w web
           mkdir -p "$GITHUB_WORKSPACE/out"
@@ -57,5 +61,5 @@ jobs:
           prerelease: ${{ github.ref != 'refs/heads/main' }}
           body: |
             **Install on your phone:** download `society_app.apk` and open it (allow "Install unknown apps" when Android asks).
-            Offline demo: data stays on the phone. Switch between Resident, Secretary, Treasurer and Watchman under **More → Switch role**.
+            ${{ vars.SOCIETY_APP_URL && format('Connects to {0} — sign up with your mobile number, then register or join a society.', vars.SOCIETY_APP_URL) || 'Offline demo (no server address set yet): data stays on this phone; switch roles under More → Switch role.' }}
           files: out/society_app.apk

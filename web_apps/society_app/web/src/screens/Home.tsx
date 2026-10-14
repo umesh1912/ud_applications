@@ -10,21 +10,13 @@ const tileStyle = { ...btnReset, background: '#fff', boxShadow: ring(), borderRa
 
 export function ResidentHome() {
   const { st, T, x, L, go, set, toast, run } = useApp();
-  const vt = useVisitorText();
   const due = st.bills.filter(b => !b.paid);
   const dueTotal = due.reduce((a, b) => a + b.amount, 0);
   const dueBy = due.map(b => b.due).sort()[0];
   const wing = st.me.flat?.[0] ?? '';
-  const approval = st.visitors.find(v => v.status === 'waiting');
   const notice = st.notices[0];
   const event = st.events.find(e => e.startsOn >= st.today) ?? st.events[0];
   const community = (commTab: 'notices' | 'events' | 'polls') => set({ screen: 'community', commTab });
-
-  const decide = async (approve: boolean) => {
-    if (!approval) return;
-    if (await run(() => api('POST', `/visitors/${approval.id}/decision`, { approve })))
-      toast(approve ? x(['મંજૂરી આપી – ગેટ પર જાણ કરી', 'Approved – gate notified']) : x(['પ્રવેશ નામંજૂર', 'Entry denied']));
-  };
 
   const tiles: [string, string, () => void][] = [
     ['IconReceipt', T.bills, () => go('bills')], ['IconTicket', T.gatePass, () => go('gate')], ['IconWrench', T.complaints, () => go('complaints')],
@@ -52,22 +44,7 @@ export function ResidentHome() {
           : <div style={{ fontSize: 14, display: 'flex', gap: 6, alignItems: 'center' }}><Icon name="IconCheckCircle2" size={16} />{T.allPaid}</div>}
       </div>
 
-      {approval && (
-        <Card accent style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-            <IconBox name="IconBellRing" radius={40} />
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <div style={{ fontSize: 12, color: C.muted, fontWeight: 500 }}>{T.atGate}</div>
-              <div style={{ fontSize: 15, fontWeight: 600 }}>{approval.name}</div>
-              <div style={{ fontSize: 13, color: C.muted }}>{x(purposeLabel(approval.purpose))} · {vt(approval).in}</div>
-            </div>
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-            <Button variant="outline" style={wide} onClick={() => decide(false)}>{T.deny}</Button>
-            <Button style={wide} onClick={() => decide(true)}>{T.approve}</Button>
-          </div>
-        </Card>
-      )}
+      <VisitorApproval />
 
       <Label>{T.services}</Label>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 8 }}>
@@ -101,6 +78,34 @@ export function ResidentHome() {
   );
 }
 
+/** "Visitor waiting at gate" card for the signed-in member's own flat. */
+function VisitorApproval() {
+  const { st, T, x, toast, run } = useApp();
+  const vt = useVisitorText();
+  const approval = st.myWaiting[0];
+  if (!approval) return null;
+  const decide = async (approve: boolean) => {
+    if (await run(() => api('POST', `/visitors/${approval.id}/decision`, { approve })))
+      toast(approve ? x(['મંજૂરી આપી – ગેટ પર જાણ કરી', 'Approved – gate notified']) : x(['પ્રવેશ નામંજૂર', 'Entry denied']));
+  };
+  return (
+    <Card accent style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+        <IconBox name="IconBellRing" radius={40} />
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <div style={{ fontSize: 12, color: C.muted, fontWeight: 500 }}>{T.atGate}</div>
+          <div style={{ fontSize: 15, fontWeight: 600 }}>{approval.name}</div>
+          <div style={{ fontSize: 13, color: C.muted }}>{x(purposeLabel(approval.purpose))} · {vt(approval).in}</div>
+        </div>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+        <Button variant="outline" style={wide} onClick={() => decide(false)}>{T.deny}</Button>
+        <Button style={wide} onClick={() => decide(true)}>{T.approve}</Button>
+      </div>
+    </Card>
+  );
+}
+
 export const DateBox = ({ d }: { d: string }) => (
   <div style={{ width: 48, height: 52, borderRadius: 6, background: C.soft, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>
     <span style={{ fontSize: 11, color: C.muted, fontWeight: 600 }}>{monUpper(d)}</span><span style={{ fontSize: 20, fontWeight: 700 }}>{d.slice(8)}</span>
@@ -110,14 +115,18 @@ export const DateBox = ({ d }: { d: string }) => (
 export function AdminHome() {
   const { st, T, x, L, role, go, set, open, toast, run, dl } = useApp();
   const fin = st.finance!;
+  const requests = st.members?.pending.length ?? 0;
   const pct = Math.round(fin.collected / fin.target * 100);
   const roleLabel = role === 'secretary' ? T.secretary : T.treasurer;
   const remindAll = async () => { if (await run(() => api('POST', '/reminders', {}))) toast(x(['બધા બાકીદારોને યાદી મોકલી', 'Reminders sent to all pending flats'])); };
   const report = () => dl('/reports/monthly.pdf', 'report.pdf', x(['રિપોર્ટ PDF ડાઉનલોડ થયો', 'Report PDF downloaded']));
   const actions: [string, string, () => void][] = role === 'treasurer'
-    ? [['IconBanknote', T.recordCash, () => open('cash')], ['IconUpload', x(['બિલ જમા કરો', 'Submit a bill']), () => open('bill')], ['IconBellRing', T.remindAll, remindAll], ['IconFileBarChart', T.reportPdf, report]]
-    : [['IconCheckSquare', `${T.pendingApproval} (${fin.pending.length})`, () => go('expenses')], ['IconMegaphone', T.postNotice, () => { set({ screen: 'community', commTab: 'notices' }); open('notice'); }],
-      ['IconBellRing', T.remindAll, remindAll], ['IconWrench', T.complaints, () => go('complaints')]];
+    ? [['IconCheckCircle2', `${T.toVerify} (${fin.claims.length})`, () => go('reports')], ['IconBanknote', T.recordPayment, () => open('cash')],
+      ['IconUpload', x(['બિલ જમા કરો', 'Submit a bill']), () => open('bill')], ['IconReceipt', T.raiseBill, () => open('charge')],
+      ['IconBellRing', T.remindAll, remindAll], ['IconFileBarChart', T.reportPdf, report]]
+    : [['IconUserPlus', `${T.joinRequests} (${requests})`, () => go('members')], ['IconCheckSquare', `${T.pendingApproval} (${fin.pending.length})`, () => go('expenses')],
+      ['IconMegaphone', T.postNotice, () => { set({ screen: 'community', commTab: 'notices' }); open('notice'); }], ['IconReceipt', T.raiseBill, () => open('charge')],
+      ['IconCheckCircle2', `${T.toVerify} (${fin.claims.length})`, () => go('reports')], ['IconWrench', T.complaints, () => go('complaints')]];
   const openComplaints = st.complaints.filter(c => c.status !== 'resolved');
   const card = { ...tileStyle, padding: 14, display: 'flex', flexDirection: 'column', gap: 4, textAlign: 'left' } as const;
 
@@ -127,7 +136,7 @@ export function AdminHome() {
         <Avatar initials={initials(st.me.name)} size={44} />
         <Stack gap={2}>
           <div style={{ fontSize: 16, fontWeight: 600 }}>{T.greeting}, {firstName(L ? st.me.name : st.me.nameGu)}</div>
-          <div style={{ fontSize: 13, color: C.muted }}>{st.me.flat} · {roleLabel}</div>
+          <div style={{ fontSize: 13, color: C.muted }}>{st.me.flat ? `${st.me.flat} · ` : ''}{roleLabel}</div>
         </Stack>
       </div>
       <div style={{ background: C.ink, color: '#fff', borderRadius: 6, padding: 18, display: 'flex', flexDirection: 'column', gap: 4 }}>
@@ -135,6 +144,7 @@ export function AdminHome() {
         <div style={{ fontSize: 32, fontWeight: 700, letterSpacing: -0.8 }}>{fmt(fin.fund)}</div>
         <div style={{ fontSize: 12, color: '#cbd5e1' }}>{T.asOn} {dayMonYear(st.today)}</div>
       </div>
+      <VisitorApproval />
       <button onClick={() => go('reports')} style={{ ...tileStyle, padding: 16, display: 'flex', flexDirection: 'column', gap: 10, textAlign: 'left' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}><span style={{ fontSize: 14, fontWeight: 600 }}>{collectionLabel(st.today, L)}</span><span style={{ fontSize: 14, fontWeight: 600 }}>{pct}%</span></div>
         <Progress value={pct} />

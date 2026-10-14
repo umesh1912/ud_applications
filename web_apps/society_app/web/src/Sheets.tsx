@@ -1,9 +1,9 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Button, Icon, Input, Switch, Textarea } from './ds';
 import { useApp, type Sheet } from './ctx';
 import { api } from './lib/api';
 import { CATS, COMP_CATS, PURPOSES, SOS_TYPES } from './lib/i18n';
-import { dayMonYear, fmt } from './lib/format';
+import { addDays, dayMonYear, fmt } from './lib/format';
 import { btnReset, C, Chip, Chips, FieldLabel, pill, ring, Stack, wide, wideTall } from './ui';
 
 const METHOD_NAME = { upi: 'UPI', card: 'Card', net: 'Net banking' } as const;
@@ -13,9 +13,13 @@ export function SheetHost() {
   if (!ui.sheet) return null;
   const titles: Record<Sheet, string> = {
     pay: x(['ચુકવણી', 'Checkout']), receipt: T.success, sos: x(['ઇમરજન્સી SOS', 'Emergency SOS']), pass: T.gatePass, complaint: T.raiseComplaint,
-    visitor: T.newEntry, notice: T.postNotice, bill: x(['બિલ જમા કરો', 'Submit a bill']), cash: T.recordCash,
+    visitor: T.newEntry, notice: T.postNotice, bill: x(['બિલ જમા કરો', 'Submit a bill']), cash: T.recordPayment, upi: T.payUpi,
+    charge: T.raiseBill, event: T.newEvent, poll: T.newPoll, staff: T.addStaff, vehicle: T.addVehicle, contact: T.addContact, doc: T.uploadDoc,
   };
-  const Body = { pay: PaySheet, receipt: ReceiptSheet, sos: SosSheet, pass: PassSheet, complaint: ComplaintSheet, visitor: VisitorSheet, notice: NoticeSheet, bill: BillSheet, cash: CashSheet }[ui.sheet];
+  const Body = {
+    pay: PaySheet, receipt: ReceiptSheet, sos: SosSheet, pass: PassSheet, complaint: ComplaintSheet, visitor: VisitorSheet, notice: NoticeSheet, bill: BillSheet,
+    cash: RecordPaymentSheet, upi: UpiSheet, charge: ChargeSheet, event: EventSheet, poll: PollSheet, staff: StaffSheet, vehicle: VehicleSheet, contact: ContactSheet, doc: DocSheet,
+  }[ui.sheet];
   return (
     <>
       <div onClick={close} style={{ position: 'absolute', inset: 0, background: 'rgba(15,23,42,.45)', zIndex: 40 }} />
@@ -56,7 +60,7 @@ const form = (fields: Record<string, string | Blob | null | undefined>) => {
 
 function PaySheet() {
   const { st, T, x, ui, set, run } = useApp();
-  const sel = st.bills.filter(b => !b.paid && !ui.unselected.includes(b.id));
+  const sel = st.bills.filter(b => !b.paid && !b.claimed && !ui.unselected.includes(b.id));
   const total = sel.reduce((a, b) => a + b.amount, 0);
   const methods = [['upi', 'IconSmartphone', 'UPI', 'Google Pay · PhonePe · Paytm · BHIM'], ['card', 'IconCreditCard', x(['ડેબિટ / ક્રેડિટ કાર્ડ', 'Debit / credit card']), 'Visa · Mastercard · RuPay'],
     ['net', 'IconLandmark', x(['નેટ બેંકિંગ', 'Net banking']), 'SBI · HDFC · ICICI · BoB']] as const;
@@ -238,21 +242,182 @@ function BillSheet() {
   );
 }
 
-function CashSheet() {
-  const { st, T, x, ui, set, setF, run, toast } = useApp();
-  const defaulters = st.finance?.defaulters ?? [];
-  const cur = defaulters.find(d => d.flat === ui.f.cashFlat);
-  const record = async () => {
-    if (!cur) return toast(x(['ફ્લેટ પસંદ કરો', 'Pick a flat']));
-    if (await run(() => api('POST', '/cash', { flat: cur.flat }))) { set(u => ({ sheet: null, f: { ...u.f, cashFlat: null } })); toast(x(['રોકડ નોંધાઈ, રસીદ મોકલી: ', 'Cash recorded, receipt sent: ']) + cur.flat); }
-  };
+/** Shared submit for the simple create sheets: runs the call, closes the sheet and toasts. */
+function useSubmit() {
+  const { set, run, toast } = useApp();
+  const [busy, setBusy] = useState(false);
+  return { busy, submit: async (fn: () => Promise<unknown>, ok: string) => {
+    if (busy) return;
+    setBusy(true);
+    const r = await run(fn);
+    setBusy(false);
+    if (r !== undefined) { set({ sheet: null }); toast(ok); }
+  } };
+}
+
+function RecordPaymentSheet() {
+  const { st, T, x } = useApp();
+  const due = st.finance?.dueFlats ?? [];
+  const [flat, setFlat] = useState('');
+  const [method, setMethod] = useState<'cash' | 'upi' | 'cheque' | 'bank'>('cash');
+  const [reference, setReference] = useState('');
+  const { busy, submit } = useSubmit();
+  const cur = due.find(d => d.flat === flat);
+  if (!due.length) return <div style={{ fontSize: 14, color: C.muted }}>{T.nothingDue}</div>;
   return (
     <Stack gap={14}>
-      <FieldLabel>{T.flatNo}</FieldLabel>
-      <Chips>{defaulters.map(d => <Chip key={d.flat} square on={ui.f.cashFlat === d.flat} onClick={() => setF('cashFlat', d.flat)}>{d.flat}</Chip>)}</Chips>
+      <label style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <span className="sc-field-label">{T.flatNo}</span>
+        <select className="sc-input sc-select" value={flat} onChange={e => setFlat(e.target.value)}>
+          <option value="">{T.pickFlat}</option>
+          {due.map(d => <option key={d.flat} value={d.flat}>{d.flat}{d.name ? ` · ${d.name}` : ''} · {fmt(d.amount)}</option>)}
+        </select>
+      </label>
+      <FieldLabel>{T.method}</FieldLabel>
+      <Chips>{([['cash', T.cash], ['upi', 'UPI'], ['cheque', T.cheque], ['bank', T.bank]] as const).map(([m, l]) => <Chip key={m} on={method === m} onClick={() => setMethod(m)}>{l}</Chip>)}</Chips>
+      {method !== 'cash' && <Input label={T.reference} value={reference} onChange={e => setReference(e.target.value)} style={wide} />}
       <div style={{ display: 'flex', justifyContent: 'space-between', padding: 14, borderRadius: 6, background: C.soft }}><span style={{ fontSize: 14 }}>{T.amount}</span><span style={{ fontSize: 18, fontWeight: 700 }}>{cur ? fmt(cur.amount) : '—'}</span></div>
-      <Button icon="IconBanknote" onClick={record} style={wideTall}>{T.recordIssue}</Button>
+      <Button icon="IconBanknote" loading={busy} disabled={!cur} style={{ ...wideTall, opacity: cur ? 1 : 0.5 }}
+        onClick={() => cur && submit(() => api('POST', '/payments/record', { flat: cur.flat, method, reference }), x(['ચુકવણી નોંધાઈ, રસીદ બની: ', 'Payment recorded, receipt issued: ']) + cur.flat)}>{T.recordIssue}</Button>
     </Stack>
   );
 }
 
+/** Resident pays the society's UPI ID in their own UPI app, then submits the UTR for the treasurer to confirm. */
+function UpiSheet() {
+  const { st, T, x, ui, set } = useApp();
+  const sel = st.bills.filter(b => !b.paid && !b.claimed && !ui.unselected.includes(b.id));
+  const total = sel.reduce((a, b) => a + b.amount, 0);
+  const [utr, setUtr] = useState('');
+  const { busy, submit } = useSubmit();
+  if (!st.society.upiId) return <div style={{ fontSize: 14, color: C.body, lineHeight: 1.6 }}>{T.noUpi}</div>;
+  const note = `${st.me.flat} ${sel.length === 1 ? sel[0].titleEn : 'maintenance'}`.slice(0, 50);
+  const link = `upi://pay?pa=${encodeURIComponent(st.society.upiId)}&pn=${encodeURIComponent(st.society.en)}&am=${total.toFixed(2)}&cu=INR&tn=${encodeURIComponent(note)}`;
+  return (
+    <Stack gap={14}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', padding: 14, borderRadius: 6, background: C.soft }}><span style={{ fontSize: 14 }}>{sel.length} {T.billsSel}</span><span style={{ fontSize: 18, fontWeight: 700 }}>{fmt(total)}</span></div>
+      <FieldLabel>{T.upiStep1}</FieldLabel>
+      <div style={{ fontSize: 14, display: 'flex', justifyContent: 'space-between', gap: 8 }}><span style={{ color: C.muted }}>UPI ID</span><b style={{ fontFamily: 'Menlo,ui-monospace,monospace' }}>{st.society.upiId}</b></div>
+      <a href={link} className="sc-btn" style={{ ...wideTall, boxSizing: 'border-box' }}><Icon name="IconSmartphone" size={16} />{T.openUpi} · {fmt(total)}</a>
+      <FieldLabel>{T.upiStep2}</FieldLabel>
+      <Input label={T.utr} inputMode="text" autoCapitalize="characters" placeholder="412345678901" value={utr} onChange={e => setUtr(e.target.value.replace(/\s/g, ''))} style={wide} />
+      <Button loading={busy} disabled={!sel.length} style={wideTall}
+        onClick={() => submit(async () => { const r = await api('POST', '/bills/claim', { billIds: sel.map(b => b.id), reference: utr }); set({ unselected: [] }); return r; }, T.claimSent)}>{T.iPaid}</Button>
+      <div style={{ fontSize: 12, color: C.muted, textAlign: 'center' }}>{x(['ખજાનચી બેંકમાં ચકાસીને પુષ્ટિ કરશે, પછી રસીદ મળશે.', 'The treasurer checks the bank statement and confirms; you then get a receipt.'])}</div>
+    </Stack>
+  );
+}
+
+function ChargeSheet() {
+  const { st, T } = useApp();
+  const [f, setF] = useState({ title: '', amount: '', dueDate: addDays(st.today, 15), target: 'all', flat: '' });
+  const { busy, submit } = useSubmit();
+  const flats = (st.finance?.dueFlats ?? []).map(d => d.flat);
+  return (
+    <Stack gap={14}>
+      <Input label={T.titleLbl} placeholder="Water tanker share" value={f.title} onChange={e => setF({ ...f, title: e.target.value })} style={wide} />
+      <Input label={T.amount} inputMode="numeric" value={f.amount} onChange={e => setF({ ...f, amount: e.target.value })} style={wide} />
+      <Input label={T.dueDate} type="date" min={st.today} value={f.dueDate} onChange={e => setF({ ...f, dueDate: e.target.value })} style={wide} />
+      <Chips>
+        <Chip on={f.target === 'all'} onClick={() => setF({ ...f, target: 'all' })}>{T.allFlats} ({st.society.totalFlats})</Chip>
+        <Chip on={f.target === 'one'} onClick={() => setF({ ...f, target: 'one' })}>{T.oneFlat}</Chip>
+      </Chips>
+      {f.target === 'one' && <Input label={T.flatNo} placeholder={flats[0] ?? 'A-101'} autoCapitalize="characters" value={f.flat} onChange={e => setF({ ...f, flat: e.target.value.toUpperCase() })} style={wide} />}
+      <Button loading={busy} style={wideTall} onClick={() => submit(async () => {
+        const r = await api<{ count: number }>('POST', '/bills', { title: f.title, amount: f.amount, dueDate: f.dueDate, flat: f.target === 'one' ? f.flat : 'all' });
+        return r;
+      }, `${T.billRaised}${f.target === 'one' ? f.flat : st.society.totalFlats}`)}>{T.raiseBill}</Button>
+    </Stack>
+  );
+}
+
+function EventSheet() {
+  const { st, T } = useApp();
+  const [f, setF] = useState({ title: '', date: addDays(st.today, 7), when: '', place: '' });
+  const { busy, submit } = useSubmit();
+  return (
+    <Stack gap={14}>
+      <Input label={T.eventTitle} value={f.title} onChange={e => setF({ ...f, title: e.target.value })} style={wide} />
+      <Input label={T.eventDate} type="date" min={st.today} value={f.date} onChange={e => setF({ ...f, date: e.target.value })} style={wide} />
+      <Input label={T.eventTime} placeholder="7 pm" value={f.when} onChange={e => setF({ ...f, when: e.target.value })} style={wide} />
+      <Input label={T.eventPlace} placeholder="Clubhouse" value={f.place} onChange={e => setF({ ...f, place: e.target.value })} style={wide} />
+      <Button loading={busy} style={wideTall} onClick={() => submit(() => api('POST', '/events', f), T.added)}>{T.publish}</Button>
+    </Stack>
+  );
+}
+
+function PollSheet() {
+  const { st, T } = useApp();
+  const [q, setQ] = useState('');
+  const [opts, setOpts] = useState(['', '']);
+  const [ends, setEnds] = useState(addDays(st.today, 7));
+  const { busy, submit } = useSubmit();
+  return (
+    <Stack gap={14}>
+      <Textarea label={T.question} value={q} onChange={e => setQ(e.target.value)} style={wide} />
+      {opts.map((o, i) => <Input key={i} label={`${T.option} ${i + 1}`} value={o} onChange={e => setOpts(opts.map((v, j) => j === i ? e.target.value : v))} style={wide} />)}
+      {opts.length < 6 && <Button variant="outline" icon="IconPlus" style={wide} onClick={() => setOpts([...opts, ''])}>{T.addOption}</Button>}
+      <Input label={T.pollEnds} type="date" min={st.today} value={ends} onChange={e => setEnds(e.target.value)} style={wide} />
+      <Button loading={busy} style={wideTall} onClick={() => submit(() => api('POST', '/polls', { question: q, options: opts, endsOn: ends }), T.added)}>{T.publish}</Button>
+    </Stack>
+  );
+}
+
+function StaffSheet() {
+  const { T } = useApp();
+  const [f, setF] = useState({ name: '', role: '', flats: '' });
+  const { busy, submit } = useSubmit();
+  return (
+    <Stack gap={14}>
+      <Input label={T.nameLbl} value={f.name} onChange={e => setF({ ...f, name: e.target.value })} style={wide} />
+      <Input label={T.staffRole} value={f.role} onChange={e => setF({ ...f, role: e.target.value })} style={wide} />
+      <Input label={T.staffFlats} placeholder="B-304, B-305" value={f.flats} onChange={e => setF({ ...f, flats: e.target.value })} style={wide} />
+      <Button loading={busy} style={wideTall} onClick={() => submit(() => api('POST', '/staff', f), T.added)}>{T.addStaff}</Button>
+    </Stack>
+  );
+}
+
+function VehicleSheet() {
+  const { T } = useApp();
+  const [f, setF] = useState({ vehicle: '', slot: '', kind: 'car', location: '' });
+  const { busy, submit } = useSubmit();
+  return (
+    <Stack gap={14}>
+      <Input label={T.vehicleNo} placeholder="GJ 01 AB 1234" autoCapitalize="characters" value={f.vehicle} onChange={e => setF({ ...f, vehicle: e.target.value })} style={wide} />
+      <Chips>
+        <Chip on={f.kind === 'car'} onClick={() => setF({ ...f, kind: 'car' })}>{T.car}</Chip>
+        <Chip on={f.kind === 'two'} onClick={() => setF({ ...f, kind: 'two' })}>{T.twoWheeler}</Chip>
+      </Chips>
+      <Input label={T.parkingSlot} placeholder="B-P12" autoCapitalize="characters" value={f.slot} onChange={e => setF({ ...f, slot: e.target.value })} style={wide} />
+      <Input label={T.location} placeholder="Basement 1" value={f.location} onChange={e => setF({ ...f, location: e.target.value })} style={wide} />
+      <Button loading={busy} style={wideTall} onClick={() => submit(() => api('POST', '/vehicles', f), T.added)}>{T.addVehicle}</Button>
+    </Stack>
+  );
+}
+
+function ContactSheet() {
+  const { T } = useApp();
+  const [f, setF] = useState({ name: '', phone: '', role: '' });
+  const { busy, submit } = useSubmit();
+  return (
+    <Stack gap={14}>
+      <Input label={T.nameLbl} value={f.name} onChange={e => setF({ ...f, name: e.target.value })} style={wide} />
+      <Input label={T.phoneLbl} type="tel" inputMode="tel" value={f.phone} onChange={e => setF({ ...f, phone: e.target.value })} style={wide} />
+      <Input label={T.contactRole} value={f.role} onChange={e => setF({ ...f, role: e.target.value })} style={wide} />
+      <Button loading={busy} style={wideTall} onClick={() => submit(() => api('POST', '/contacts', f), T.added)}>{T.addContact}</Button>
+    </Stack>
+  );
+}
+
+function DocSheet() {
+  const { T, ui, set } = useApp();
+  const [name, setName] = useState('');
+  const { busy, submit } = useSubmit();
+  return (
+    <Stack gap={14}>
+      <Input label={T.docName} value={name} onChange={e => setName(e.target.value)} style={wide} />
+      <Attach icon="IconUploadCloud" label={T.chooseFile} accept="application/pdf,image/*" height={64} attachedLabel={n => n + ' ✓'} />
+      <Button loading={busy} style={wideTall} onClick={() => submit(async () => { const r = await api('POST', '/documents', form({ name, file: ui.file })); set({ file: null }); return r; }, T.added)}>{T.uploadDoc}</Button>
+    </Stack>
+  );
+}

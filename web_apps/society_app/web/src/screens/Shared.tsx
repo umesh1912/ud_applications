@@ -21,6 +21,7 @@ export function Community() {
 
       {ui.commTab === 'notices' && <Stack gap={10}>
         {role === 'secretary' && <Button variant="outline" icon="IconPlus" style={wide} onClick={() => open('notice')}>{T.postNotice}</Button>}
+        {!st.notices.length && <Card><Empty>{T.noNotices}</Empty></Card>}
         {st.notices.map(n => (
           <Card key={n.id} style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 6 }}>
             <div style={{ display: 'flex', gap: 6, alignItems: 'center', fontSize: 12, color: C.muted }}>
@@ -34,6 +35,8 @@ export function Community() {
       </Stack>}
 
       {ui.commTab === 'events' && <Stack gap={10}>
+        {role === 'secretary' && <Button variant="outline" icon="IconPlus" style={wide} onClick={() => open('event')}>{T.newEvent}</Button>}
+        {!st.events.length && <Card><Empty>{T.noEvents}</Empty></Card>}
         {st.events.map(e => (
           <Card key={e.id} style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 10 }}>
             <div style={{ display: 'flex', gap: 12 }}>
@@ -53,6 +56,8 @@ export function Community() {
       </Stack>}
 
       {ui.commTab === 'polls' && <Stack gap={10}>
+        {role === 'secretary' && <Button variant="outline" icon="IconPlus" style={wide} onClick={() => open('poll')}>{T.newPoll}</Button>}
+        {!st.polls.length && <Card><Empty>{T.noPolls}</Empty></Card>}
         {st.polls.map(p => {
           const tot = p.options.reduce((a, o) => a + o.votes, 0);
           const shown = p.votedOption !== null || p.closed;
@@ -79,7 +84,7 @@ export function Community() {
 }
 
 export function Directory() {
-  const { st, T, x, ui, setF, toast } = useApp();
+  const { st, T, x, ui, setF, toast, role, open } = useApp();
   const q = ui.f.q.trim().toLowerCase();
   const groups = ([['committee', T.committee], ['resident', T.residents], ['emergency', T.emergency]] as const).map(([g, label]) => ({
     label,
@@ -88,6 +93,7 @@ export function Directory() {
   return (
     <Stack gap={12}>
       <Input type="search" placeholder={T.searchPh} value={ui.f.q} onChange={e => setF('q', e.target.value)} style={wide} />
+      {role === 'secretary' && <Button variant="outline" icon="IconPlus" style={wide} onClick={() => open('contact')}>{T.addContact}</Button>}
       {groups.map(g => (
         <Stack key={g.label} gap={6}>
           <Label>{g.label}</Label>
@@ -110,25 +116,34 @@ export function Directory() {
 }
 
 export function Docs() {
-  const { st, x, dl } = useApp();
+  const { st, T, x, dl, role, open, run, toast } = useApp();
   return (
+    <Stack gap={12}>
+    {role === 'secretary' && <Button icon="IconUpload" style={wideTall} onClick={() => open('doc')}>{T.uploadDoc}</Button>}
+    {!st.documents.length && <Card><Empty>{T.noDocs}</Empty></Card>}
     <Card>
       {st.documents.map(d => (
         <Row key={d.id} style={{ gap: 12 }}>
           <IconBox name="IconFileText" box={36} size={18} />
-          <Lines gap={1} title={x([d.nameGu, d.nameEn])} sub={`PDF · ${d.size} · ${d.date}`} />
+          <Lines gap={1} title={x([d.nameGu, d.nameEn])} sub={`${d.size} · ${d.date}`} />
           <IconBtn name="IconDownload" size={18} box={36} label={x([d.nameGu, d.nameEn])}
             onClick={() => dl(`/documents/${d.id}/download`, `${d.nameEn}.pdf`, x(['ડાઉનલોડ થયું: ', 'Downloaded: ']) + x([d.nameGu, d.nameEn]))} />
+          {role === 'secretary' && <IconBtn name="IconX" size={16} label={T.remove}
+            onClick={() => { if (confirm(`${T.remove}: ${x([d.nameGu, d.nameEn])}?`)) run(() => api('DELETE', `/documents/${d.id}`)).then(r => r && toast(T.deleted)); }} />}
         </Row>
       ))}
     </Card>
+    </Stack>
   );
 }
 
 export function Help() {
-  const { st, T, x, isW, run } = useApp();
+  const { st, T, x, isW, role, run, open, toast } = useApp();
+  const canManage = isW || role === 'secretary';
   return (
     <Stack gap={10}>
+      {canManage && <Button variant="outline" icon="IconPlus" style={wide} onClick={() => open('staff')}>{T.addStaff}</Button>}
+      {!st.staff.length && <Card><Empty>{T.noStaff}</Empty></Card>}
       {st.staff.map(h => {
         const isIn = !!h.inTime && !h.outTime;
         const status = isIn ? `${T.present} ${h.inTime}` : h.outTime ? `${T.left} ${h.outTime}` : T.absent;
@@ -143,6 +158,7 @@ export function Help() {
             {isW
               ? <Button variant={isIn ? 'outline' : 'default'} onClick={() => run(() => api('POST', `/staff/${h.id}/attendance`))}>{isIn ? T.markOut : T.markIn}</Button>
               : <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}><span style={{ fontSize: 16, fontWeight: 700 }}>{h.days}</span><span style={{ fontSize: 11, color: C.muted }}>{T.daysMonth}</span></div>}
+            {canManage && <IconBtn name="IconX" label={T.remove} onClick={() => { if (confirm(`${T.remove}: ${x([h.nameGu, h.nameEn])}?`)) run(() => api('DELETE', `/staff/${h.id}`)).then(r => r && toast(T.deleted)); }} />}
           </Card>
         );
       })}
@@ -167,16 +183,21 @@ export function VisitorLog() {
 }
 
 export function More() {
-  const { st, T, x, role, isRes, isAdmin, go, switchRole, logout } = useApp();
+  const { st, T, x, L, role, isRes, isAdmin, go, switchRole, logout, memberships, switchSociety, addSociety } = useApp();
   const roleLocal = { resident: T.resident, secretary: T.secretary, treasurer: T.treasurer, watchman: T.watchman };
   const booking = x(['બુકિંગ', 'Booking']);
   const t = (id: string, icon: string, label: string) => ({ id, icon, label });
   const tiles = isRes
     ? [t('complaints', 'IconWrench', T.complaints), t('amenities', 'IconCalendarDays', booking), t('parking', 'IconCar', T.parking), t('help', 'IconUsers', T.dailyHelp), t('directory', 'IconUser', T.directory), t('docs', 'IconFolder', T.docs), t('bills', 'IconReceipt', T.bills), t('gate', 'IconTicket', T.gatePass), t('community', 'IconMegaphone', T.community)]
     : isAdmin
-      ? [t('reports', 'IconIndianRupee', T.reports), t('expenses', 'IconPieChart', T.expenses), t('complaints', 'IconWrench', T.complaints), t('directory', 'IconUser', T.directory), t('docs', 'IconFolder', T.docs), t('community', 'IconMegaphone', T.community), t('amenities', 'IconCalendarDays', booking), t('parking', 'IconCar', T.parking), t('help', 'IconUsers', T.dailyHelp)]
+      ? [...(role === 'secretary' ? [t('members', 'IconUserPlus', `${T.members}${st.members?.pending.length ? ` (${st.members.pending.length})` : ''}`)] : []), t('settings', 'IconClipboardCheck', T.settings),
+        t('reports', 'IconIndianRupee', T.reports), t('expenses', 'IconPieChart', T.expenses), t('complaints', 'IconWrench', T.complaints), t('directory', 'IconUser', T.directory), t('docs', 'IconFolder', T.docs),
+        t('community', 'IconMegaphone', T.community), t('help', 'IconUsers', T.dailyHelp),
+        ...(st.me.flat ? [t('bills', 'IconReceipt', T.bills), t('gate', 'IconTicket', T.gatePass), t('amenities', 'IconCalendarDays', booking), t('parking', 'IconCar', T.parking)] : [])]
       : [t('log', 'IconClipboardList', T.visitors), t('help', 'IconUsers', T.dailyHelp), t('directory', 'IconUser', T.directory), t('parking', 'IconCar', T.parking), t('community', 'IconMegaphone', T.community)];
-  const sub = role === 'resident' ? `${T.flat} ${st.me.flat} · ${T.resident}` : role === 'watchman' ? `${T.watchman} · ${x(['મુખ્ય ગેટ', 'Main gate'])}` : `${st.me.flat} · ${roleLocal[role]}`;
+  const society = x([st.society.gu, st.society.en]);
+  const sub = role === 'resident' ? `${T.flat} ${st.me.flat} · ${T.resident}` : role === 'watchman' ? `${T.watchman} · ${society}` : `${st.me.flat ? `${st.me.flat} · ` : ''}${roleLocal[role]}`;
+  const others = memberships.filter(m => m.status === 'active' && m.id !== st.me.memberId);
   const rowStyle = { ...btnReset, width: '100%', background: 'transparent', padding: '12px 14px', display: 'flex', gap: 12, alignItems: 'center', borderBottom: `1px solid ${C.soft}`, textAlign: 'left' } as const;
 
   return (
@@ -205,7 +226,19 @@ export function More() {
           ))}
         </Card>
       </>}
+      <Label>{T.switchSociety}</Label>
       <Card>
+        <div style={{ ...rowStyle, cursor: 'default' }}>
+          <Icon name="IconBuilding2" size={18} /><span style={{ flex: 1, fontSize: 14, fontWeight: 600 }}>{society}</span><Icon name="IconCheck" size={16} />
+        </div>
+        {others.map(m => (
+          <button key={m.id} className="hov2" onClick={() => switchSociety(m.id)} style={rowStyle}>
+            <Icon name="IconBuilding" size={18} /><span style={{ flex: 1, fontSize: 14, fontWeight: 500 }}>{L ? m.society : m.societyGu || m.society}</span>
+          </button>
+        ))}
+        <button className="hov2" onClick={addSociety} style={rowStyle}>
+          <Icon name="IconPlus" size={18} /><span style={{ flex: 1, fontSize: 14, fontWeight: 500 }}>{T.addSociety}</span>
+        </button>
         <button className="hov2" onClick={logout} style={{ ...rowStyle, borderBottom: 0 }}>
           <Icon name="IconLogOut" size={18} /><span style={{ flex: 1, fontSize: 14, fontWeight: 500 }}>{T.logout}</span>
         </button>

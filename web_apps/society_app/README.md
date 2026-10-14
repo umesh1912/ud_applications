@@ -1,96 +1,84 @@
-# Shivam Residency — society app
+# Society app
 
-Implementation of `project/Society App.dc.html` (the Claude Design handoff in `project/`, `chats/` and `DESIGN_HANDOFF.md`).
+A society management app for many housing societies at once, in Gujarati and English. It was built from the Claude Design handoff (`project/Society App.dc.html`, `chats/`, `DESIGN_HANDOFF.md`).
 
-**Get the APK:** open this repository's **Releases** page and download `society_app.apk` from the newest "Society App" release.
-It is a mobile-first web app (React + Vite) with a real backend (Express + SQLite), in Gujarati with an English toggle, for four roles:
+- **Sign up and log in** with a mobile number and an SMS OTP. New users add their name.
+- **Register a society.** Enter the name, city, wings (floors × flats per floor), monthly maintenance, due day and the society's UPI ID. The flats are created automatically, the person who registers becomes the **secretary**, and the society gets a 6-character **society code**.
+- **Join a society.** Enter the society code, pick your flat (owner or tenant) or choose "security guard", and wait for the secretary to approve. The secretary assigns the role: resident, treasurer, secretary or watchman.
+- **Members:** the secretary approves or rejects join requests, changes roles and removes members. Every society needs at least one secretary.
+- **Billing:** each month's maintenance bill is raised for every flat automatically. The committee can add extra charges for all flats or one flat. Residents pay the society's **UPI ID** from any UPI app and enter the UTR. The treasurer or secretary confirms it against the bank statement and a receipt (PDF) is issued. The committee can also record cash, cheque, bank or UPI payments themselves. Pending dues, reminders and a monthly PDF report are included.
+- **Expenses:** bills are submitted with a photo or PDF, and the secretary approves them. The fund balance updates automatically.
+- **Gate:** the watchman logs visitors and the resident approves from their phone. Guest gate pass codes, staff check-in and out, and SOS alerts to guards and the committee.
+- **Community:** notices, events with RSVP and polls (created by the secretary), complaints with status tracking, amenity booking (paid bookings become bills), parking and vehicles, the directory (members plus emergency and service contacts) and the document vault (uploads).
+- Each society's data is kept separate. A person can belong to several societies and switch between them under **More**.
 
-- **Resident:** dues and payments with receipts, auto-pay, guest gate passes, approving visitors, complaints, notices, events and RSVPs, polls, amenity booking, parking, daily help, the directory and documents.
-- **Secretary:** fund balance, collection progress, approving or rejecting bills, posting notices, moving complaints from open to resolved, and dues reminders.
-- **Treasurer:** submitting bills with attachments, recording cash payments, reminders, the expense breakdown and the monthly PDF report.
-- **Watchman:** logging visitors and sending them for approval, verifying gate pass codes, marking visitors out, staff check-in and check-out, and responding to SOS alerts.
+Phones get updates by polling every 3 seconds.
 
-Actions carry across roles through the shared database. Every client polls every 3 seconds, so an approval or SOS reaches other members within about 3 seconds.
-
-## Run it
+## Run locally
 
 ```bash
 npm install
-npm run dev        # API on :8787, web on http://localhost:5173 (proxied /api)
-npm test           # API integration tests
-npm run build && NODE_ENV=production npm start   # single server on :8787 serving web/dist
-npm run seed -- --reset                           # wipe and re-seed the database
+npm run dev          # API on :8787, web on http://localhost:5173 (demo society + OTP 123456)
+npm test             # API tests: signup, onboarding, approvals, UPI claims, isolation, demo flows
 ```
 
-Requires Node 22.5+ (it uses the built-in `node:sqlite`). The data lives in `server/data/society.db`, with uploads in `server/data/uploads/`.
+Requires Node 22.5 or later (it uses the built-in `node:sqlite`).
 
-### Demo mode
+In development, **demo mode** adds a sample society, Shivam Residency. Its members sign in with one tap from the panel beside the phone frame, or with 98250 12345 / 23456 / 34567 / 41122 and OTP `123456`.
 
-This is on by default in development.
+## Put it online (Railway)
 
-- On a wide screen the app is drawn inside the iPhone frame, with the role and language panel from the prototype beside it. On a phone it fills the screen.
-- A new visitor is signed in as the resident automatically, and the panel or **More → Switch role** switches between the four seeded members.
-- Visitors logged for flats with no app user are approved after about 3 seconds, which stands in for the guard phoning the flat.
-- **Sign out** shows the real OTP login. The sample numbers are 98250 12345 (resident), 98250 23456 (secretary), 98250 34567 (treasurer) and 98250 41122 (watchman). The OTP is `123456` in development.
+1. Create an account at **railway.com** and choose **New project → Deploy from GitHub repo → `ud_applications`**.
+2. In the service **Settings**:
+   - Set **Root directory** to `web_apps/society_app`. The Dockerfile and `railway.json` there are picked up automatically.
+   - Set **Branch** to `main`.
+   - Under **Networking**, choose **Generate domain**. You get something like `https://society-app-production.up.railway.app`.
+3. **Add a volume** (right-click the service → *Attach volume*) mounted at **`/data`**. The database and uploads live there. Without a volume, data is lost on every deploy.
+4. Add these **variables**:
 
-### Environment
+   | Variable | Value |
+   |---|---|
+   | `TWILIO_ACCOUNT_SID` | from the Twilio console |
+   | `TWILIO_AUTH_TOKEN` | from the Twilio console |
+   | `TWILIO_VERIFY_SERVICE_SID` | Twilio → Verify → Services → create a service → its `VA…` SID |
 
-| Variable | Default | |
-|---|---|---|
-| `PORT` | `8787` | |
-| `DEMO_MODE` | `true` in dev, `false` when `NODE_ENV=production` | One-tap role logins and simulated flat approvals |
-| `OTP_DEV_CODE` | `123456` in dev, unset in production | A fixed OTP. When it is unset, OTPs are random. |
-| `DATA_DIR` / `DB_FILE` | `server/data` | |
+   Twilio Verify sends OTPs in India on Twilio's own registered templates, so you don't need DLT registration. MSG91 works too: set `MSG91_AUTH_KEY` and `MSG91_TEMPLATE_ID` (a DLT-approved template containing `##OTP##`) instead.
+   Until SMS is set up, codes are only written to the Railway **logs**, which is enough for testing yourself.
+5. In GitHub, go to **Settings → Secrets and variables → Actions → Variables** and add `SOCIETY_APP_URL` = your Railway address. The next APK build then opens that server. Without the variable, the APK is the offline single-phone demo.
 
-## Android app (APK)
+Optional variables: `DEMO_MODE=true` (adds the sample society and one-tap logins; never use this for real societies), `OTP_DEV_CODE` (a fixed code, for testing only), `ONLINE_PAYMENTS=stub`.
 
-`web/android` is a Capacitor project wrapping an **offline demo build**. The app bundles its own SQLite database (sql.js) and runs the server's route table, seed data and state logic on the phone, so it needs no server. The data stays on that one phone, so the roles can't talk across devices. Switch roles under **More → Switch role** instead. PDF downloads are only available with the server.
+## Android app
+
+`web/android` is a Capacitor project. With `CAP_SERVER_URL` set, the APK loads the live server, so app updates need no reinstall. Without it, the APK bundles the offline demo: the server's own route table runs on the phone using sql.js.
 
 ```bash
-npm run apk -w web    # needs JDK 21 + Android SDK (ANDROID_HOME); output: web/android/app/build/outputs/apk/debug/app-debug.apk
+CAP_SERVER_URL=https://your-app.up.railway.app npm run apk -w web   # needs JDK 21 + Android SDK
 ```
 
-On GitHub, `.github/workflows/society-app.yml` (at the repository root) builds the APK on every push that touches `web_apps/society_app/` and publishes it as a release.
-To point the APK at a real server instead, build without `VITE_LOCAL` and set `server.url` in `web/capacitor.config.ts`.
+`.github/workflows/society-app.yml` builds it on every push and publishes `society_app.apk` as a "Society App" release.
 
 ## Layout
 
 ```
 server/src
-  app.ts            routes (auth, bills/payments, gate, community, facilities, finance)
-  state.ts          GET /api/state: everything one member's app shows, scoped by role
-  auth.ts           phone + OTP, bearer sessions, role guards
-  db.ts, seed.ts    SQLite schema and the prototype's sample data
-  routes.ts         member actions as a transport-neutral table (used by Express and the offline app)
-  store.ts          storage interface, schema and shared types
-  services/         payments.ts, notifier.ts, pdf.ts: integration boundaries
+  routes.ts         every API action as a transport-neutral table (Express + offline app)
+  auth.ts           phone normalisation, sessions, active society membership
+  society.ts        register a society (flats, defaults), monthly maintenance billing, receipt numbers
+  state.ts          GET /api/state: everything one member's app shows, scoped by society and role
+  store.ts          storage interface, schema, shared types
+  seed.ts           demo society (demo mode only)
+  services/         otp.ts (Twilio Verify / MSG91 / console), payments.ts, notifier.ts, pdf.ts
 web/src
-  ds/               shadcn design-system components and tokens, copied from project/_ds
-  Phone.tsx         header, SOS banner, tab bar, toast, sheets
-  screens/, Sheets.tsx
-  lib/i18n.ts       prototype strings, verbatim ([Gujarati, English])
-  local/backend.ts  offline backend for the APK (sql.js)
-web/android         Capacitor Android project
+  App.tsx           sign-in → name → register/join → society app; polling
+  Login.tsx, Onboarding.tsx, Phone.tsx, Sheets.tsx, screens/
+  local/backend.ts  offline demo backend (sql.js)
 ```
 
-## Stubs to replace before going live
+## Not done yet
 
-- **Payments:** `StubPaymentProvider` approves every charge. Implement `PaymentProvider` with Razorpay, Cashfree or similar: create an order, open checkout, and verify the webhook.
-- **SMS, WhatsApp and push:** `ConsoleNotifier` only logs OTPs, dues reminders, notices, SOS alerts and visitor requests. Implement `Notifier` with MSG91, Twilio, the WhatsApp Business API or FCM.
-- **Calls** use `tel:` links. **PDFs** (receipts, the monthly report, document placeholders) are real files, but they are English-only because PDFKit cannot shape Gujarati text.
-
-## Differences from the prototype
-
-- Dates, collections and expenses use the real current date and month instead of the fixed "08 Oct".
-- "Pending dues" lists every flat with unpaid maintenance, including the resident's own flat until it pays.
-- Attach and photo buttons open a real file picker, or the camera on phones, and upload the file.
-- New: an OTP login screen, Sign out, empty states, and an offline notice.
-- `IconReceipt` is not in the design system, so the prototype shows a blank icon there. The app draws a matching receipt glyph.
-- Members can create notices, complaints and other content in one language only, and it is shown unchanged in both. The seeded content is bilingual.
-
-## Not built yet
-
-- Generating each month's maintenance bills, and running auto-pay. The toggle saves the preference but does not charge anyone.
-- Managing members and flats, and uploading documents to the vault. Committee members have no screens for these yet.
-- Push notifications. The app polls every 3 seconds instead.
-- A native speaker should still review the Gujarati, as noted in the design chat.
+- **Online card or net-banking gateway (Razorpay etc.):** payments go to the society's UPI ID and the treasurer confirms them. `PaymentProvider` is the place to plug a gateway in.
+- **Push notifications:** the app polls instead. SMS and WhatsApp reminders and notices are only logged (`Notifier`).
+- **Editing amenities and fees, and editing or deleting notices, events and polls.**
+- **Gujarati text written by members** is shown as typed in both languages. The built-in Gujarati was machine-written and should be reviewed by a native speaker.
+- **PDFs are English-only.**

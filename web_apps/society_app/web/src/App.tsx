@@ -2,10 +2,11 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Icon } from './ds';
 import { IOSDevice } from './IOSDevice';
 import { Login } from './Login';
+import { JoinSociety, Profile, RegisterSociety, Welcome } from './Onboarding';
 import { Phone } from './Phone';
 import { ApiError, api, demoTokens, getToken, saveDemoToken, setToken } from './lib/api';
 import { ROLES, type Role } from './lib/i18n';
-import type { AppState } from './lib/types';
+import type { AppState, Me } from './lib/types';
 import { C } from './ui';
 
 const POLL_MS = 3000;
@@ -25,9 +26,11 @@ const nowHM = () => new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Kolkata',
 
 export function App() {
   const [demo, setDemo] = useState<boolean | null>(null);
+  const [me, setMe] = useState<Me | null>(null);
   const [st, setSt] = useState<AppState | null>(null);
   const [authed, setAuthed] = useState(!!getToken());
   const [offline, setOffline] = useState(false);
+  const [view, setView] = useState<'app' | 'welcome' | 'register' | 'join'>('app');
   const [lang, setLangState] = useState(storedLang);
   const [clock, setClock] = useState(nowHM);
   const wide = useWide();
@@ -39,59 +42,93 @@ export function App() {
 
   const signOutLocal = useCallback(() => {
     if (roleRef.current) saveDemoToken(roleRef.current, null);
-    setToken(null); setSt(null); setAuthed(false);
+    setToken(null); setSt(null); setMe(null); setAuthed(false); setView('app');
   }, []);
+
+  /** Loads the account; when it has an active society, also that society's state. */
+  const loadMe = useCallback(async () => {
+    if (!getToken()) return;
+    try {
+      const m = await api<Me>('GET', '/me');
+      setMe(m); setOffline(false);
+      setSt(m.activeMemberId ? await api<AppState>('GET', '/state') : null);
+    } catch (e) {
+      if (e instanceof ApiError && e.status === 401) signOutLocal();
+      else setOffline(true);
+    }
+  }, [signOutLocal]);
 
   const refresh = useCallback(async () => {
     if (!getToken()) return;
     try { setSt(await api<AppState>('GET', '/state')); setOffline(false); }
     catch (e) {
       if (e instanceof ApiError && e.status === 401) signOutLocal();
+      else if (e instanceof ApiError && e.status === 403) loadMe(); // removed from the society
       else setOffline(true);
     }
-  }, [signOutLocal]);
+  }, [signOutLocal, loadMe]);
 
   const loginAs = useCallback(async (role: Role) => {
     let token: string | undefined = demoTokens()[role];
     if (!token) { token = (await api<{ token: string }>('POST', '/auth/demo', { role })).token; saveDemoToken(role, token); }
-    setToken(token); setAuthed(true);
-    try { setSt(await api<AppState>('GET', '/state')); }
+    setToken(token); setAuthed(true); setView('app');
+    try { await api('GET', '/me'); }
     catch (e) {
       // Saved demo session went stale (e.g. database reset): start a fresh one.
       if (!(e instanceof ApiError && e.status === 401)) throw e;
-      saveDemoToken(role, null);
       const fresh = (await api<{ token: string }>('POST', '/auth/demo', { role })).token;
-      saveDemoToken(role, fresh); setToken(fresh); setSt(await api<AppState>('GET', '/state'));
+      saveDemoToken(role, fresh); setToken(fresh);
     }
-  }, []);
+    await loadMe();
+  }, [loadMe]);
 
   const switchRole = useCallback((role: Role) => { loginAs(role).catch(() => setOffline(true)); }, [loginAs]);
+  const switchSociety = useCallback(async (memberId: number) => {
+    await api('POST', '/session/member', { memberId }).catch(() => {});
+    setView('app'); await loadMe();
+  }, [loadMe]);
 
-  // Startup: read server config, then either resume the session or (demo) sign in as the resident.
+  // Startup: read server config, then resume the session, or (demo, first visit) sign in as the demo resident.
   useEffect(() => {
     api<{ demo: boolean }>('GET', '/config').then(c => {
       setDemo(c.demo);
-      if (getToken()) refresh();
+      if (getToken()) loadMe();
       else if (c.demo) switchRole('resident');
     }, () => { setDemo(false); setOffline(true); });
-  }, [refresh, switchRole]);
+  }, [loadMe, switchRole]);
 
-  // Poll so visitor approvals, SOS alerts and bill approvals from other members show up.
+  // Poll so approvals, visitors, SOS alerts and payments from other members show up.
   useEffect(() => {
     if (!authed) return;
-    const id = setInterval(() => { if (document.visibilityState === 'visible') refresh(); setClock(nowHM()); }, POLL_MS);
-    const vis = () => document.visibilityState === 'visible' && refresh();
+    const id = setInterval(() => {
+      setClock(nowHM());
+      if (document.visibilityState !== 'visible') return;
+      if (st) refresh(); else if (me?.memberships.some(m => m.status === 'pending')) loadMe();
+    }, POLL_MS);
+    const vis = () => { if (document.visibilityState === 'visible') loadMe(); };
     document.addEventListener('visibilitychange', vis);
     return () => { clearInterval(id); document.removeEventListener('visibilitychange', vis); };
-  }, [authed, refresh]);
+  }, [authed, st, me, refresh, loadMe]);
 
   const logout = useCallback(() => { api('POST', '/auth/logout').catch(() => {}); signOutLocal(); }, [signOutLocal]);
-  const onLoggedIn = (token: string) => { setToken(token); setAuthed(true); refresh(); };
+  const onLoggedIn = (token: string) => { setToken(token); setAuthed(true); loadMe(); };
 
   const framed = !!demo && wide;
-  const screen = st
-    ? <Phone key={st.me.id} st={st} lang={lang} setLang={setLang} framed={framed} offline={offline} refresh={refresh} switchRole={switchRole} logout={logout} onUnauthorized={signOutLocal} />
-    : authed ? <Splash /> : <Login lang={lang} setLang={setLang} framed={framed} demo={!!demo} onLoggedIn={onLoggedIn} />;
+  const common = { lang, setLang, framed };
+  let screen;
+  if (!authed) screen = <Login {...common} demo={!!demo} onLoggedIn={onLoggedIn} />;
+  else if (!me) screen = <Splash />;
+  else {
+    const ob = { ...common, me, reload: loadMe, logout };
+    const back = st ? () => setView('app') : () => setView('welcome');
+    if (!me.account.name) screen = <Profile {...ob} />;
+    else if (view === 'register') screen = <RegisterSociety {...ob} onBack={back} onDone={() => setView('app')} />;
+    else if (view === 'join') screen = <JoinSociety {...ob} onBack={back} onDone={() => setView('app')} />;
+    else if (!st || view === 'welcome')
+      screen = <Welcome {...ob} onBack={st ? () => setView('app') : undefined} onRegister={() => setView('register')} onJoin={() => setView('join')} onSwitch={switchSociety} />;
+    else screen = <Phone key={`${st.society.id}-${st.me.id}`} st={st} memberships={me.memberships} {...common} offline={offline} refresh={refresh} switchRole={switchRole}
+      switchSociety={switchSociety} addSociety={() => setView('welcome')} logout={logout} onUnauthorized={signOutLocal} />;
+  }
 
   if (!framed) return <div style={{ height: '100dvh' }}>{screen}</div>;
 

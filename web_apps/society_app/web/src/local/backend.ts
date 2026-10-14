@@ -2,14 +2,16 @@
 // seed data and state builder against SQLite compiled to WebAssembly, saved in the phone's storage.
 import initSqlJs, { type Database } from 'sql.js';
 import wasmUrl from 'sql.js/dist/sql-wasm.wasm?url';
+import { resolveSession } from '../../../server/src/auth';
 import { matchRoute, runRoute, type Deps } from '../../../server/src/routes';
-import { seed } from '../../../server/src/seed';
+import { seedDemo } from '../../../server/src/seed';
+import { StoredOtp } from '../../../server/src/services/otp';
 import { ConsoleNotifier } from '../../../server/src/services/notifier';
 import { StubPaymentProvider } from '../../../server/src/services/payments';
-import { HttpError, SCHEMA, type Row, type SqlValue, type Store, type User } from '../../../server/src/store';
+import { HttpError, prepareSchema, type Row, type SqlValue, type Store } from '../../../server/src/store';
 import { ApiError } from '../lib/api';
 
-const KEY = 'sr.localdb';
+const KEY = 'sr.localdb.v2';
 const DEMO_OTP = '123456';
 
 class SqlJsStore implements Store {
@@ -38,7 +40,6 @@ class SqlJsStore implements Store {
     try { const r = fn(); this.raw.exec('COMMIT'); return r; }
     catch (e) { this.raw.exec('ROLLBACK'); throw e; }
   }
-  setting(key: string) { return this.get<{ value: string }>('SELECT value FROM settings WHERE key = ?', key)?.value; }
 }
 
 const toB64 = (u8: Uint8Array) => { let s = ''; for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode(...u8.subarray(i, i + 0x8000)); return btoa(s); };
@@ -53,10 +54,12 @@ function open() {
     let saved: string | null = null;
     try { saved = localStorage.getItem(KEY); } catch { /* storage unavailable */ }
     const db = new SqlJsStore(saved ? new SQL.Database(fromB64(saved)) : new SQL.Database());
-    db.raw.exec(SCHEMA);
-    seed(db);
+    prepareSchema(db);
+    seedDemo(db);
     persist(db, true);
-    return { db, deps: { payments: new StubPaymentProvider(1200), notifier: new ConsoleNotifier(), demo: true } };
+    const notifier = new ConsoleNotifier();
+    const deps: Deps = { payments: new StubPaymentProvider(1200), notifier, demo: true, otp: new StoredOtp(db, (p, c) => notifier.sendOtp(p, c), DEMO_OTP, true) };
+    return { db, deps };
   })();
 }
 
@@ -68,43 +71,25 @@ function persist(db: SqlJsStore, force = false) {
   try { localStorage.setItem(KEY, toB64(db.raw.export())); } catch { /* storage full or unavailable */ }
 }
 
-const normalizePhone = (raw: unknown) => {
-  const d = String(raw ?? '').replace(/\D/g, '');
-  const ten = d.length === 12 && d.startsWith('91') ? d.slice(2) : d;
-  return /^[6-9]\d{9}$/.test(ten) ? ten : null;
-};
-
 async function readBody(body: unknown) {
   if (!(body instanceof FormData)) return { body, file: undefined };
   const fields: Record<string, string> = {};
-  let file: { filename: string; originalname: string } | undefined;
-  body.forEach((v, k) => { if (typeof v === 'string') fields[k] = v; else file = { filename: undefined as unknown as string, originalname: v.name }; });
+  let file: { filename: string; originalname: string; size: number } | undefined;
+  body.forEach((v, k) => { if (typeof v === 'string') fields[k] = v; else file = { filename: '', originalname: v.name, size: v.size }; });
   return { body: fields, file };
 }
 
+/** Same contract as fetch('/api' + path): runs the server's route table on the phone. */
 export async function localApi(method: string, path: string, rawBody: unknown, token: string | null) {
   const { db, deps } = await open();
   try {
-    const { body, file } = await readBody(rawBody) as { body: any; file?: { filename: string; originalname: string } };
-    const userBy = (sql: string, v: SqlValue) => db.get<User>(sql, v);
-    const tokenFor = (u: User) => ({ token: `local:${u.id}` });
-
-    if (path === '/config') return { demo: true, local: true };
-    if (path === '/auth/demo') return tokenFor(userBy('SELECT * FROM users WHERE role = ? ORDER BY id LIMIT 1', String(body?.role)) ?? (() => { throw new HttpError(404, 'not_found'); })());
-    if (path === '/auth/otp' || path === '/auth/verify') {
-      const phone = normalizePhone(body?.phone) ?? (() => { throw new HttpError(400, 'phone_invalid'); })();
-      const user = userBy('SELECT * FROM users WHERE phone = ?', phone) ?? (() => { throw new HttpError(404, 'phone_unknown'); })();
-      if (path === '/auth/otp') return { sent: true, devCode: DEMO_OTP };
-      if (String(body?.code) !== DEMO_OTP) throw new HttpError(400, 'otp_invalid');
-      return tokenFor(user);
-    }
-
-    const user = token?.startsWith('local:') ? userBy('SELECT * FROM users WHERE id = ?', Number(token.slice(6))) : undefined;
-    if (!user) throw new HttpError(401, 'unauthenticated');
-    if (path === '/auth/logout') return { ok: true };
-    const m = matchRoute(method, path);
+    const [p, qs] = path.split('?');
+    const read = await readBody(rawBody);
+    const body = method === 'GET' ? Object.fromEntries(new URLSearchParams(qs ?? '')) : read.body;
+    const m = matchRoute(method, p);
     if (!m) throw new HttpError(404, 'not_found');
-    const result = await runRoute(m.route, { db, deps, user, params: m.params, body, file });
+    const session = m.route.auth === 'public' ? undefined : resolveSession(db, token ?? undefined);
+    const result = await runRoute(m.route, { db, deps, session, token: token ?? undefined, params: m.params, body, file: read.file });
     return JSON.parse(JSON.stringify(result ?? null));
   } catch (e) {
     if (e instanceof HttpError) throw new ApiError(e.status, e.message);
