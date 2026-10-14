@@ -25,6 +25,9 @@ Every app works offline and keeps files on the phone. Languages: English, हि
 | **Dial Abroad** | `apps/dial_abroad` | Contacts abroad with their local time, call with the right code or on WhatsApp. |
 | **Milo** | `apps/meet_milo` | Free video meetings on Jitsi Meet with shareable links and scheduling. |
 | **Safar** | `apps/safar_trips` | Train booking and Tatkal opening countdowns, PNR check, saved passengers. |
+| **Daftar** | `apps/doc_manager` | File manager for documents: your own folders, import from files/camera/gallery, search, star, sort, move, share. |
+| **ClipCam** | `apps/video_recorder` | Video recorder: SD to 4K, pause/resume, front/back camera, torch, optional copy to the gallery, built-in player. |
+| **Baatcheet** | `apps/call_recorder` | Records calls automatically through the microphone, plus voice notes; search, notes, stars, playback speed. |
 
 **Shivam Residency** (`web_apps/society_app`) is a society management app (maintenance and bills, visitors and gate passes, complaints, notices, events, polls, amenity booking, expenses, SOS) for residents, the secretary, the treasurer and the watchman. Unlike the apps above it is built with React and Capacitor, so it has its own workflow (`society-app.yml`) and its APK appears as a separate "Society App" release.
 
@@ -92,3 +95,11 @@ Missing keys fall back to English.
   Syncfusion Community License for individuals and small companies
   (under USD 1M revenue). Check their licence terms before a commercial launch.
 - DocScan uses Google ML Kit's document scanner, which needs Google Play services.
+- Baatcheet records calls through the microphone, because Android 10 and later
+  do not let ordinary apps capture call audio directly. The other person is heard
+  best with the call on speaker, and some phones give other apps silence during
+  a call, so check it on your phone. It needs the microphone and phone-state
+  permissions, and runs a foreground service with a notification while call
+  recording is on. On Play, apps that record calls must show a clear consent
+  notice and fill in the permissions declaration, and Accessibility-based
+  recording is not allowed.

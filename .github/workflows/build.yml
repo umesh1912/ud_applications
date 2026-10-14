@@ -48,6 +48,12 @@ jobs:
             label: Milo
           - app: safar_trips
             label: Safar
+          - app: doc_manager
+            label: Daftar
+          - app: video_recorder
+            label: ClipCam
+          - app: call_recorder
+            label: Baatcheet
     env:
       APP: ${{ matrix.app }}
     steps:

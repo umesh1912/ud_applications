@@ -243,6 +243,39 @@ def safar_trips(A):
             f'<circle cx="700" cy="318" r="10" fill="{A}"/>')
 
 
+def doc_manager(A):
+    back = (f'<path d="M286,350 Q286,318 318,318 H440 L482,362 H706 Q738,362 738,394 V700 '
+            f'Q738,732 706,732 H318 Q286,732 286,700 Z" fill="{G}"/>')
+    page = (f'<g transform="rotate(-6 512 470)">' + doc_page(372, 298, 260, 300, fold=64)
+            + lines(408, [380, 424, 468], [150, 186, 120], A) + '</g>')
+    front = (f'<path d="M286,470 Q286,444 312,444 H712 Q738,444 738,470 V700 '
+             f'Q738,732 706,732 H318 Q286,732 286,700 Z" fill="{C}"/>')
+    return (back + page + front
+            + f'<rect x="452" y="532" width="120" height="26" rx="13" fill="{A}" opacity="0.55"/>')
+
+
+def video_recorder(A):
+    return (f'<rect x="262" y="372" width="384" height="286" rx="58" fill="{C}"/>'
+            f'<path d="M664,476 L752,420 Q774,406 774,432 V598 Q774,624 752,610 L664,554 Z" fill="{C}"/>'
+            f'<circle cx="454" cy="515" r="92" fill="{A}"/>'
+            f'<circle cx="454" cy="515" r="56" fill="{shade(A, 0.25)}"/>'
+            f'<circle cx="428" cy="490" r="16" fill="#FFFFFF" opacity="0.55"/>'
+            f'<circle cx="330" cy="318" r="40" fill="#E5533F"/>'
+            f'<circle cx="330" cy="318" r="40" fill="none" stroke="{G}" stroke-width="14"/>')
+
+
+def call_recorder(A):
+    call = ("M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 "
+            "1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 "
+            "0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z")
+    bars = "".join(f'<rect x="{x}" y="{512 - h / 2}" width="30" height="{h}" rx="15" fill="{G}"/>'
+                   for x, h in [(584, 90), (634, 170), (684, 250), (734, 130)])
+    return (f'<path d="{call}" fill="{C}" transform="translate(262 300) scale(17.5)"/>'
+            + bars
+            + f'<circle cx="694" cy="730" r="44" fill="#E5533F"/>'
+            + f'<circle cx="694" cy="730" r="44" fill="none" stroke="{C}" stroke-width="12"/>')
+
+
 APPS = {
     "doc_scanner": ("#C2512E", doc_scanner),
     "doc_vault": ("#1F5F5B", doc_vault),
@@ -260,6 +293,9 @@ APPS = {
     "dial_abroad": ("#127A7A", dial_abroad),
     "meet_milo": ("#5B4FCF", meet_milo),
     "safar_trips": ("#A26B00", safar_trips),
+    "doc_manager": ("#1E5A8C", doc_manager),
+    "video_recorder": ("#C2412F", video_recorder),
+    "call_recorder": ("#1F7A55", call_recorder),
 }
 
 
@@ -301,7 +337,8 @@ def symbol(accent, draw, scale):
 def main():
     store = ROOT / "store"
     store.mkdir(exist_ok=True)
-    sheet = Image.new("RGBA", (8 * 200 + 20, 2 * 200 + 20), "#F6F1E7")
+    rows = (len(APPS) + 7) // 8
+    sheet = Image.new("RGBA", (8 * 200 + 20, rows * 200 + 20), "#F6F1E7")
     for i, (app, (accent, draw)) in enumerate(APPS.items()):
         if not (ROOT / "apps" / app).exists():
             continue

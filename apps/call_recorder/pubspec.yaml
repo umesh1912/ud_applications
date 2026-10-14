@@ -1,0 +1,48 @@
+name: call_recorder
+description: Baatcheet — record calls and voice notes, find them by date.
+version: 1.0.0+1
+publish_to: none
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  ud_core:
+    path: ../../packages/ud_core
+  record: ^6.0.0
+  just_audio: ^0.10.0
+  phone_state: ^3.0.0
+  permission_handler: ^12.0.0
+  flutter_foreground_task: ^9.0.0
+  shared_preferences: ^2.3.0
+
+dev_dependencies:
+  flutter_launcher_icons: any
+  flutter_native_splash: any
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/icon/icon.png
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: assets/icon/icon.png
+  adaptive_icon_background: assets/icon/background.png
+  adaptive_icon_foreground: assets/icon/foreground.png
+
+flutter_native_splash:
+  color: "#F6F1E7"
+  color_dark: "#14130F"
+  image: assets/icon/splash.png
+  android_12:
+    color: "#F6F1E7"
+    color_dark: "#14130F"
+    image: assets/icon/foreground.png
+    icon_background_color: "#1F7A55"
+    icon_background_color_dark: "#1F7A55"
+  ios: false
+  web: false
