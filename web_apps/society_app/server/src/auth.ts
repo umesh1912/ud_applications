@@ -1,60 +1,44 @@
-import crypto from 'node:crypto';
-import type { NextFunction, Request, Response } from 'express';
-import type { Db } from './db.js';
-import { HttpError, type Role, type User } from './store.js';
+import type { Account, Role, Store, User } from './store.js';
+import { HttpError, randomToken } from './store.js';
 import { nowIso } from './time.js';
-
-export { HttpError, type Role, type User };
-
-declare global {
-  namespace Express { interface Request { user?: User } }
-}
-
-const OTP_TTL_MS = 5 * 60 * 1000;
-const MAX_ATTEMPTS = 5;
 
 /** Normalises Indian mobile numbers to their 10-digit form. */
 export const normalizePhone = (raw: unknown) => {
   const digits = String(raw ?? '').replace(/\D/g, '');
-  const ten = digits.length === 12 && digits.startsWith('91') ? digits.slice(2) : digits;
+  const ten = digits.length === 12 && digits.startsWith('91') ? digits.slice(2) : digits.length === 11 && digits.startsWith('0') ? digits.slice(1) : digits;
   return /^[6-9]\d{9}$/.test(ten) ? ten : null;
 };
 
-export function createSession(db: Db, userId: number) {
-  const token = crypto.randomBytes(24).toString('base64url');
+export function createSession(db: Store, userId: number) {
+  const token = randomToken();
   db.run('INSERT INTO sessions (token, user_id, created_at) VALUES (?, ?, ?)', token, userId, nowIso());
   return token;
 }
 
-/** Stores a fresh OTP for a registered member. Returns null when the number is not registered. */
-export function issueOtp(db: Db, phone: string, fixedCode?: string) {
-  if (!db.get('SELECT id FROM users WHERE phone = ?', phone)) return null;
-  const code = fixedCode ?? String(crypto.randomInt(100000, 1000000));
-  db.run('INSERT OR REPLACE INTO otps (phone, code, expires_at, attempts) VALUES (?, ?, ?, 0)', phone, code, Date.now() + OTP_TTL_MS);
-  return code;
+/** Finds or creates the account for a verified phone number. */
+export function upsertUser(db: Store, phone: string) {
+  const existing = db.get<{ id: number }>('SELECT id FROM users WHERE phone = ?', phone);
+  if (existing) return { id: existing.id, isNew: false };
+  return { id: db.run('INSERT INTO users (phone, created_at) VALUES (?, ?)', phone, nowIso()).id, isNew: true };
 }
 
-export function verifyOtp(db: Db, phone: string, code: string) {
-  const row = db.get<{ code: string; expires_at: number; attempts: number }>('SELECT code, expires_at, attempts FROM otps WHERE phone = ?', phone);
-  if (!row || row.expires_at < Date.now() || row.attempts >= MAX_ATTEMPTS) throw new HttpError(400, 'otp_expired');
-  const ok = row.code.length === code.length && crypto.timingSafeEqual(Buffer.from(row.code), Buffer.from(code));
-  if (!ok) { db.run('UPDATE otps SET attempts = attempts + 1 WHERE phone = ?', phone); throw new HttpError(400, 'otp_invalid'); }
-  db.run('DELETE FROM otps WHERE phone = ?', phone);
-  const user = db.get<User>('SELECT * FROM users WHERE phone = ?', phone)!;
-  return createSession(db, user.id);
-}
+const memberSql = `SELECT u.id, u.name, u.name_gu, u.phone, m.id AS member_id, m.society_id, m.flat_id, m.role
+  FROM members m JOIN users u ON u.id = m.user_id WHERE m.status = 'active'`;
 
-export const authenticate = (db: Db) => (req: Request, _res: Response, next: NextFunction) => {
-  const header = req.headers.authorization ?? '';
-  const token = header.startsWith('Bearer ') ? header.slice(7) : undefined;
+/** Resolves a bearer token to the account and, when it has one, the active membership it is acting through. */
+export function resolveSession(db: Store, token: string | undefined): { account: Account; user: User | null; token: string } {
   if (!token) throw new HttpError(401, 'unauthenticated');
-  const user = db.get<User>('SELECT u.* FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token = ?', token);
-  if (!user) throw new HttpError(401, 'unauthenticated');
-  req.user = user;
-  next();
-};
+  const s = db.get<{ user_id: number; member_id: number | null }>('SELECT user_id, member_id FROM sessions WHERE token = ?', token);
+  if (!s) throw new HttpError(401, 'unauthenticated');
+  const account = db.get<Account>('SELECT id, name, name_gu, phone FROM users WHERE id = ?', s.user_id);
+  if (!account) throw new HttpError(401, 'unauthenticated');
+  let user = s.member_id ? db.get<User>(`${memberSql} AND m.id = ? AND m.user_id = ?`, s.member_id, s.user_id) : undefined;
+  if (!user) {
+    // Session has no (or a no-longer-active) membership: fall back to the first active one.
+    user = db.get<User>(`${memberSql} AND m.user_id = ? ORDER BY m.id LIMIT 1`, s.user_id);
+    db.run('UPDATE sessions SET member_id = ? WHERE token = ?', user?.member_id ?? null, token);
+  }
+  return { account, user: user ?? null, token };
+}
 
-export const requireRole = (...roles: Role[]) => (req: Request, _res: Response, next: NextFunction) => {
-  if (!req.user || !roles.includes(req.user.role)) throw new HttpError(403, 'forbidden');
-  next();
-};
+export const roleIn = (u: { role: Role }, roles: Role[]) => roles.includes(u.role);

@@ -8,6 +8,7 @@ export interface Notifier {
   broadcastNotice(title: string, flats: number): Promise<void>;
   sosAlert(flatId: string | null, type: string): Promise<void>;
   visitorAtGate(flatId: string, visitor: string): Promise<void>;
+  joinRequest(societyId: number, name: string, flatId: string | null): Promise<void>;
 }
 
 export class ConsoleNotifier implements Notifier {
@@ -17,4 +18,5 @@ export class ConsoleNotifier implements Notifier {
   async broadcastNotice(title: string, flats: number) { this.log(`Notice "${title}" → ${flats} flats`); }
   async sosAlert(flatId: string | null, type: string) { this.log(`SOS ${type} from ${flatId ?? 'unknown'} → guards + committee`); }
   async visitorAtGate(flatId: string, visitor: string) { this.log(`Visitor ${visitor} waiting → ${flatId}`); }
+  async joinRequest(societyId: number, name: string, flatId: string | null) { this.log(`Join request in society ${societyId}: ${name} (${flatId ?? 'staff'}) → secretary`); }
 }
