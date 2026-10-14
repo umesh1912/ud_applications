@@ -21,6 +21,9 @@ APPS = [
     ("dial_abroad", "Dial Abroad", "Call family abroad at the right time"),
     ("meet_milo", "Milo", "Free video meetings with a link"),
     ("safar_trips", "Safar", "Train booking and Tatkal countdowns"),
+    ("doc_manager", "Daftar", "All your files in neat folders"),
+    ("video_recorder", "ClipCam", "Record videos with pause, flip and torch"),
+    ("call_recorder", "Baatcheet", "Record calls and voice notes"),
 ]
 
 tag = sys.argv[1]

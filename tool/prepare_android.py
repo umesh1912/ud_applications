@@ -1,5 +1,6 @@
 """Finishes the Android project that `flutter create` generated for one app:
-sets the launcher label and, when android/key.properties exists, switches the
+sets the launcher label, adds the app's manifest extras (android_manifest_extra.xml
+goes inside <manifest>, android_application_extra.xml inside <application>) and, when android/key.properties exists, switches the
 release build to the upload key needed for Google Play.
 
 Usage: python3 tool/prepare_android.py apps/<app> "<Label>"
@@ -20,6 +21,10 @@ extra = app_dir / "android_manifest_extra.xml"
 if extra.exists() and "<!-- ud-extra -->" not in text:
     text = text.replace("</manifest>", "<!-- ud-extra -->\n" + extra.read_text() + "\n</manifest>", 1)
     print("manifest extras added")
+app_extra = app_dir / "android_application_extra.xml"
+if app_extra.exists() and "<!-- ud-app-extra -->" not in text:
+    text = text.replace("</application>", "<!-- ud-app-extra -->\n" + app_extra.read_text() + "\n    </application>", 1)
+    print("application extras added")
 manifest.write_text(text)
 print("label set:", label)
 

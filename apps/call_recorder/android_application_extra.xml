@@ -1,0 +1,5 @@
+        <!-- Watches for calls and records them (flutter_foreground_task). Do not rename. -->
+        <service
+            android:name="com.pravera.flutter_foreground_task.service.ForegroundService"
+            android:foregroundServiceType="microphone"
+            android:exported="false" />
