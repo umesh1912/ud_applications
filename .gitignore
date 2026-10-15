@@ -17,6 +17,8 @@ apps/*/.idea/
 
 # Signing — never commit
 *.jks
+# Shared key for test builds only (public, see tool/TEST_SIGNING.md); real upload keys stay in secrets
+!tool/test-signing.jks
 *.keystore
 key.properties
 

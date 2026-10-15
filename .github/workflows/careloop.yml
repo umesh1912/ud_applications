@@ -4,7 +4,7 @@ name: CareLoop APKs
 # CareLoop (patients, VITE_ROLE=patient) and CareLoop Pro (doctors, VITE_ROLE=doctor).
 on:
   push:
-    branches: [main, careloop]
+    branches: [main, careloop, careloop-preview]
     paths: ["web_apps/careloop/**", ".github/workflows/careloop.yml"]
   workflow_dispatch:
 
@@ -56,7 +56,7 @@ jobs:
           npx cap add android
           chmod +x android/gradlew
 
-      - name: Add upload key (only if secrets are set)
+      - name: Signing key (your upload key if set, else the shared test key)
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
@@ -72,7 +72,15 @@ jobs:
             } > android/key.properties
             echo "Upload key added."
           else
-            echo "No KEYSTORE_BASE64 secret: building a debug-signed APK."
+            # Same test key on every build, so a new APK installs over the old one.
+            cp ../../tool/test-signing.jks android/upload-keystore.jks
+            {
+              echo "storePassword=udapps-test-signing"
+              echo "keyPassword=udapps-test-signing"
+              echo "keyAlias=udapps-test"
+              echo "storeFile=upload-keystore.jks"
+            } > android/key.properties
+            echo "No KEYSTORE_BASE64 secret: signing with the shared test key (tool/test-signing.jks)."
           fi
 
       - name: Icons, theme and version
@@ -81,13 +89,12 @@ jobs:
       - name: Build APK
         run: |
           mkdir -p "$GITHUB_WORKSPACE/out"
-          if [ -f android/key.properties ]; then
-            (cd android && ../../../tool/ci_run.sh "apk $APP" ./gradlew assembleRelease bundleRelease)
-            cp android/app/build/outputs/apk/release/app-release.apk "$GITHUB_WORKSPACE/out/$APP.apk"
+          (cd android && ../../../tool/ci_run.sh "apk $APP" ./gradlew assembleRelease)
+          cp android/app/build/outputs/apk/release/app-release.apk "$GITHUB_WORKSPACE/out/$APP.apk"
+          # Play Store bundle only with your own upload key.
+          if [ -n "${{ secrets.KEYSTORE_BASE64 }}" ]; then
+            (cd android && ./gradlew bundleRelease)
             cp android/app/build/outputs/bundle/release/app-release.aab "$GITHUB_WORKSPACE/out/$APP.aab"
-          else
-            (cd android && ../../../tool/ci_run.sh "apk $APP" ./gradlew assembleDebug)
-            cp android/app/build/outputs/apk/debug/app-debug.apk "$GITHUB_WORKSPACE/out/$APP.apk"
           fi
 
       - uses: actions/upload-artifact@v4
