@@ -8,7 +8,7 @@
     "preview": "vite preview",
     "typecheck": "tsc -p tsconfig.json",
     "build:app": "tsc -p tsconfig.json && VITE_LOCAL=1 vite build --outDir dist-app && cap sync android",
-    "apk": "npm run build:app && cd android && ./gradlew assembleDebug && echo APK: android/app/build/outputs/apk/debug/app-debug.apk"
+    "apk": "npm run build:app && cd android && ./gradlew assembleRelease && echo APK: android/app/build/outputs/apk/release/app-release.apk"
   },
   "dependencies": {
     "@capacitor/core": "^7.6.9",

@@ -38,8 +38,23 @@ jobs:
       - name: Test API
         run: npm test
 
+      - name: Signing key (repository secret if set, else the fixed test key)
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 -d > web/android/app/upload-keystore.jks
+            echo "SIGNING_STORE_FILE=upload-keystore.jks" >> "$GITHUB_ENV"
+            echo "Signing with the upload key from KEYSTORE_BASE64."
+          else
+            echo "No KEYSTORE_BASE64 secret: signing with the fixed test key."
+          fi
+
       - name: Build APK
         env:
+          VERSION_CODE: ${{ github.run_number }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_BASE64 && secrets.KEYSTORE_PASSWORD || '' }}
+          SIGNING_KEY_ALIAS: ${{ secrets.KEYSTORE_BASE64 && (secrets.KEY_ALIAS || 'upload') || '' }}
           # Repository variable (Settings → Secrets and variables → Actions → Variables). Unset = offline demo APK.
           CAP_SERVER_URL: ${{ vars.SOCIETY_APP_URL }}
         run: |
@@ -47,7 +62,7 @@ jobs:
           chmod +x web/android/gradlew
           ../../tool/ci_run.sh "apk society_app" npm run apk -w web
           mkdir -p "$GITHUB_WORKSPACE/out"
-          cp web/android/app/build/outputs/apk/debug/app-debug.apk "$GITHUB_WORKSPACE/out/society_app.apk"
+          cp web/android/app/build/outputs/apk/release/app-release.apk "$GITHUB_WORKSPACE/out/society_app.apk"
 
       - uses: actions/upload-artifact@v4
         with:
@@ -60,6 +75,6 @@ jobs:
           name: Society App (Shivam Residency) ${{ github.run_number }}
           prerelease: ${{ github.ref != 'refs/heads/main' }}
           body: |
-            **Install on your phone:** download `society_app.apk` and open it (allow "Install unknown apps" when Android asks).
+            **Install on your phone:** download `society_app.apk` and open it (allow "Install unknown apps" when Android asks). Version 1.0.${{ github.run_number }} — installs over earlier versions from now on. If Android says the package conflicts, uninstall the old app once, then install this one.
             ${{ vars.SOCIETY_APP_URL && format('Connects to {0} — sign up with your mobile number, then register or join a society.', vars.SOCIETY_APP_URL) || 'Offline demo (no server address set yet): data stays on this phone; switch roles under More → Switch role.' }}
           files: out/society_app.apk

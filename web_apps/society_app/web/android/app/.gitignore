@@ -1,2 +1,6 @@
 /build/*
 !/build/.npmkeep
+
+# Fixed test signing key (not secret) so every build can update the previous install.
+# Real releases are signed with the KEYSTORE_BASE64 secret instead.
+!society-test.keystore
