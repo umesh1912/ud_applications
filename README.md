@@ -31,6 +31,8 @@ Every app works offline and keeps files on the phone. Languages: English, हि
 
 **Shivam Residency** (`web_apps/society_app`) is a society management app (maintenance and bills, visitors and gate passes, complaints, notices, events, polls, amenity booking, expenses, SOS) for residents, the secretary, the treasurer and the watchman. Unlike the apps above it is built with React and Capacitor, so it has its own workflow (`society-app.yml`) and its APK appears as a separate "Society App" release.
 
+**Dark Theme Automator** (`figma_plugins/dark_theme_automator`) is a Figma plugin that turns a design's colours into Light/Dark colour variables, binds every layer to them and switches screens to dark mode. See its README for installing it in Figma.
+
 Shared code lives in `packages/ud_core` (theme, fonts, translations, widgets, file helpers).
 
 ## Getting the APKs

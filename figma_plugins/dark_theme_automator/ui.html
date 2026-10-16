@@ -1,0 +1,401 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  :root {
+    --bg: var(--figma-color-bg, #fff);
+    --bg2: var(--figma-color-bg-secondary, #f5f5f5);
+    --hover: var(--figma-color-bg-hover, #f0f0f0);
+    --text: var(--figma-color-text, #1e1e1e);
+    --muted: var(--figma-color-text-secondary, #6b6b6b);
+    --border: var(--figma-color-border, #e6e6e6);
+    --brand: var(--figma-color-bg-brand, #0d99ff);
+    --onbrand: var(--figma-color-text-onbrand, #fff);
+    --danger: var(--figma-color-text-danger, #dc3412);
+    --warn: var(--figma-color-text-warning, #b86200);
+    --ok: var(--figma-color-text-success, #14ae5c);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font: 11px/16px Inter, system-ui, -apple-system, sans-serif;
+    color: var(--text); background: var(--bg);
+    display: flex; flex-direction: column; height: 100vh;
+  }
+  header { padding: 12px 14px 8px; border-bottom: 1px solid var(--border); }
+  h1 { font-size: 13px; font-weight: 600; margin: 0 0 2px; }
+  .sub { color: var(--muted); }
+  section { padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  .step { font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .step b { display: inline-grid; place-items: center; width: 16px; height: 16px; border-radius: 50%;
+    background: var(--brand); color: var(--onbrand); font-size: 10px; }
+  .line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .grow { flex: 1; }
+  button {
+    font: inherit; border-radius: 5px; border: 1px solid var(--border); background: var(--bg);
+    color: var(--text); padding: 5px 10px; cursor: pointer; white-space: nowrap;
+  }
+  button:hover { background: var(--hover); }
+  button.primary { background: var(--brand); border-color: var(--brand); color: var(--onbrand); font-weight: 600; }
+  button.primary:hover { filter: brightness(1.08); }
+  button:disabled { opacity: .45; cursor: default; }
+  .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 5px; overflow: hidden; }
+  .seg button { border: 0; border-radius: 0; }
+  .seg button.on { background: var(--bg2); font-weight: 600; }
+  input[type=text], select {
+    font: inherit; color: var(--text); background: var(--bg); border: 1px solid var(--border);
+    border-radius: 4px; padding: 4px 6px; min-width: 0;
+  }
+  input[type=text]:focus, select:focus { outline: 1px solid var(--brand); border-color: var(--brand); }
+  label.check { display: flex; align-items: center; gap: 6px; color: var(--muted); }
+  #list { flex: 1; overflow: auto; padding: 0 8px; }
+  .empty { color: var(--muted); padding: 28px 16px; text-align: center; }
+  .filters { display: flex; gap: 4px; padding: 8px 6px; position: sticky; top: 0; background: var(--bg); z-index: 1; flex-wrap: wrap; }
+  .filters button { padding: 2px 8px; border-radius: 10px; }
+  .filters button.on { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .row {
+    display: grid; grid-template-columns: 16px 46px 1fr auto; gap: 8px; align-items: center;
+    padding: 6px; border-radius: 6px;
+  }
+  .row:hover { background: var(--bg2); }
+  .row.off { opacity: .45; }
+  .pair { display: flex; border-radius: 5px; overflow: hidden; border: 1px solid var(--border); height: 26px; width: 46px; }
+  .pair span, .pair label { flex: 1; position: relative; display: grid; place-items: center; font-weight: 600; font-size: 10px; }
+  .pair label { cursor: pointer; }
+  .pair input[type=color] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; border: 0; padding: 0; }
+  .meta { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .meta input.name { width: 100%; font-weight: 500; }
+  .meta .info { color: var(--muted); display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .hex { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; width: 74px; padding: 2px 4px !important; }
+  .chip { border-radius: 8px; padding: 0 6px; background: var(--bg2); border: 1px solid var(--border); font-size: 10px; }
+  .chip.link { color: var(--brand); }
+  .bad { color: var(--danger); font-weight: 600; }
+  .meh { color: var(--warn); font-weight: 600; }
+  .good { color: var(--ok); font-weight: 600; }
+  .count { cursor: pointer; text-decoration: underline dotted; }
+  .right { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+  footer { padding: 10px 14px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .grid2 > div { display: flex; flex-direction: column; gap: 3px; }
+  .grid2 span { color: var(--muted); }
+  details summary { cursor: pointer; color: var(--muted); }
+  details[open] summary { margin-bottom: 6px; }
+  #status { min-height: 16px; color: var(--muted); }
+  #status.err { color: var(--danger); }
+  .after { display: none; gap: 6px; flex-wrap: wrap; }
+  .after.show { display: flex; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Dark Theme Automator</h1>
+    <div class="sub">Turns every colour in your design into Light/Dark variables and binds the layers.</div>
+  </header>
+
+  <section>
+    <div class="step"><b>1</b> Find colours</div>
+    <div class="line">
+      <div class="seg" id="scope">
+        <button data-v="selection" class="on">Selection <span id="selCount"></span></button>
+        <button data-v="page">Whole page</button>
+      </div>
+      <div class="grow"></div>
+      <button class="primary" id="scan">Scan</button>
+    </div>
+    <div class="line" style="margin-top:8px">
+      <label class="check"><input type="checkbox" id="includeStyles" /> Include colours from paint styles (detaches them)</label>
+    </div>
+  </section>
+
+  <div id="list"><div class="empty">Select a screen (or choose Whole page) and press <b>Scan</b>.<br />Colours already bound to variables are left as they are.</div></div>
+
+  <footer>
+    <div class="step" style="margin:0"><b>2</b> Create variables</div>
+    <div class="line">
+      <span class="sub">Dark tone</span>
+      <div class="seg" id="tone">
+        <button data-v="0.24">Dim</button>
+        <button data-v="0.18" class="on">Dark</button>
+        <button data-v="0.0">Black</button>
+      </div>
+      <div class="grow"></div>
+      <label class="check"><input type="checkbox" id="linkAll" checked /> Reuse matching variables</label>
+    </div>
+    <details id="settings">
+    <summary id="settingsSummary"></summary>
+    <div class="grid2">
+      <div><span>Collection</span><select id="collection"></select></div>
+      <div id="newNameBox"><span>New collection name</span><input type="text" id="collectionName" value="Theme" /></div>
+      <div><span>Light mode</span><input type="text" id="lightName" value="Light" /></div>
+      <div><span>Dark mode</span><input type="text" id="darkName" value="Dark" /></div>
+    </div>
+    </details>
+    <button class="primary" id="apply" disabled>Create variables &amp; bind</button>
+    <div class="step" style="margin:0"><b>3</b> Use the theme</div>
+    <div class="line">
+      <div class="seg">
+        <button id="modeLight">Light</button>
+        <button id="modeDark">Dark</button>
+      </div>
+      <span class="sub">on selection (or page)</span>
+      <div class="grow"></div>
+      <button id="preview">Dark copy</button>
+      <button id="export">Export JSON</button>
+    </div>
+    <div id="status"></div>
+  </footer>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const send = (msg) => parent.postMessage({ pluginMessage: msg }, '*');
+
+  let rows = [];
+  let choices = {}; // key -> { name, darkHex, enabled, link, edited }
+  let filter = 'all';
+  let collections = [];
+  let scope = 'selection';
+
+  // ---- contrast (WCAG 2) for text and icon rows ----
+  const lin = (c) => (c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
+  function lum(hex) {
+    const h = hex.replace('#', '');
+    const [r, g, b] = [0, 2, 4].map((i) => lin(parseInt(h.slice(i, i + 2), 16) / 255));
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  }
+  const ratio = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
+  const validHex = (v) => /^#?[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$/.test(v.trim());
+  const norm = (v) => ('#' + v.trim().replace('#', '')).toUpperCase();
+
+  // Text is judged against the page background (most used background).
+  function pageBg() {
+    const bg = rows.filter((r) => r.role === 'background').sort((a, b) => b.count - a.count)
+      .find((r) => lum(r.lightHex) > 0.5);
+    return bg ? { light: bg.lightHex, dark: choices[bg.key].darkHex } : { light: '#FFFFFF', dark: '#121212' };
+  }
+
+  function badge(value) {
+    const cls = value >= 4.5 ? 'good' : value >= 3 ? 'meh' : 'bad';
+    return `<span class="${cls}" title="Contrast with the page background in dark mode">${value.toFixed(1)}:1</span>`;
+  }
+
+  const ROLE_LABEL = { all: 'All', background: 'Backgrounds', text: 'Text', icon: 'Icons', border: 'Borders', shadow: 'Shadows' };
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+
+  function render() {
+    const list = $('list');
+    if (!rows.length) return;
+    const counts = { all: rows.length };
+    rows.forEach((r) => (counts[r.role] = (counts[r.role] || 0) + 1));
+    const bg = pageBg();
+    const shown = rows.filter((r) => filter === 'all' || r.role === filter);
+    list.innerHTML =
+      `<div class="filters">${Object.keys(ROLE_LABEL).filter((k) => counts[k])
+        .map((k) => `<button data-f="${k}" class="${k === filter ? 'on' : ''}">${ROLE_LABEL[k]} ${counts[k]}</button>`).join('')}</div>` +
+      shown.map((r) => {
+        const c = choices[r.key];
+        const fg = r.role === 'text' || r.role === 'icon';
+        const linked = r.existing && c.link;
+        const lightTxt = fg ? `<span style="background:${bg.light};color:${r.lightHex}">Aa</span>` : `<span style="background:${r.lightHex}"></span>`;
+        const darkTxt = fg ? `Aa` : '';
+        const darkStyle = fg ? `background:${bg.dark};color:${c.darkHex.slice(0, 7)}` : `background:${c.darkHex.slice(0, 7)}`;
+        return `<div class="row ${c.enabled ? '' : 'off'}" data-key="${esc(r.key)}">
+          <input type="checkbox" data-act="enabled" ${c.enabled ? 'checked' : ''} title="Include this colour" />
+          <div class="pair" title="Light → Dark (click the right half to pick)">
+            ${lightTxt}
+            <label style="${darkStyle}">${darkTxt}<input type="color" data-act="pick" value="${c.darkHex.slice(0, 7)}" /></label>
+          </div>
+          <div class="meta">
+            ${linked
+              ? `<div class="info"><span class="chip link" title="Already a variable in ${esc(r.existing.collection)}">↪ ${esc(r.existing.name)}</span></div>`
+              : `<input type="text" class="name" data-act="name" value="${esc(c.name)}" />`}
+            <div class="info">
+              <span>${r.lightHex}</span>→<input type="text" class="hex" data-act="hex" value="${c.darkHex}" />
+              ${fg ? badge(ratio(c.darkHex.slice(0, 7), bg.dark)) : ''}
+            </div>
+          </div>
+          <div class="right">
+            <span class="count" data-act="select" title="Select these layers">${r.count} use${r.count === 1 ? '' : 's'}</span>
+            ${r.existing ? `<label class="check" title="Bind to the existing variable instead of creating one"><input type="checkbox" data-act="link" ${c.link ? 'checked' : ''} />reuse</label>` : `<span class="chip">${r.role}</span>`}
+          </div>
+        </div>`;
+      }).join('');
+    updateApply();
+  }
+
+  function updateApply() {
+    const n = rows.filter((r) => choices[r.key] && choices[r.key].enabled).length;
+    $('apply').disabled = n === 0;
+    $('apply').textContent = n ? `Create variables & bind (${n} colour${n === 1 ? '' : 's'})` : 'Create variables & bind';
+  }
+
+  function status(text, err) {
+    $('status').textContent = text || '';
+    $('status').className = err ? 'err' : '';
+  }
+
+  function fillCollections(selectedId) {
+    const sel = $('collection');
+    sel.innerHTML = `<option value="">＋ New collection</option>` +
+      collections.map((c) => `<option value="${esc(c.id)}">${esc(c.name)} (${c.modes.map(esc).join(', ')})</option>`).join('');
+    if (selectedId && collections.some((c) => c.id === selectedId)) sel.value = selectedId;
+    onCollection();
+  }
+
+  function summarize() {
+    const col = collections.find((c) => c.id === $('collection').value);
+    const where = col ? `Into “${col.name}”` : `New collection “${$('collectionName').value || 'Theme'}”`;
+    $('settingsSummary').textContent = `${where} · modes ${$('lightName').value} / ${$('darkName').value}`;
+  }
+
+  function onCollection() {
+    const col = collections.find((c) => c.id === $('collection').value);
+    $('newNameBox').style.visibility = col ? 'hidden' : 'visible';
+    if (col) {
+      // Suggest the collection's own mode names.
+      const light = col.modes.find((m) => /light|default|mode 1/i.test(m)) || col.modes[0];
+      const dark = col.modes.find((m) => /dark|night/i.test(m));
+      $('lightName').value = light;
+      if (dark) $('darkName').value = dark;
+    }
+    summarize();
+  }
+  ['collectionName', 'lightName', 'darkName'].forEach((id) => $(id).addEventListener('input', summarize));
+
+  // ---- events ----
+  document.querySelectorAll('#scope button').forEach((b) => b.onclick = () => {
+    scope = b.dataset.v;
+    document.querySelectorAll('#scope button').forEach((x) => x.classList.toggle('on', x === b));
+  });
+  document.querySelectorAll('#tone button').forEach((b) => b.onclick = () => {
+    document.querySelectorAll('#tone button').forEach((x) => x.classList.toggle('on', x === b));
+    send({ type: 'dark-base', value: parseFloat(b.dataset.v) });
+  });
+
+  $('scan').onclick = () => {
+    status('Scanning…');
+    send({ type: 'scan', scope, includeStyles: $('includeStyles').checked });
+  };
+  $('collection').onchange = onCollection;
+  $('linkAll').onchange = () => {
+    rows.forEach((r) => { if (r.existing) choices[r.key].link = $('linkAll').checked; });
+    render();
+  };
+
+  $('list').addEventListener('click', (e) => {
+    const f = e.target.closest('[data-f]');
+    if (f) { filter = f.dataset.f; render(); return; }
+    const el = e.target.closest('[data-act="select"]');
+    if (el) send({ type: 'select', key: el.closest('.row').dataset.key });
+  });
+  $('list').addEventListener('change', (e) => {
+    const el = e.target;
+    const row = el.closest('.row');
+    if (!row) return;
+    const c = choices[row.dataset.key];
+    const act = el.dataset.act;
+    if (act === 'enabled') c.enabled = el.checked;
+    else if (act === 'link') c.link = el.checked;
+    else if (act === 'name') c.name = el.value;
+    else if (act === 'pick') { c.darkHex = el.value.toUpperCase() + c.darkHex.slice(7); c.edited = true; }
+    else if (act === 'hex') {
+      if (!validHex(el.value)) { el.value = c.darkHex; return; }
+      c.darkHex = norm(el.value); c.edited = true;
+    }
+    render();
+  });
+  // Live preview while dragging in the colour picker.
+  $('list').addEventListener('input', (e) => {
+    if (e.target.dataset.act !== 'pick') return;
+    const label = e.target.parentElement;
+    if (label.textContent.trim()) label.style.color = e.target.value;
+    else label.style.background = e.target.value;
+  });
+
+  $('apply').onclick = () => {
+    const darkName = $('darkName').value.trim() || 'Dark';
+    const lightName = $('lightName').value.trim() || 'Light';
+    if (darkName.toLowerCase() === lightName.toLowerCase()) return status('Light and Dark modes need different names.', true);
+    status('Creating variables…');
+    $('apply').disabled = true;
+    send({
+      type: 'apply',
+      settings: {
+        collectionId: $('collection').value,
+        collectionName: $('collectionName').value,
+        lightName, darkName,
+        rows: rows.map((r) => ({ key: r.key, ...choices[r.key] })),
+      },
+    });
+  };
+
+  const colId = () => $('collection').value || undefined;
+  $('modeLight').onclick = () => send({ type: 'set-mode', collectionId: colId(), mode: $('lightName').value });
+  $('modeDark').onclick = () => send({ type: 'set-mode', collectionId: colId(), mode: $('darkName').value });
+  $('preview').onclick = () => send({ type: 'preview-dark', collectionId: colId(), darkName: $('darkName').value });
+  $('export').onclick = () => send({ type: 'export', collectionId: colId() });
+
+  window.onmessage = (event) => {
+    const msg = event.data.pluginMessage;
+    if (!msg) return;
+    switch (msg.type) {
+      case 'init':
+        collections = msg.collections;
+        fillCollections(msg.collectionId);
+        $('selCount').textContent = msg.selection ? `(${msg.selection})` : '';
+        break;
+      case 'selection':
+        $('selCount').textContent = msg.count ? `(${msg.count})` : '';
+        break;
+      case 'scan-result': {
+        rows = msg.rows;
+        choices = {};
+        rows.forEach((r) => (choices[r.key] = { name: r.name, darkHex: r.darkHex, enabled: true, link: !!r.existing && $('linkAll').checked, edited: false }));
+        filter = 'all';
+        const s = msg.stats;
+        const extra = [
+          s.alreadyBound && `${s.alreadyBound} already use variables`,
+          s.styled && `${s.styled} use paint styles (skipped)`,
+          s.gradients && `${s.gradients} gradients skipped`,
+        ].filter(Boolean).join(' · ');
+        if (!rows.length) {
+          $('list').innerHTML = `<div class="empty">No loose colours found in ${s.layers} layers.${extra ? '<br />' + extra : ''}</div>`;
+          updateApply();
+        } else render();
+        status(`${s.colors} colours in ${s.layers} layers${extra ? ' · ' + extra : ''}`);
+        break;
+      }
+      case 'regenerated':
+        msg.rows.forEach((r) => { const c = choices[r.key]; if (c && !c.edited) c.darkHex = r.darkHex; });
+        render();
+        break;
+      case 'applied': {
+        const s = msg.summary;
+        collections = msg.collections;
+        fillCollections(msg.collectionId);
+        rows = []; choices = {};
+        $('list').innerHTML = `<div class="empty">Done. ${s.created} created, ${s.updated} updated, ${s.linked} reused · ${s.layers} layers bound${s.failed ? ` · ${s.failed} could not be changed` : ''}.<br /><br />Try <b>Dark</b> or <b>Dark copy</b> below.</div>`;
+        updateApply();
+        status('');
+        break;
+      }
+      case 'export-data': {
+        const blob = new Blob([msg.json], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = msg.filename;
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+        status(`Saved ${msg.filename}`);
+        break;
+      }
+      case 'error':
+        status(msg.message, true);
+        updateApply();
+        break;
+    }
+  };
+
+  send({ type: 'ready' });
+</script>
+</body>
+</html>
