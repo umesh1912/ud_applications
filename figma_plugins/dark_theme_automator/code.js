@@ -20,7 +20,7 @@
   };
   var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
 
-  // src/color.ts
+  // shared/color.ts
   var NEUTRAL_CHROMA = 0.04;
   var DEFAULT_DARK_BASE = 0.18;
   var clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
@@ -161,7 +161,7 @@
     return name.replace(/[.{}]/g, "-").split("/").map((p) => p.trim()).filter(Boolean).join("/") || "color";
   }
 
-  // src/code.ts
+  // dark_theme_automator/src/code.ts
   var SCOPES = {
     background: ["FRAME_FILL", "SHAPE_FILL"],
     text: ["TEXT_FILL"],

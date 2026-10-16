@@ -14,7 +14,7 @@ import {
   sanitizeName,
   toHex,
   fromHex,
-} from './color';
+} from '../../shared/color';
 import { Row, UiMessage, CollectionInfo, ApplySettings, ScanStats } from './messages';
 
 type UsageKind = 'fills' | 'strokes' | 'effects' | 'text';

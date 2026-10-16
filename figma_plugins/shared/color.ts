@@ -210,3 +210,34 @@ export function sanitizeName(name: string): string {
       .join('/') || 'color'
   );
 }
+
+// Paints a (semi-transparent) colour over an opaque one.
+export function blend(top: RGBA, bottom: { r: number; g: number; b: number }): { r: number; g: number; b: number } {
+  const a = clamp(top.a, 0, 1);
+  return {
+    r: top.r * a + bottom.r * (1 - a),
+    g: top.g * a + bottom.g * (1 - a),
+    b: top.b * a + bottom.b * (1 - a),
+  };
+}
+
+/**
+ * The colour closest to `fg` (same hue and chroma, only lightness moves) that reaches
+ * `target` contrast on `bg`. Returns null if no lightness can reach it.
+ */
+export function fixContrast(
+  fg: { r: number; g: number; b: number },
+  bg: { r: number; g: number; b: number },
+  target: number
+): { r: number; g: number; b: number } | null {
+  if (contrast(fg, bg) >= target) return { ...fg };
+  const { l, c, h } = rgbToOklch(fg);
+  let best: { rgb: { r: number; g: number; b: number }; dist: number } | null = null;
+  for (let i = 0; i <= 400; i++) {
+    const L = i / 400;
+    const rgb = oklchToRgb({ l: L, c, h });
+    // Small margin so rounding to 8-bit hex never drops it below the target.
+    if (contrast(rgb, bg) >= target + 0.02 && (!best || Math.abs(L - l) < best.dist)) best = { rgb, dist: Math.abs(L - l) };
+  }
+  return best ? best.rgb : null;
+}

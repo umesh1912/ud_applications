@@ -1,0 +1,13 @@
+{
+  "name": "Data Filler",
+  "id": "ud-data-filler",
+  "api": "1.0.0",
+  "main": "code.js",
+  "ui": "ui.html",
+  "editorType": ["figma"],
+  "documentAccess": "dynamic-page",
+  "networkAccess": {
+    "allowedDomains": ["*"],
+    "reasoning": "Loads the images whose URLs are in your data (for example avatars or product photos)."
+  }
+}

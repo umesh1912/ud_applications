@@ -1,0 +1,228 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  :root {
+    --bg: var(--figma-color-bg, #fff);
+    --bg2: var(--figma-color-bg-secondary, #f5f5f5);
+    --hover: var(--figma-color-bg-hover, #f0f0f0);
+    --text: var(--figma-color-text, #1e1e1e);
+    --muted: var(--figma-color-text-secondary, #6b6b6b);
+    --border: var(--figma-color-border, #e6e6e6);
+    --brand: var(--figma-color-bg-brand, #0d99ff);
+    --onbrand: var(--figma-color-text-onbrand, #fff);
+    --danger: var(--figma-color-text-danger, #dc3412);
+    --warn: var(--figma-color-text-warning, #b86200);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 11px/16px Inter, system-ui, -apple-system, sans-serif; color: var(--text); background: var(--bg);
+    display: flex; flex-direction: column; height: 100vh; }
+  header { padding: 12px 14px 8px; border-bottom: 1px solid var(--border); }
+  h1 { font-size: 13px; font-weight: 600; margin: 0 0 2px; }
+  .sub, .muted { color: var(--muted); }
+  section { padding: 10px 14px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; }
+  .line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .grow { flex: 1; }
+  button { font: inherit; border-radius: 5px; border: 1px solid var(--border); background: var(--bg); color: var(--text); padding: 5px 10px; cursor: pointer; white-space: nowrap; }
+  button:hover { background: var(--hover); }
+  button.primary { background: var(--brand); border-color: var(--brand); color: var(--onbrand); font-weight: 600; }
+  button:disabled { opacity: .45; cursor: default; }
+  .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 5px; overflow: hidden; }
+  .seg button { border: 0; border-radius: 0; }
+  .seg button.on { background: var(--bg2); font-weight: 600; }
+  input[type=text], select { font: inherit; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 4px 6px; min-width: 0; }
+  input:focus, select:focus { outline: 1px solid var(--brand); border-color: var(--brand); }
+  label.check { display: flex; align-items: center; gap: 6px; }
+  #list { flex: 1; overflow: auto; padding: 0 8px 6px; }
+  .empty { color: var(--muted); padding: 28px 16px; text-align: center; }
+  h2 { font-size: 11px; margin: 10px 6px 4px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+  .row { display: grid; grid-template-columns: 16px 40px 1fr auto; gap: 8px; align-items: center; padding: 5px 6px; border-radius: 6px; }
+  .row:hover { background: var(--bg2); }
+  .row.off { opacity: .45; }
+  .viz { height: 26px; display: grid; place-items: center; }
+  .bar { background: var(--brand); height: 10px; border-radius: 2px; opacity: .8; }
+  .corner { width: 26px; height: 26px; border: 2px solid var(--brand); border-right: 0; border-bottom: 0; }
+  .meta { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .meta input { width: 100%; font-weight: 500; }
+  .from { color: var(--muted); display: flex; gap: 4px; flex-wrap: wrap; }
+  .from span { cursor: pointer; }
+  .from .snap { color: var(--warn); font-weight: 600; }
+  .right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+  .val { font-weight: 700; font-size: 12px; }
+  .count { cursor: pointer; text-decoration: underline dotted; color: var(--muted); }
+  .chip { border-radius: 8px; padding: 0 6px; background: var(--bg2); border: 1px solid var(--border); font-size: 10px; color: var(--brand); }
+  footer { padding: 10px 14px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .grid2 > div { display: flex; flex-direction: column; gap: 3px; }
+  #status { min-height: 16px; color: var(--muted); }
+  #status.err { color: var(--danger); }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Spacing Tokens</h1>
+    <div class="sub">Turns auto-layout padding, gaps and corner radii into number variables on a clean scale.</div>
+  </header>
+  <section>
+    <div class="line">
+      <div class="seg" id="scope">
+        <button data-v="selection" class="on">Selection <span id="selCount"></span></button>
+        <button data-v="page">Whole page</button>
+      </div>
+      <div class="grow"></div>
+      <button class="primary" id="scan">Scan</button>
+    </div>
+    <div class="line">
+      <span class="muted">Scale</span>
+      <div class="seg" id="base"><button data-v="4" class="on">4 pt</button><button data-v="8">8 pt</button></div>
+      <span class="muted">Names</span>
+      <div class="seg" id="naming"><button data-v="number" class="on">spacing/16</button><button data-v="tshirt">spacing/md</button></div>
+    </div>
+    <label class="check"><input type="checkbox" id="snap" checked /> Snap odd values to the scale (13 → 12)</label>
+  </section>
+  <div id="list"><div class="empty">Select screens or components and press <b>Scan</b>.<br />Instances are skipped: bind the main component and its instances follow.</div></div>
+  <footer>
+    <div class="grid2">
+      <div><span class="muted">Collection</span><select id="collection"></select></div>
+      <div id="newBox"><span class="muted">New collection name</span><input type="text" id="collectionName" value="Spacing" /></div>
+    </div>
+    <button class="primary" id="apply" disabled>Create tokens &amp; bind</button>
+    <div id="status"></div>
+  </footer>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const send = (msg) => parent.postMessage({ pluginMessage: msg }, '*');
+  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+  const opts = { scope: 'selection', base: 4, naming: 'number' };
+  let rows = [], choices = {}, collections = [];
+
+  function seg(id, key, num, rescan) {
+    document.querySelectorAll(`#${id} button`).forEach((b) => b.onclick = () => {
+      document.querySelectorAll(`#${id} button`).forEach((x) => x.classList.toggle('on', x === b));
+      opts[key] = num ? Number(b.dataset.v) : b.dataset.v;
+      if (rescan && rows.length) scan();
+    });
+  }
+  seg('scope', 'scope', false, false);
+  seg('base', 'base', true, true);
+  seg('naming', 'naming', false, true);
+  $('snap').onchange = () => rows.length && scan();
+
+  function scan() {
+    status('Scanning…');
+    send({ type: 'scan', options: { ...opts, snap: $('snap').checked } });
+  }
+  $('scan').onclick = scan;
+  function status(t, err) { $('status').textContent = t || ''; $('status').className = err ? 'err' : ''; }
+
+  function render() {
+    if (!rows.length) return;
+    const group = (kind, title) => {
+      const list = rows.filter((r) => r.kind === kind);
+      if (!list.length) return '';
+      return `<h2>${title}</h2>` + list.map((r) => {
+        const c = choices[r.key];
+        const linked = r.existing && c.link;
+        const viz = kind === 'spacing'
+          ? `<div class="bar" style="width:${Math.min(40, Math.max(2, r.value / 2))}px"></div>`
+          : `<div class="corner" style="border-top-left-radius:${Math.min(26, r.value)}px"></div>`;
+        const from = r.from.map((f) => `<span class="${f.value !== r.value ? 'snap' : ''}" data-from="${f.value}" title="Select layers using ${f.value}">${f.value}${f.value !== r.value ? ` → ${r.value === 9999 ? 'full' : r.value}` : ''} ×${f.count}</span>`).join('');
+        return `<div class="row ${c.enabled ? '' : 'off'}" data-key="${esc(r.key)}">
+          <input type="checkbox" data-act="enabled" ${c.enabled ? 'checked' : ''} />
+          <div class="viz">${viz}</div>
+          <div class="meta">
+            ${linked ? `<span class="chip">↪ ${esc(r.existing.name)}</span>` : `<input type="text" data-act="name" value="${esc(c.name)}" />`}
+            <div class="from">${from}</div>
+          </div>
+          <div class="right">
+            <span class="val">${r.value === 9999 ? 'full' : r.value}</span>
+            <span class="count" data-act="select">${r.count} use${r.count === 1 ? '' : 's'}</span>
+            ${r.existing ? `<label class="check muted"><input type="checkbox" data-act="link" ${c.link ? 'checked' : ''} />reuse</label>` : ''}
+          </div>
+        </div>`;
+      }).join('');
+    };
+    $('list').innerHTML = group('spacing', 'Spacing (padding & gaps)') + group('radius', 'Corner radius');
+    const n = rows.filter((r) => choices[r.key].enabled).length;
+    $('apply').disabled = !n;
+    $('apply').textContent = n ? `Create tokens & bind (${n})` : 'Create tokens & bind';
+  }
+
+  $('list').addEventListener('change', (e) => {
+    const row = e.target.closest('.row');
+    if (!row) return;
+    const c = choices[row.dataset.key];
+    const act = e.target.dataset.act;
+    if (act === 'enabled') c.enabled = e.target.checked;
+    if (act === 'link') c.link = e.target.checked;
+    if (act === 'name') c.name = e.target.value;
+    render();
+  });
+  $('list').addEventListener('click', (e) => {
+    const row = e.target.closest('.row');
+    if (!row) return;
+    if (e.target.dataset.act === 'select') send({ type: 'select', key: row.dataset.key });
+    const f = e.target.closest('[data-from]');
+    if (f) send({ type: 'select', key: row.dataset.key, from: Number(f.dataset.from) });
+  });
+
+  function fillCollections(selected) {
+    $('collection').innerHTML = '<option value="">＋ New collection</option>' + collections.map((c) => `<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('');
+    if (selected) $('collection').value = selected;
+    $('newBox').style.visibility = $('collection').value ? 'hidden' : 'visible';
+  }
+  $('collection').onchange = () => fillCollections($('collection').value);
+
+  $('apply').onclick = () => {
+    status('Creating tokens…');
+    $('apply').disabled = true;
+    send({ type: 'apply', settings: {
+      collectionId: $('collection').value,
+      collectionName: $('collectionName').value,
+      rows: rows.map((r) => ({ key: r.key, value: r.value, ...choices[r.key] })),
+    } });
+  };
+
+  window.onmessage = (event) => {
+    const msg = event.data.pluginMessage;
+    if (!msg) return;
+    switch (msg.type) {
+      case 'init':
+        collections = msg.collections; fillCollections('');
+        $('selCount').textContent = msg.selection ? `(${msg.selection})` : '';
+        break;
+      case 'selection':
+        $('selCount').textContent = msg.count ? `(${msg.count})` : '';
+        break;
+      case 'scan-result': {
+        rows = msg.rows;
+        const old = choices;
+        choices = {};
+        rows.forEach((r) => (choices[r.key] = { name: r.name, enabled: old[r.key] ? old[r.key].enabled : true, link: !!r.existing }));
+        const s = msg.stats;
+        if (!rows.length) $('list').innerHTML = `<div class="empty">No padding, gaps or radii to tokenise here.${s.alreadyBound ? `<br />${s.alreadyBound} values already use variables.` : ''}</div>`;
+        render();
+        if (!rows.length) $('apply').disabled = true;
+        status(`${rows.length} tokens from ${s.layers} layers${s.snapped ? ` · ${s.snapped} values snapped` : ''}${s.alreadyBound ? ` · ${s.alreadyBound} already bound` : ''}`);
+        break;
+      }
+      case 'applied': {
+        const s = msg.summary;
+        collections = msg.collections; fillCollections(msg.collectionId);
+        rows = []; choices = {};
+        $('list').innerHTML = `<div class="empty">Done. ${s.created} created, ${s.updated} updated, ${s.linked} reused · ${s.bound} values bound${s.failed ? ` · ${s.failed} failed` : ''}.</div>`;
+        $('apply').disabled = true;
+        status('');
+        break;
+      }
+      case 'error':
+        status(msg.message, true);
+        break;
+    }
+  };
+  send({ type: 'ready' });
+</script>
+</body>
+</html>

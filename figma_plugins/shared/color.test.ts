@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { contrast, darkVariant, fromHex, hueName, oklchToRgb, rgbToOklch, sanitizeName, toHex } from '../src/color.ts';
+import { contrast, darkVariant, fromHex, hueName, oklchToRgb, rgbToOklch, sanitizeName, toHex } from './color.ts';
 
 const hex = (h: string) => fromHex(h)!;
 const dark = (h: string, role: Parameters<typeof darkVariant>[1]) => darkVariant(hex(h), role);
@@ -65,4 +65,23 @@ test('shadows get stronger', () => {
 test('variable names are made valid', () => {
   assert.equal(sanitizeName(' text / primary.1 '), 'text/primary-1');
   assert.equal(sanitizeName('//'), 'color');
+});
+
+import { blend, fixContrast } from './color.ts';
+
+test('blend paints half black over white as mid grey', () => {
+  const g = blend({ r: 0, g: 0, b: 0, a: 0.5 }, { r: 1, g: 1, b: 1 });
+  assert.equal(toHex(g), '#808080');
+});
+
+test('fixContrast reaches the target with the smallest change and keeps the hue', () => {
+  const bg = hex('#FFFFFF');
+  const fg = hex('#9CA3AF'); // light grey text, about 2.5:1
+  const fixed = fixContrast(fg, bg, 4.5)!;
+  assert.ok(contrast(fromHex(toHex(fixed))!, bg) >= 4.5);
+  assert.ok(rgbToOklch(fixed).l < rgbToOklch(fg).l);
+  assert.ok(rgbToOklch(fixed).l > 0.4, 'not pushed all the way to black');
+  const blue = fixContrast(hex('#60A5FA'), bg, 4.5)!;
+  assert.equal(hueName(blue), 'blue');
+  assert.equal(fixContrast(hex('#777777'), hex('#777777'), 21), null);
 });

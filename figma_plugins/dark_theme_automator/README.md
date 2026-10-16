@@ -42,15 +42,9 @@ Multiple modes in a collection need a paid Figma plan (Professional or above).
 
 ## Working on it
 
-```bash
-cd figma_plugins/dark_theme_automator
-npm install
-npm run watch      # rebuilds code.js from src/ on save
-npm run typecheck
-npm run build && npm test
-```
+See [../README.md](../README.md): build and tests run from `figma_plugins/`.
 
-- `src/color.ts` – colour maths and the light → dark rules (unit tested)
+- `../shared/color.ts` – colour maths and the light → dark rules (unit tested)
 - `src/code.ts` – scanning, variables, binding, modes, export
 - `ui.html` – the plugin window
 - `test/plugin.test.ts` – runs the built `code.js` against a fake Figma API

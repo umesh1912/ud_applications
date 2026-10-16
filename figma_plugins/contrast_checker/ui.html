@@ -1,0 +1,212 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  :root {
+    --bg: var(--figma-color-bg, #fff);
+    --bg2: var(--figma-color-bg-secondary, #f5f5f5);
+    --hover: var(--figma-color-bg-hover, #f0f0f0);
+    --text: var(--figma-color-text, #1e1e1e);
+    --muted: var(--figma-color-text-secondary, #6b6b6b);
+    --border: var(--figma-color-border, #e6e6e6);
+    --brand: var(--figma-color-bg-brand, #0d99ff);
+    --onbrand: var(--figma-color-text-onbrand, #fff);
+    --danger: var(--figma-color-text-danger, #dc3412);
+    --warn: var(--figma-color-text-warning, #b86200);
+    --ok: var(--figma-color-text-success, #14ae5c);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 11px/16px Inter, system-ui, -apple-system, sans-serif; color: var(--text); background: var(--bg);
+    display: flex; flex-direction: column; height: 100vh; }
+  header { padding: 12px 14px 8px; border-bottom: 1px solid var(--border); }
+  h1 { font-size: 13px; font-weight: 600; margin: 0 0 2px; }
+  .sub, .muted { color: var(--muted); }
+  section { padding: 10px 14px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; }
+  .line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .grow { flex: 1; }
+  button { font: inherit; border-radius: 5px; border: 1px solid var(--border); background: var(--bg); color: var(--text); padding: 5px 10px; cursor: pointer; white-space: nowrap; }
+  button:hover { background: var(--hover); }
+  button.primary { background: var(--brand); border-color: var(--brand); color: var(--onbrand); font-weight: 600; }
+  button:disabled { opacity: .45; cursor: default; }
+  button.small { padding: 2px 7px; font-size: 10px; }
+  .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 5px; overflow: hidden; }
+  .seg button { border: 0; border-radius: 0; }
+  .seg button.on { background: var(--bg2); font-weight: 600; }
+  select { font: inherit; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 3px 4px; }
+  #modes .line span { min-width: 90px; }
+  .summary { display: flex; gap: 12px; padding: 8px 14px; border-bottom: 1px solid var(--border); align-items: center; flex-wrap: wrap; }
+  .summary b { font-size: 13px; }
+  .fail { color: var(--danger); }
+  .pass { color: var(--ok); }
+  .unsure { color: var(--warn); }
+  #list { flex: 1; overflow: auto; padding: 4px 8px; }
+  .empty { color: var(--muted); padding: 28px 16px; text-align: center; }
+  .row { display: grid; grid-template-columns: 44px 1fr auto; gap: 8px; align-items: center; padding: 6px; border-radius: 6px; cursor: pointer; }
+  .row:hover { background: var(--bg2); }
+  .sample { height: 32px; border-radius: 5px; border: 1px solid var(--border); display: grid; place-items: center; font-weight: 600; font-size: 14px; }
+  .meta { min-width: 0; }
+  .meta .t { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
+  .meta .i { color: var(--muted); display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .ratio { font-weight: 700; font-size: 12px; }
+  .right { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+  .sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; border: 1px solid var(--border); vertical-align: -1px; }
+  .tag { border-radius: 8px; padding: 0 6px; background: var(--bg2); border: 1px solid var(--border); font-size: 10px; }
+  footer { padding: 10px 14px; border-top: 1px solid var(--border); display: flex; gap: 8px; align-items: center; }
+  #status { color: var(--muted); flex: 1; }
+  #status.err { color: var(--danger); }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Contrast Checker</h1>
+    <div class="sub">Checks every text layer against what is really behind it, in Light, Dark or any mode.</div>
+  </header>
+  <section>
+    <div class="line">
+      <div class="seg" id="scope">
+        <button data-v="selection" class="on">Selection <span id="selCount"></span></button>
+        <button data-v="page">Whole page</button>
+      </div>
+      <div class="seg" id="level" title="WCAG level">
+        <button data-v="AA" class="on">AA</button>
+        <button data-v="AAA">AAA</button>
+      </div>
+      <div class="grow"></div>
+      <button class="primary" id="scan">Check</button>
+    </div>
+    <div id="modes"></div>
+  </section>
+  <div class="summary" id="summary" hidden></div>
+  <div id="list"><div class="empty">Select screens (or choose Whole page) and press <b>Check</b>.<br />AA needs 4.5:1 for body text and 3:1 for large text (24px, or 18.66px bold).</div></div>
+  <footer>
+    <div id="status"></div>
+    <button id="fixAll" disabled>Fix all unlinked</button>
+  </footer>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const send = (msg) => parent.postMessage({ pluginMessage: msg }, '*');
+  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+
+  let scope = 'selection', level = 'AA', results = [], show = 'fail', collections = [];
+
+  function seg(id, set) {
+    document.querySelectorAll(`#${id} button`).forEach((b) => b.onclick = () => {
+      document.querySelectorAll(`#${id} button`).forEach((x) => x.classList.toggle('on', x === b));
+      set(b.dataset.v);
+    });
+  }
+  seg('scope', (v) => (scope = v));
+  seg('level', (v) => { level = v; if (results.length) scan(); });
+
+  function modes() {
+    const out = {};
+    document.querySelectorAll('#modes select').forEach((s) => { if (s.value) out[s.dataset.col] = s.value; });
+    return out;
+  }
+  function scan() {
+    status('Checking…');
+    send({ type: 'scan', options: { scope, level, modes: modes() } });
+  }
+  $('scan').onclick = scan;
+
+  function status(t, err) { $('status').textContent = t || ''; $('status').className = err ? 'err' : ''; }
+
+  const failing = (r) => r.ratio < r.required;
+
+  function render() {
+    const fails = results.filter(failing);
+    const unsure = results.filter((r) => r.unsure);
+    $('summary').hidden = !results.length;
+    $('summary').innerHTML = `
+      <span><b class="fail">${fails.length}</b> failing</span>
+      <span><b class="pass">${results.length - fails.length}</b> passing</span>
+      ${unsure.length ? `<span class="unsure" title="On an image or gradient: check by eye">${unsure.length} on images</span>` : ''}
+      <div class="grow"></div>
+      <div class="seg" id="show">
+        <button data-v="fail" class="${show === 'fail' ? 'on' : ''}">Failing</button>
+        <button data-v="all" class="${show === 'all' ? 'on' : ''}">All</button>
+      </div>`;
+    seg('show', (v) => { show = v; render(); });
+    const list = show === 'fail' ? fails : results;
+    $('fixAll').disabled = !fails.some((r) => r.fix && !r.variable && !r.unsure);
+    if (!results.length) return;
+    if (!list.length) { $('list').innerHTML = `<div class="empty pass">Every text layer passes ${level}. 🎉</div>`; return; }
+    $('list').innerHTML = list.map((r, i) => {
+      const bad = failing(r);
+      return `<div class="row" data-i="${results.indexOf(r)}">
+        <div class="sample" style="background:${r.bg};color:${r.fg}">Aa</div>
+        <div class="meta">
+          <div class="t" title="${esc(r.text)}">${esc(r.text) || esc(r.name)}</div>
+          <div class="i">
+            <span><span class="sw" style="background:${r.fg}"></span> ${r.fg}</span>
+            <span>on <span class="sw" style="background:${r.bg}"></span> ${r.bg}</span>
+            ${r.large ? '<span class="tag">large</span>' : ''}
+            ${r.variable ? `<span class="tag" title="Text colour is the variable ${esc(r.variable.name)}">${esc(r.variable.name)}${r.variable.modeName ? ' · ' + esc(r.variable.modeName) : ''}</span>` : ''}
+            ${r.unsure ? '<span class="tag unsure">on image</span>' : ''}
+          </div>
+        </div>
+        <div class="right">
+          <span class="ratio ${bad ? 'fail' : 'pass'}">${r.ratio.toFixed(2)}:1</span>
+          <span class="muted">needs ${r.required}</span>
+          ${bad && r.fix && !r.unsure ? (r.variable
+            ? `<button class="small" data-fix="var" title="Changes ${esc(r.variable.name)} in ${esc(r.variable.modeName)} everywhere it is used"><span class="sw" style="background:${r.fix}"></span> Fix variable</button>`
+            : `<button class="small" data-fix="layer"><span class="sw" style="background:${r.fix}"></span> Fix ${r.fix}</button>`) : ''}
+          ${bad && !r.fix ? '<span class="fail" title="No shade of this colour reaches the target here; change the background">change bg</span>' : ''}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  const fixItem = (r, asVar) => asVar
+    ? { variableId: r.variable.id, modeId: r.variable.modeId, fix: r.fix }
+    : { id: r.id, start: r.start, end: r.end, fix: r.fix };
+
+  $('list').addEventListener('click', (e) => {
+    const row = e.target.closest('.row');
+    if (!row) return;
+    const r = results[+row.dataset.i];
+    const btn = e.target.closest('[data-fix]');
+    if (btn) { status('Fixing…'); send({ type: 'fix', items: [fixItem(r, btn.dataset.fix === 'var')] }); }
+    else send({ type: 'select', id: r.id });
+  });
+  $('fixAll').onclick = () => {
+    const items = results.filter((r) => failing(r) && r.fix && !r.variable && !r.unsure).map((r) => fixItem(r, false));
+    status('Fixing…');
+    send({ type: 'fix', items });
+  };
+
+  function renderModes() {
+    $('modes').innerHTML = collections.map((c) => `<div class="line"><span class="muted">${esc(c.name)} mode</span>
+      <select data-col="${esc(c.id)}"><option value="">As shown on canvas</option>${c.modes.map((m) => `<option value="${esc(m.modeId)}">${esc(m.name)}</option>`).join('')}</select></div>`).join('');
+    $('modes').hidden = !collections.length;
+    document.querySelectorAll('#modes select').forEach((s) => s.onchange = () => results.length && scan());
+  }
+
+  window.onmessage = (event) => {
+    const msg = event.data.pluginMessage;
+    if (!msg) return;
+    switch (msg.type) {
+      case 'init':
+        collections = msg.collections; renderModes();
+        $('selCount').textContent = msg.selection ? `(${msg.selection})` : '';
+        break;
+      case 'selection':
+        $('selCount').textContent = msg.count ? `(${msg.count})` : '';
+        break;
+      case 'results':
+        results = msg.results;
+        if (!results.length) $('list').innerHTML = `<div class="empty">No visible text in ${scope === 'page' ? 'this page' : 'the selection'}.</div>`;
+        render();
+        status(`${msg.layers} text layers checked`);
+        break;
+      case 'error':
+        status(msg.message, true);
+        break;
+    }
+  };
+  send({ type: 'ready' });
+</script>
+</body>
+</html>

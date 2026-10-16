@@ -1,0 +1,248 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  :root {
+    --bg: var(--figma-color-bg, #fff);
+    --bg2: var(--figma-color-bg-secondary, #f5f5f5);
+    --hover: var(--figma-color-bg-hover, #f0f0f0);
+    --text: var(--figma-color-text, #1e1e1e);
+    --muted: var(--figma-color-text-secondary, #6b6b6b);
+    --border: var(--figma-color-border, #e6e6e6);
+    --brand: var(--figma-color-bg-brand, #0d99ff);
+    --onbrand: var(--figma-color-text-onbrand, #fff);
+    --danger: var(--figma-color-text-danger, #dc3412);
+    --ok: var(--figma-color-text-success, #14ae5c);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 11px/16px Inter, system-ui, -apple-system, sans-serif; color: var(--text); background: var(--bg);
+    display: flex; flex-direction: column; height: 100vh; }
+  header { padding: 12px 14px 8px; border-bottom: 1px solid var(--border); }
+  h1 { font-size: 13px; font-weight: 600; margin: 0 0 2px; }
+  .sub { color: var(--muted); }
+  main { flex: 1; overflow: auto; }
+  section { padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  .step { font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .step b { display: inline-grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; background: var(--brand); color: var(--onbrand); font-size: 10px; }
+  .line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .grow { flex: 1; }
+  button { font: inherit; border-radius: 5px; border: 1px solid var(--border); background: var(--bg); color: var(--text); padding: 5px 10px; cursor: pointer; white-space: nowrap; }
+  button:hover { background: var(--hover); }
+  button.primary { background: var(--brand); border-color: var(--brand); color: var(--onbrand); font-weight: 600; }
+  button:disabled { opacity: .45; cursor: default; }
+  .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 5px; overflow: hidden; }
+  .seg button { border: 0; border-radius: 0; }
+  .seg button.on { background: var(--bg2); font-weight: 600; }
+  input[type=text], input[type=number], textarea { font: inherit; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 4px 6px; }
+  input:focus, textarea:focus { outline: 1px solid var(--brand); border-color: var(--brand); }
+  input[type=number] { width: 60px; }
+  textarea { width: 100%; height: 96px; resize: vertical; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; }
+  label.check { display: flex; align-items: center; gap: 6px; }
+  .tab { display: none; margin-top: 8px; }
+  .tab.on { display: block; }
+  .drop { border: 1px dashed var(--border); border-radius: 6px; padding: 18px; text-align: center; color: var(--muted); cursor: pointer; }
+  .drop.over { border-color: var(--brand); color: var(--brand); }
+  .tablewrap { overflow: auto; border: 1px solid var(--border); border-radius: 6px; max-height: 170px; }
+  table { border-collapse: collapse; width: max-content; min-width: 100%; }
+  th, td { padding: 4px 8px; border-bottom: 1px solid var(--border); text-align: left; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  th { position: sticky; top: 0; background: var(--bg2); font-weight: 600; }
+  th.match { color: var(--ok); }
+  th.match::before { content: '✓ '; }
+  .chips { display: flex; gap: 4px; flex-wrap: wrap; }
+  .chip { border-radius: 8px; padding: 0 7px; border: 1px solid var(--border); background: var(--bg2); }
+  .chip.ok { color: var(--ok); border-color: currentColor; }
+  .chip.no { color: var(--danger); border-color: currentColor; }
+  details summary { cursor: pointer; color: var(--muted); }
+  .help { color: var(--muted); margin: 6px 0 0; padding-left: 16px; }
+  .help code { color: var(--text); background: var(--bg2); padding: 0 3px; border-radius: 3px; }
+  footer { padding: 10px 14px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; }
+  #status { min-height: 16px; color: var(--muted); white-space: pre-line; }
+  #status.err { color: var(--danger); }
+  .muted { color: var(--muted); }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Data Filler</h1>
+    <div class="sub">Name layers <b>#name</b>, <b>#photo</b>, <b>#price</b>… and fill them from a sheet, CSV or JSON.</div>
+  </header>
+  <main>
+    <section>
+      <div class="step"><b>1</b> Data</div>
+      <div class="seg" id="tabs">
+        <button data-t="paste" class="on">Paste</button>
+        <button data-t="file">File</button>
+        <button data-t="sample">Sample data</button>
+      </div>
+      <div class="tab on" id="tab-paste">
+        <textarea id="paste" placeholder="Copy cells from Google Sheets or Excel (with a header row), or paste CSV or JSON.&#10;&#10;name,price,photo&#10;Cotton Kurta,₹899,https://…"></textarea>
+      </div>
+      <div class="tab" id="tab-file">
+        <div class="drop" id="drop">Drop a .csv, .tsv or .json file here, or click to choose</div>
+        <input type="file" id="file" accept=".csv,.tsv,.txt,.json,application/json,text/csv" hidden />
+      </div>
+      <div class="tab" id="tab-sample">
+        <div class="line">
+          <input type="number" id="sampleCount" value="20" min="1" max="200" /> <span class="muted">rows of names, emails, phones, cities, prices, dates, ratings, avatars…</span>
+          <div class="grow"></div>
+          <button id="sample">Generate</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="previewBox" hidden>
+      <div class="line" style="margin-bottom:6px"><b id="total"></b><span class="muted" id="source"></span></div>
+      <div class="tablewrap"><table id="preview"></table></div>
+    </section>
+
+    <section>
+      <div class="step"><b>2</b> Layers <span class="muted" id="selInfo" style="font-weight:400"></span></div>
+      <div class="chips" id="fields"><span class="muted">Select the cards, rows or screens to fill.</span></div>
+      <details style="margin-top:8px">
+        <summary>How to name layers</summary>
+        <ul class="help">
+          <li><code>#title</code> on a text layer → the <i>title</i> column</li>
+          <li><code>#photo</code> on a rectangle or frame → image from a URL</li>
+          <li><code>#color</code> with a value like <i>#2563EB</i> → fill colour</li>
+          <li><code>#badge?</code> → shown when the value is yes/true/1, hidden when empty/no/0</li>
+          <li><code>#user.name</code> → nested JSON values</li>
+          <li>Component properties (text, boolean, variant) fill by their own name, no renaming needed</li>
+          <li>Column names ignore case, spaces and underscores: <i>First Name</i> = <code>#firstname</code></li>
+        </ul>
+      </details>
+    </section>
+
+    <section>
+      <div class="step"><b>3</b> Fill</div>
+      <div class="line"><label class="check"><input type="checkbox" id="repeat" checked /> When one item is selected, repeat it for every row</label></div>
+      <div class="line" style="margin-top:6px">
+        <label class="check"><input type="checkbox" id="shuffle" /> Shuffle rows</label>
+        <div class="grow"></div>
+        <span class="muted">Start at row</span><input type="number" id="start" value="1" min="1" />
+        <span class="muted">Gap</span><input type="number" id="gap" value="16" min="0" />
+      </div>
+    </section>
+  </main>
+  <footer>
+    <button class="primary" id="apply" disabled>Fill</button>
+    <div id="status"></div>
+  </footer>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const send = (msg) => parent.postMessage({ pluginMessage: msg }, '*');
+  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+
+  let total = 0, selCount = 0, fields = [], matched = [], columns = [];
+
+  function status(text, err) { $('status').textContent = text || ''; $('status').className = err ? 'err' : ''; }
+
+  function updateApply() {
+    const repeat = $('repeat').checked && selCount === 1 && total > 1;
+    const n = repeat ? Math.max(1, total - (parseInt($('start').value, 10) || 1) + 1) : selCount;
+    $('apply').disabled = !total || !selCount;
+    $('apply').textContent = !selCount ? 'Select layers to fill' : !total ? 'Add data first' :
+      repeat ? `Repeat & fill ${n} items` : `Fill ${selCount} item${selCount === 1 ? '' : 's'}`;
+  }
+
+  function renderFields() {
+    $('selInfo').textContent = selCount ? `${selCount} selected` : '';
+    if (!selCount) { $('fields').innerHTML = '<span class="muted">Select the cards, rows or screens to fill.</span>'; return; }
+    if (!fields.length) { $('fields').innerHTML = '<span class="muted">No <b>#field</b> layers or component properties in the selection yet.</span>'; return; }
+    const isMatch = (f) => matched.includes(f);
+    $('fields').innerHTML = fields.map((f) => total
+      ? `<span class="chip ${isMatch(f) ? 'ok' : 'no'}" title="${isMatch(f) ? 'Has a column' : 'No column with this name'}">${isMatch(f) ? '✓' : '✕'} ${esc(f)}</span>`
+      : `<span class="chip">${esc(f)}</span>`).join('');
+  }
+
+  function renderPreview(msg) {
+    $('previewBox').hidden = !msg.total;
+    if (!msg.total) return;
+    $('total').textContent = `${msg.total} row${msg.total === 1 ? '' : 's'} · ${msg.columns.length} columns`;
+    $('source').textContent = '';
+    const norm = (s) => s.toLowerCase().replace(/[\s_\-]/g, '');
+    const matchedCol = (c) => fields.some((f) => norm(f) === norm(c) || c.toLowerCase().startsWith(f.toLowerCase() + '.'));
+    const cell = (row, c) => {
+      let v = row[c];
+      if (v === undefined && c.includes('.')) v = c.split('.').reduce((o, k) => (o && typeof o === 'object' ? o[k] : undefined), row);
+      return v && typeof v === 'object' ? JSON.stringify(v) : v;
+    };
+    $('preview').innerHTML = `<tr>${msg.columns.map((c) => `<th class="${matchedCol(c) ? 'match' : ''}">${esc(c)}</th>`).join('')}</tr>` +
+      msg.preview.map((r) => `<tr>${msg.columns.map((c) => `<td title="${esc(cell(r, c))}">${esc(cell(r, c))}</td>`).join('')}</tr>`).join('');
+  }
+
+  // ---- data input ----
+  document.querySelectorAll('#tabs button').forEach((b) => b.onclick = () => {
+    document.querySelectorAll('#tabs button').forEach((x) => x.classList.toggle('on', x === b));
+    document.querySelectorAll('.tab').forEach((t) => t.classList.toggle('on', t.id === 'tab-' + b.dataset.t));
+  });
+  let timer;
+  $('paste').addEventListener('input', () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => send({ type: 'data', text: $('paste').value, source: 'pasted' }), 300);
+  });
+  function readFile(f) {
+    if (!f) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      $('paste').value = reader.result;
+      send({ type: 'data', text: reader.result, source: f.name });
+      status(`Loaded ${f.name}`);
+    };
+    reader.readAsText(f);
+  }
+  $('drop').onclick = () => $('file').click();
+  $('file').onchange = () => readFile($('file').files[0]);
+  $('drop').ondragover = (e) => { e.preventDefault(); $('drop').classList.add('over'); };
+  $('drop').ondragleave = () => $('drop').classList.remove('over');
+  $('drop').ondrop = (e) => { e.preventDefault(); $('drop').classList.remove('over'); readFile(e.dataTransfer.files[0]); };
+  $('sample').onclick = () => send({ type: 'sample', count: parseInt($('sampleCount').value, 10) || 20, seed: Math.floor(Math.random() * 1e9) });
+
+  ['repeat', 'start'].forEach((id) => $(id).addEventListener('input', updateApply));
+  $('apply').onclick = () => {
+    status('Filling…');
+    $('apply').disabled = true;
+    send({ type: 'apply', options: {
+      repeat: $('repeat').checked,
+      shuffle: $('shuffle').checked,
+      start: Math.max(0, (parseInt($('start').value, 10) || 1) - 1),
+      gap: parseInt($('gap').value, 10) || 0,
+    } });
+  };
+
+  window.onmessage = (event) => {
+    const msg = event.data.pluginMessage;
+    if (!msg) return;
+    switch (msg.type) {
+      case 'selection':
+        selCount = msg.count; fields = msg.fields;
+        renderFields(); updateApply();
+        break;
+      case 'restore':
+        $('paste').value = msg.text;
+        break;
+      case 'table':
+        total = msg.total; columns = msg.columns; fields = msg.fields; matched = msg.matched;
+        renderPreview(msg); renderFields(); updateApply();
+        if (msg.source === 'pasted' || msg.source === 'sample') status(total ? '' : 'No rows found. Include a header row.');
+        break;
+      case 'applied': {
+        const s = msg.summary;
+        const lines = [`Filled ${s.items} item${s.items === 1 ? '' : 's'}, ${s.fields} fields${s.created ? ` (${s.created} copies made)` : ''}.`];
+        if (s.missing.length) lines.push(`No column for: ${s.missing.join(', ')}`);
+        if (s.errors.length) lines.push(...s.errors.slice(0, 4), s.errors.length > 4 ? `…and ${s.errors.length - 4} more` : '');
+        status(lines.filter(Boolean).join('\n'), s.errors.length > 0);
+        updateApply();
+        break;
+      }
+      case 'error':
+        status(msg.message, true);
+        updateApply();
+        break;
+    }
+  };
+  send({ type: 'ready' });
+</script>
+</body>
+</html>

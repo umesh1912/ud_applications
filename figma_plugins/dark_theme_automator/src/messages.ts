@@ -1,6 +1,6 @@
 // Messages between the plugin (code.ts) and its window (ui.html).
 
-import type { Role } from './color';
+import type { Role } from '../../shared/color';
 
 export interface Row {
   key: string;

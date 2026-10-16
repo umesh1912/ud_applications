@@ -10,5 +10,6 @@
     "allowImportingTsExtensions": true,
     "typeRoots": ["./node_modules/@types", "./node_modules/@figma"]
   },
-  "include": ["src"]
+  "include": ["shared", "*/src"],
+  "exclude": ["**/*.test.ts", "shared/fake-figma.ts", "node_modules"]
 }
