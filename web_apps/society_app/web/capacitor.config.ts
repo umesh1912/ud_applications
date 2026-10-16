@@ -5,7 +5,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 const url = process.env.CAP_SERVER_URL?.replace(/\/+$/, '');
 
 const config: CapacitorConfig = {
-  appId: 'com.shivamresidency.app',
+  appId: 'com.udapps.society_app',
   appName: 'Society App',
   webDir: 'dist-app',
   backgroundColor: '#ffffff',

@@ -4,7 +4,7 @@ android {
     namespace "com.shivamresidency.app"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.shivamresidency.app"
+        applicationId "com.udapps.society_app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         // CI passes the run number so each build is a newer version that installs over the last one.
