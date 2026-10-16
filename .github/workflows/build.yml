@@ -54,6 +54,8 @@ jobs:
             label: ClipCam
           - app: call_recorder
             label: Baatcheet
+          - app: biz_hisaab
+            label: Hisaab
     env:
       APP: ${{ matrix.app }}
     steps:

@@ -276,6 +276,19 @@ def call_recorder(A):
             + f'<circle cx="694" cy="730" r="44" fill="none" stroke="{C}" stroke-width="12"/>')
 
 
+def biz_hisaab(A):
+    page = doc_page(318, 268, 330, 440, fold=76)
+    head = f'<rect x="352" y="306" width="150" height="34" rx="12" fill="{A}"/>'
+    rows = lines(352, [376, 420, 464], [230, 196, 150], A, h=20)
+    bars = "".join(f'<rect x="{x}" y="{652 - h}" width="40" height="{h}" rx="10" fill="{A}" opacity="0.8"/>'
+                   for x, h in [(352, 70), (408, 110), (464, 150)])
+    coin = (f'<circle cx="652" cy="636" r="118" fill="{G}"/>'
+            f'<circle cx="652" cy="636" r="94" fill="none" stroke="{G2}" stroke-width="10"/>'
+            f'<text x="652" y="690" text-anchor="middle" font-family="DejaVu Sans" font-weight="bold" '
+            f'font-size="150" fill="{A}">₹</text>')
+    return page + head + rows + bars + coin
+
+
 APPS = {
     "doc_scanner": ("#C2512E", doc_scanner),
     "doc_vault": ("#1F5F5B", doc_vault),
@@ -296,6 +309,7 @@ APPS = {
     "doc_manager": ("#1E5A8C", doc_manager),
     "video_recorder": ("#C2412F", video_recorder),
     "call_recorder": ("#1F7A55", call_recorder),
+    "biz_hisaab": ("#B4235A", biz_hisaab),
 }
 
 
