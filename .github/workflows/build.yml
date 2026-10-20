@@ -54,6 +54,8 @@ jobs:
             label: ClipCam
           - app: call_recorder
             label: Baatcheet
+          - app: valence
+            label: Valence
     env:
       APP: ${{ matrix.app }}
     steps:

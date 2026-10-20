@@ -1,0 +1,41 @@
+name: valence
+description: Valence — science lessons, solved examples, notes and mock tests for students.
+version: 1.0.0+1
+publish_to: none
+
+environment:
+  sdk: ">=3.6.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  google_fonts: ^6.2.1
+
+dev_dependencies:
+  flutter_launcher_icons: any
+  flutter_native_splash: any
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/icon/icon.png
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: assets/icon/icon.png
+  adaptive_icon_background: assets/icon/background.png
+  adaptive_icon_foreground: assets/icon/foreground.png
+
+flutter_native_splash:
+  color: "#F5F7F2"
+  color_dark: "#0F1626"
+  image: assets/icon/splash.png
+  android_12:
+    color: "#F5F7F2"
+    color_dark: "#0F1626"
+    image: assets/icon/foreground.png
+    icon_background_color: "#2F5BEA"
+    icon_background_color_dark: "#2F5BEA"
+  ios: false
+  web: false

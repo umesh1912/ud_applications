@@ -24,6 +24,7 @@ APPS = [
     ("doc_manager", "Daftar", "All your files in neat folders"),
     ("video_recorder", "ClipCam", "Record videos with pause, flip and torch"),
     ("call_recorder", "Baatcheet", "Record calls and voice notes"),
+    ("valence", "Valence", "Science lessons, notes and mock tests"),
 ]
 
 tag = sys.argv[1]

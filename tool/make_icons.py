@@ -276,6 +276,18 @@ def call_recorder(A):
             + f'<circle cx="694" cy="730" r="44" fill="none" stroke="{C}" stroke-width="12"/>')
 
 
+def valence(A):
+    # A periodic-table cell: number mark, a two-orbit atom, and a name bar.
+    return (f'<rect x="286" y="276" width="452" height="472" rx="40" fill="{C}"/>'
+            f'<rect x="286" y="276" width="452" height="472" rx="40" fill="none" stroke="{G}" stroke-width="22"/>'
+            f'<rect x="330" y="320" width="64" height="26" rx="13" fill="{A}"/>'
+            f'<g fill="none" stroke="{A}" stroke-width="20">'
+            '<ellipse cx="512" cy="500" rx="150" ry="58" transform="rotate(28 512 500)"/>'
+            '<ellipse cx="512" cy="500" rx="150" ry="58" transform="rotate(-28 512 500)"/></g>'
+            f'<circle cx="512" cy="500" r="42" fill="{G}"/>'
+            f'<rect x="402" y="664" width="220" height="30" rx="15" fill="{A}" opacity="0.55"/>')
+
+
 APPS = {
     "doc_scanner": ("#C2512E", doc_scanner),
     "doc_vault": ("#1F5F5B", doc_vault),
@@ -296,6 +308,7 @@ APPS = {
     "doc_manager": ("#1E5A8C", doc_manager),
     "video_recorder": ("#C2412F", video_recorder),
     "call_recorder": ("#1F7A55", call_recorder),
+    "valence": ("#2F5BEA", valence),
 }
 
 
