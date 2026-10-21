@@ -1,0 +1,83 @@
+name: Device check
+
+# Installs each new app on an Android emulator, opens it, and saves a
+# screenshot plus the crash log to the `device-reports` branch.
+on:
+  push:
+    branches: ['wip/**']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    name: ${{ matrix.app }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [valence, sawaal, hisaab, pul, jhatpat]
+    env:
+      APP: ${{ matrix.app }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Build release APK
+        working-directory: apps/${{ matrix.app }}
+        run: |
+          flutter create --platforms=android --org com.udapps --project-name "$APP" . > /dev/null
+          rm -rf test
+          python3 ../../tool/prepare_android.py "." "$APP"
+          flutter pub get > /dev/null
+          flutter build apk --release
+          cp build/app/outputs/flutter-apk/app-release.apk "$GITHUB_WORKSPACE/app.apk"
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Run on emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 33
+          arch: x86_64
+          target: google_apis
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          script: bash tool/device_smoke.sh
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: report-${{ matrix.app }}
+          path: report/*
+
+  publish:
+    needs: run
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: reports
+      - name: Push reports to device-reports branch
+        run: |
+          git init -q out && cd out
+          git checkout -q -b device-reports
+          cp -r ../reports/* . || true
+          git -c user.name=ci -c user.email=ci@example.com add -A
+          git -c user.name=ci -c user.email=ci@example.com commit -q -m "Device reports ${{ github.sha }}"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" device-reports
