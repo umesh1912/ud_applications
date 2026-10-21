@@ -288,6 +288,49 @@ def valence(A):
             f'<rect x="402" y="664" width="220" height="30" rx="15" fill="{A}" opacity="0.55"/>')
 
 
+
+def sawaal(A):
+    # A speech bubble asking a question.
+    bubble = ("M300,300 H724 Q764,300 764,340 V610 Q764,650 724,650 H520 L420,748 L436,650 H300 "
+              "Q260,650 260,610 V340 Q260,300 300,300 Z")
+    return (f'<path d="{bubble}" fill="{C}"/>'
+            f'<path d="M440,430 Q440,360 512,360 Q584,360 584,424 Q584,470 540,492 Q518,504 518,540 V556" '
+            f'fill="none" stroke="{G}" stroke-width="44" stroke-linecap="round"/>'
+            f'<circle cx="518" cy="608" r="26" fill="{G}"/>')
+
+
+def hisaab(A):
+    # A passbook with ruled lines and a brass ribbon.
+    return (f'<rect x="300" y="270" width="424" height="490" rx="30" fill="{C}"/>'
+            f'<rect x="300" y="270" width="64" height="490" rx="30" fill="{shade(A, 0.25)}" opacity="0.55"/>'
+            + lines(400, [380, 440, 500, 560, 620], [270, 230, 270, 200, 250], A, h=16, op=0.45)
+            + f'<path d="M640,270 V420 L668,396 L696,420 V270 Z" fill="{G}"/>')
+
+
+def pul(A):
+    # An airmail envelope with a paper plane.
+    stripes = "".join(
+        f'<path d="M{x},350 l26,0 l-30,40 l-26,0 Z" fill="{"#D2352B" if i % 2 == 0 else A}"/>'
+        for i, x in enumerate(range(300, 720, 34)))
+    return (f'<rect x="270" y="330" width="484" height="330" rx="26" fill="{C}"/>'
+            f'<clipPath id="env"><rect x="270" y="330" width="484" height="330" rx="26"/></clipPath>'
+            f'<g clip-path="url(#env)">{stripes}'
+            + stripes.replace('M', 'M').replace(',350', ',618') +
+            f'</g><path d="M300,420 L512,540 L724,420" fill="none" stroke="{A}" stroke-width="18" stroke-linejoin="round" opacity="0.6"/>'
+            f'<path d="M560,250 L760,200 L690,380 L640,320 Z" fill="{G}"/>'
+            f'<path d="M640,320 L760,200 L610,300 Z" fill="{G2}"/>')
+
+
+def jhatpat(A):
+    # A ticket with a lightning bolt.
+    ticket = ("M290,330 H734 Q754,330 754,350 V470 A42,42 0 0 0 754,554 V674 Q754,694 734,694 H290 "
+              "Q270,694 270,674 V554 A42,42 0 0 0 270,470 V350 Q270,330 290,330 Z")
+    return (f'<path d="{ticket}" fill="{C}"/>'
+            f'<path d="M548,372 L440,530 H510 L476,656 L590,488 H516 Z" fill="{G}"/>'
+            + "".join(f'<rect x="{x}" y="508" width="14" height="8" rx="4" fill="{A}" opacity="0.35"/>' for x in range(320, 420, 26))
+            + "".join(f'<rect x="{x}" y="508" width="14" height="8" rx="4" fill="{A}" opacity="0.35"/>' for x in range(610, 720, 26)))
+
+
 APPS = {
     "doc_scanner": ("#C2512E", doc_scanner),
     "doc_vault": ("#1F5F5B", doc_vault),
@@ -309,6 +352,10 @@ APPS = {
     "video_recorder": ("#C2412F", video_recorder),
     "call_recorder": ("#1F7A55", call_recorder),
     "valence": ("#2F5BEA", valence),
+    "sawaal": ("#6A3FC8", sawaal),
+    "hisaab": ("#0B4F3C", hisaab),
+    "pul": ("#1F3F94", pul),
+    "jhatpat": ("#F26B1D", jhatpat),
 }
 
 

@@ -1,0 +1,43 @@
+name: sawaal
+description: Sawaal — general knowledge quiz game for every age.
+version: 1.0.0+1
+publish_to: none
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  google_fonts: ^6.2.1
+  shared_preferences: ^2.3.2
+  flutter_tts: ^4.2.0
+
+dev_dependencies:
+  flutter_launcher_icons: any
+  flutter_native_splash: any
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/icon/icon.png
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: assets/icon/icon.png
+  adaptive_icon_background: assets/icon/background.png
+  adaptive_icon_foreground: assets/icon/foreground.png
+
+flutter_native_splash:
+  color: "#E4F4EC"
+  color_dark: "#16152A"
+  image: assets/icon/splash.png
+  android_12:
+    color: "#E4F4EC"
+    color_dark: "#16152A"
+    image: assets/icon/foreground.png
+    icon_background_color: "#6A3FC8"
+    icon_background_color_dark: "#6A3FC8"
+  ios: false
+  web: false

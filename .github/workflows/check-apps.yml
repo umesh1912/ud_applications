@@ -1,0 +1,43 @@
+name: Check new apps
+
+# Fast code check (no APK) for work-in-progress branches.
+on:
+  push:
+    branches: ['wip/**']
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    name: ${{ matrix.app }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [valence, sawaal, hisaab, pul, jhatpat]
+    env:
+      APP: ${{ matrix.app }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Skip if the app does not exist yet
+        id: exists
+        run: |
+          if [ -f "apps/$APP/pubspec.yaml" ]; then echo "ok=true" >> "$GITHUB_OUTPUT"; else echo "ok=false" >> "$GITHUB_OUTPUT"; fi
+
+      - uses: subosito/flutter-action@v2
+        if: steps.exists.outputs.ok == 'true'
+        with:
+          channel: stable
+          cache: true
+
+      - name: Analyze
+        if: steps.exists.outputs.ok == 'true'
+        working-directory: apps/${{ matrix.app }}
+        run: |
+          flutter create --platforms=android --org com.udapps --project-name "$APP" . > /dev/null
+          rm -rf test
+          flutter pub get > /dev/null
+          flutter analyze . --no-fatal-infos --no-fatal-warnings > analyze.txt 2>&1 || true
+          cat analyze.txt
+          grep -E "^\s*(error|warning) " analyze.txt | head -n 50 | while IFS= read -r line; do echo "::warning title=analyze $APP::$line"; done
+          if grep -qE "^\s*error " analyze.txt; then exit 1; fi

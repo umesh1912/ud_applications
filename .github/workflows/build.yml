@@ -56,6 +56,14 @@ jobs:
             label: Baatcheet
           - app: valence
             label: Valence
+          - app: sawaal
+            label: Sawaal
+          - app: hisaab
+            label: Hisaab
+          - app: pul
+            label: Pul
+          - app: jhatpat
+            label: Jhatpat
     env:
       APP: ${{ matrix.app }}
     steps:

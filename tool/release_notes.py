@@ -25,6 +25,10 @@ APPS = [
     ("video_recorder", "ClipCam", "Record videos with pause, flip and torch"),
     ("call_recorder", "Baatcheet", "Record calls and voice notes"),
     ("valence", "Valence", "Science lessons, notes and mock tests"),
+    ("sawaal", "Sawaal", "GK quiz game for every age"),
+    ("hisaab", "Hisaab", "Accounts, budgets, bills, goals and investments"),
+    ("pul", "Pul", "Send money abroad (demo)"),
+    ("jhatpat", "Jhatpat", "Recharge and pay every bill (demo)"),
 ]
 
 tag = sys.argv[1]

@@ -1,0 +1,42 @@
+name: jhatpat
+description: Jhatpat — mobile, DTH and every bill paid in seconds.
+version: 1.0.0+1
+publish_to: none
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  google_fonts: ^6.2.1
+  shared_preferences: ^2.3.2
+
+dev_dependencies:
+  flutter_launcher_icons: any
+  flutter_native_splash: any
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/icon/icon.png
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: assets/icon/icon.png
+  adaptive_icon_background: assets/icon/background.png
+  adaptive_icon_foreground: assets/icon/foreground.png
+
+flutter_native_splash:
+  color: "#ECEEF3"
+  color_dark: "#101119"
+  image: assets/icon/splash.png
+  android_12:
+    color: "#ECEEF3"
+    color_dark: "#101119"
+    image: assets/icon/foreground.png
+    icon_background_color: "#F26B1D"
+    icon_background_color_dark: "#F26B1D"
+  ios: false
+  web: false

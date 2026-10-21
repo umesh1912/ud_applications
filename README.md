@@ -29,6 +29,10 @@ Every app works offline and keeps files on the phone. Languages: English, हि
 | **ClipCam** | `apps/video_recorder` | Video recorder: SD to 4K, pause/resume, front/back camera, torch, optional copy to the gallery, built-in player. |
 | **Baatcheet** | `apps/call_recorder` | Records calls automatically through the microphone, plus voice notes; search, notes, stars, playback speed. |
 | **Valence** | `apps/valence` | Science study app for students: lessons with step-by-step solved examples, PDF notes, Boards/JEE/NEET mock tests, analytics, doubts and a study planner. Has its own lab-notebook design system (see `apps/valence/DESIGN_SYSTEM.md`). |
+| **Sawaal** | `apps/sawaal` | GK quiz game for kids to seniors: age groups, 10 topics, picture/listen/type-in questions, daily quiz, rapid fire, battle the computer, pass-and-play, challenge codes, badges, parent controls, Hindi and read-aloud. |
+| **Hisaab** | `apps/hisaab` | Personal finance passbook: PIN lock, accounts, entries with automatic categories, budgets with alerts, bills and EMIs, goals, investments and net worth, insights, tax estimate (old vs new regime), credit score. |
+| **Pul** | `apps/pul` | International money transfer (demo, simulated rates): KYC, send abroad with fee/GST/TCS shown upfront, rate lock and alerts, multi-currency wallet and card, tracking, recipients, monthly reminders, LRS limit. |
+| **Jhatpat** | `apps/jhatpat` | Recharge and bill payment (demo): operator detection, plans with compare, BBPS bill fetch for 16 categories, coupons and scratch cards, AutoPay, saved billers, receipts, refunds and complaints. |
 
 **Shivam Residency** (`web_apps/society_app`) is a society management app (maintenance and bills, visitors and gate passes, complaints, notices, events, polls, amenity booking, expenses, SOS) for residents, the secretary, the treasurer and the watchman. Unlike the apps above it is built with React and Capacitor, so it has its own workflow (`society-app.yml`) and its APK appears as a separate "Society App" release.
 
