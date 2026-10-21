@@ -28,7 +28,53 @@ if app_extra.exists() and "<!-- ud-app-extra -->" not in text:
 manifest.write_text(text)
 print("label set:", label)
 
-# 2. Release signing (only when a keystore was provided).
+# 2. Keep plugin classes that are called from Dart through JNI. Without this,
+#    R8 (release shrinking) strips methods such as
+#    SharedPreferencesApiRegistrar.getAll and the app hangs on the splash screen.
+rules = android / "app/proguard-rules.pro"
+keep = """
+# ud-keep: plugin classes reached from Dart via JNI/Pigeon
+-keep class io.flutter.plugins.** { *; }
+-keep class dev.flutter.** { *; }
+-keep class dev.fluttercommunity.** { *; }
+-keep class com.tundralabs.fluttertts.** { *; }
+-keep class com.github.dart_lang.jni.** { *; }
+-keep class kotlin.coroutines.** { *; }
+-keep class kotlinx.coroutines.** { *; }
+-dontwarn kotlinx.coroutines.**
+"""
+existing = rules.read_text() if rules.exists() else ""
+if "ud-keep" not in existing:
+    rules.write_text(existing + keep)
+    print("proguard keep rules added")
+
+# Make sure the rules file is used by the release build.
+kts_file = android / "app/build.gradle.kts"
+groovy_file = android / "app/build.gradle"
+if kts_file.exists():
+    g = kts_file.read_text()
+    if "proguard-rules.pro" not in g:
+        g = g.replace(
+            'signingConfig = signingConfigs.getByName("debug")',
+            'signingConfig = signingConfigs.getByName("debug")\n'
+            '            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")',
+            1,
+        )
+        kts_file.write_text(g)
+        print("proguard file wired into build.gradle.kts")
+elif groovy_file.exists():
+    g = groovy_file.read_text()
+    if "proguard-rules.pro" not in g:
+        g = g.replace(
+            "signingConfig signingConfigs.debug",
+            "signingConfig signingConfigs.debug\n"
+            "            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'",
+            1,
+        )
+        groovy_file.write_text(g)
+        print("proguard file wired into build.gradle")
+
+# 3. Release signing (only when a keystore was provided).
 if not (android / "key.properties").exists():
     print("no key.properties: release build signed with debug key (fine for testing, not for Play)")
     sys.exit(0)

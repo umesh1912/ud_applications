@@ -38,7 +38,7 @@ jobs:
         run: |
           flutter create --platforms=android --org com.udapps --project-name "$APP" . > /dev/null
           rm -rf test
-          python3 ../../tool/prepare_android.py "." "$APP"
+          python3 ../../tool/prepare_android.py "." "$APP"; cat android/app/proguard-rules.pro; grep -n proguard android/app/build.gradle* || true
           flutter pub get > /dev/null
           flutter build apk --release
           cp build/app/outputs/flutter-apk/app-release.apk "$GITHUB_WORKSPACE/app.apk"
