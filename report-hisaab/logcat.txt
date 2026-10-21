@@ -1,0 +1,300 @@
+10-21 10:13:27.046  1014  1014 W BcSmartspaceView: 	at android.os.Parcel.readException(Parcel.java:2978)
+10-21 10:13:27.046  1014  1014 W BcSmartspaceView: 	at android.os.Parcel.readException(Parcel.java:2920)
+10-21 10:13:27.329  5209  5209 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-21 10:13:27.379  5209  5209 I AndroidRuntime: Using default boot image
+10-21 10:13:27.380  5209  5209 I AndroidRuntime: Leaving lock profiling enabled
+10-21 10:13:27.698  5209  5209 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-21 10:13:27.782  5214  5214 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:28.019  5289  5289 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:28.152  5311  5311 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:28.351  5331  5331 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:28.448  5349  5349 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:28.569  5367  5367 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:28.671  5386  5386 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:28.811  5405  5405 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:28.830  5209  5209 D AndroidRuntime: Shutting down VM
+10-21 10:13:28.912  5425  5425 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:29.080  5443  5443 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:29.173  5460  5460 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:29.248  5477  5477 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:29.327  5499  5499 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:29.428  5519  5519 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:29.522  5536  5536 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:29.619  5553  5553 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:29.756  5571  5571 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:29.894  5595  5595 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:30.450  1696  2250 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:32.544  1696  2217 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:33.799  1242  3934 W GmsPipelineLogger: java.lang.NullPointerException
+10-21 10:13:33.841   485   485 E JobServiceContext: android.os.DeadObjectException
+10-21 10:13:34.033  1074  1089 E JavaBinder: *** Uncaught remote exception!  (Exceptions are not yet supported across processes.)
+10-21 10:13:34.033  1074  1089 E JavaBinder: android.database.StaleDataException: Attempted to access a cursor after it has been closed.
+10-21 10:13:34.133  1074  1097 E SystemServiceRegistry: android.os.ServiceManager$ServiceNotFoundException: No service published for: ethernet
+10-21 10:13:34.361   485  1099 W WifiService: Permission violation - getConfiguredNetworks not allowed for uid=10107, packageName=com.google.android.settings.intelligence, reason=java.lang.SecurityException: UID 10107 has no location permission
+10-21 10:13:34.999  1074  1097 E JavaBinder: *** Uncaught remote exception!  (Exceptions are not yet supported across processes.)
+10-21 10:13:34.999  1074  1097 E JavaBinder: android.database.StaleDataException: Attempted to access a cursor after it has been closed.
+10-21 10:13:36.069  1696  2236 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:36.758  2838  4384 W RcsClientLib: java.lang.IllegalArgumentException: Service not registered: bwbs@209ea87
+10-21 10:13:36.758  2838  4384 W RcsClientLib: java.lang.IllegalArgumentException: Service not registered: bwbs@8707ddd
+10-21 10:13:36.760  2838  4384 W RcsClientLib: java.lang.IllegalArgumentException: Service not registered: bwbs@590a823
+10-21 10:13:36.762  2838  4384 W RcsClientLib: java.lang.IllegalArgumentException: Service not registered: bwbs@d7c1ad9
+10-21 10:13:37.071  5775  5775 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-21 10:13:37.106  5775  5775 I AndroidRuntime: Using default boot image
+10-21 10:13:37.106  5775  5775 I AndroidRuntime: Leaving lock profiling enabled
+10-21 10:13:37.400  5775  5775 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-21 10:13:37.402  1696  2236 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:37.680  5822  5822 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:37.889  5859  5859 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:38.025  5896  5896 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:38.084   485   515 E PackageManager: java.util.concurrent.TimeoutException: [Optimistic Bind] Didn't bind to resolver in time!
+10-21 10:13:38.140  5924  5924 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:38.580  5775  5775 D AndroidRuntime: Shutting down VM
+10-21 10:13:38.645  1696  2217 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:38.718  5844  5894 W GmsPipelineLogger: java.lang.NullPointerException
+10-21 10:13:39.231  6000  6099 W ConfigFileUtils: Failed to read asset ChimeraModuleSetList.pb: java.io.FileNotFoundException: ChimeraModuleSetList.pb
+10-21 10:13:41.028  5844  5955 W GLSUser : [AppCertManager] Exception while requesting key: 
+10-21 10:13:41.028  5844  5955 W GLSUser : java.util.concurrent.ExecutionException: avvw: Parse Proto Exception.
+10-21 10:13:41.028  5844  5955 W GLSUser : Caused by: avvw: Parse Proto Exception.
+10-21 10:13:41.061  5844  5942 W Conscrypt: Could not set socket write timeout: java.net.SocketException: Socket closed
+10-21 10:13:41.107  5844  5942 W Conscrypt: Could not set socket write timeout: java.net.SocketException: Socket closed
+10-21 10:13:41.264  6000  6090 E PhenotypeFlagCommitter: java.util.concurrent.TimeoutException: Timed out waiting for Task
+10-21 10:13:42.106  6162  6162 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-21 10:13:42.130  6162  6162 I AndroidRuntime: Using default boot image
+10-21 10:13:42.130  6162  6162 I AndroidRuntime: Leaving lock profiling enabled
+10-21 10:13:42.327  6162  6162 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-21 10:13:43.373  6162  6162 D AndroidRuntime: Shutting down VM
+10-21 10:13:43.647  1696  2217 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:43.696   485  1736 E RecoverySnapshotStorage: java.io.FileNotFoundException: /data/system/recoverablekeystore/snapshots/10120.xml: open failed: ENOENT (No such file or directory)
+10-21 10:13:43.696   485  1736 E RecoverySnapshotStorage: Caused by: android.system.ErrnoException: open failed: ENOENT (No such file or directory)
+10-21 10:13:43.717  6000  6099 W RecoverableKeyStoreGms: [WrappingKeyManager] InternalRecoveryServiceException during wrapping key generation [CONTEXT service_id=172 ]
+10-21 10:13:43.717  6000  6099 W RecoverableKeyStoreGms: android.security.keystore.recovery.InternalRecoveryServiceException: Failed to import secret key.
+10-21 10:13:43.717  6000  6099 W RecoverableKeyStoreGms: 	at android.security.keystore.recovery.RecoveryController.wrapUnexpectedServiceSpecificException(RecoveryController.java:773)
+10-21 10:13:43.717  6000  6099 W RecoverableKeyStoreGms: Caused by: android.os.ServiceSpecificException: Failed to import secret key. (code 22)
+10-21 10:13:43.717  6000  6099 W RecoverableKeyStoreGms: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3025)
+10-21 10:13:43.717  6000  6099 W RecoverableKeyStoreGms: 	at android.os.Parcel.createException(Parcel.java:2995)
+10-21 10:13:43.717  6000  6099 W RecoverableKeyStoreGms: 	at android.os.Parcel.readException(Parcel.java:2978)
+10-21 10:13:43.717  6000  6099 W RecoverableKeyStoreGms: 	at android.os.Parcel.readException(Parcel.java:2920)
+10-21 10:13:43.854  5844  5988 W AsyncOperation: OperationException[Status{statusCode=Stale snapshot for com.google.android.gms.magictether(change count changed - expected 1  but was 0), resolution=null}]
+10-21 10:13:43.855  5844  5957 E dlpn    : RuntimeException while executing runnable dlqc{qze@f77ff05} with executor MoreExecutors.directExecutor()
+10-21 10:13:43.855  5844  5957 E dlpn    : java.lang.NullPointerException: Attempt to get length of null array
+10-21 10:13:43.869  1696  2250 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:43.962  1696  2250 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:44.142  5844  5893 W AsyncOperation: OperationException[Status{statusCode=Stale snapshot for com.google.android.gms.dtdi#com.google.android.gms(change count changed - expected 1  but was 0), resolution=null}]
+10-21 10:13:44.156  1696  2250 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:44.445  5844  5988 W AsyncOperation: OperationException[Status{statusCode=Stale snapshot for com.google.android.gms.maps#com.google.android.gms(change count changed - expected 1  but was 0), resolution=null}]
+10-21 10:13:44.498  1696  2250 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:44.637  6000  6099 W PeoplePU: java.lang.IllegalArgumentException: Unknown component: ComponentInfo{com.google.android.syncadapters.contacts/com.google.android.syncadapters.contacts.ProxyGalProvider}
+10-21 10:13:44.637  6000  6099 W PeoplePU: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3015)
+10-21 10:13:44.637  6000  6099 W PeoplePU: 	at android.os.Parcel.createException(Parcel.java:2995)
+10-21 10:13:44.637  6000  6099 W PeoplePU: 	at android.os.Parcel.readException(Parcel.java:2978)
+10-21 10:13:44.637  6000  6099 W PeoplePU: 	at android.os.Parcel.readException(Parcel.java:2920)
+10-21 10:13:44.782  5844  5988 W AsyncOperation: OperationException[Status{statusCode=Stale snapshot for com.google.android.gms.personalsafety(change count changed - expected 1  but was 0), resolution=null}]
+10-21 10:13:44.801  5844  5988 W AsyncOperation: OperationException[Status{statusCode=Stale snapshot for com.google.android.gms.phonesky_recovery(change count changed - expected 1  but was 0), resolution=null}]
+10-21 10:13:44.810  5844  5988 W AsyncOperation: OperationException[Status{statusCode=Stale snapshot for com.google.android.gms.vision(change count changed - expected 1  but was 0), resolution=null}]
+10-21 10:13:44.899  1696  2250 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:45.003  6000  6269 W PeoplePU: android.content.pm.PackageManager$NameNotFoundException: ComponentInfo{com.google.android.gms/com.google.android.gms.people.sync.focus.ContactsSyncAdapterService}
+10-21 10:13:45.087  1696  2250 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:45.148  5844  6030 I SemanticLocation: java.io.FileNotFoundException: /data/user/0/com.google.android.gms/files/model_bundle_metadata.pb: open failed: ENOENT (No such file or directory)
+10-21 10:13:45.148  5844  6030 I SemanticLocation: Caused by: android.system.ErrnoException: open failed: ENOENT (No such file or directory)
+10-21 10:13:45.214  1696  2250 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:45.249  5844  6030 I SemanticLocation: java.io.FileNotFoundException: /data/user/0/com.google.android.gms/files/model_bundle_metadata.pb: open failed: ENOENT (No such file or directory)
+10-21 10:13:45.249  5844  6030 I SemanticLocation: Caused by: android.system.ErrnoException: open failed: ENOENT (No such file or directory)
+10-21 10:13:45.328  5844  5979 W AsyncOperation: OperationException[Status{statusCode=Stale snapshot for com.google.android.gms.trustagent.activeunlock.primary#com.google.android.gms(change count changed - expected 1  but was 0), resolution=null}]
+10-21 10:13:45.505  6000  6089 W Conscrypt: Could not set socket write timeout: java.net.SocketException: Socket closed
+10-21 10:13:45.527  1696  2250 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:45.628  1696  2250 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:45.713  1696  2250 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:45.920  1696  2217 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:45.973  6000  6089 W Conscrypt: Could not set socket write timeout: java.net.SocketException: Socket closed
+10-21 10:13:46.030  1696  2217 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:46.108  1696  2240 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:46.232  1696  2240 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:46.331  1696  2240 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:46.528  1696  2240 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:46.593  5844  6199 W TapAndPay: java.lang.NullPointerException: NfcAdapter is null
+10-21 10:13:46.675  1696  2240 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:46.781  6000  6074 W Conscrypt: Could not set socket write timeout: java.net.SocketException: Socket closed
+10-21 10:13:46.892  6332  6332 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-21 10:13:46.899  6332  6332 I AndroidRuntime: Using default boot image
+10-21 10:13:46.899  6332  6332 I AndroidRuntime: Leaving lock profiling enabled
+10-21 10:13:47.002  6332  6332 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-21 10:13:47.284  6000  6074 W Conscrypt: Could not set socket write timeout: java.net.SocketException: Socket closed
+10-21 10:13:47.406  6369  6369 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:47.496  6388  6388 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:47.554  6406  6406 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:48.051  6332  6332 D AndroidRuntime: Shutting down VM
+10-21 10:13:49.493  1696  2217 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:49.573  1696  2217 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:49.668  1696  2250 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:49.772  1696  2236 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:50.371  5844  6201 W NetworkScheduler: java.lang.IllegalArgumentException: Only the following extra parameter types are supported: Integer, Long, Double, String, Boolean, and nested Bundles with the same restrictions.
+10-21 10:13:50.754  5844  6201 I SemanticLocation: java.io.FileNotFoundException: /data/user/0/com.google.android.gms/files/model_bundle_metadata.pb: open failed: ENOENT (No such file or directory)
+10-21 10:13:50.754  5844  6201 I SemanticLocation: Caused by: android.system.ErrnoException: open failed: ENOENT (No such file or directory)
+10-21 10:13:50.840  5844  6201 I SemanticLocation: java.io.FileNotFoundException: /data/user/0/com.google.android.gms/files/model_bundle_metadata.pb: open failed: ENOENT (No such file or directory)
+10-21 10:13:50.840  5844  6201 I SemanticLocation: Caused by: android.system.ErrnoException: open failed: ENOENT (No such file or directory)
+10-21 10:13:50.863  5844  6202 W NetworkScheduler: java.lang.IllegalArgumentException: Only the following extra parameter types are supported: Integer, Long, Double, String, Boolean, and nested Bundles with the same restrictions.
+10-21 10:13:51.158  6000  6266 W PeoplePU: android.content.pm.PackageManager$NameNotFoundException: ComponentInfo{com.google.android.gms/com.google.android.gms.people.sync.focus.ContactsSyncAdapterService}
+10-21 10:13:51.165  6000  6266 W PeoplePU: java.lang.IllegalArgumentException: Unknown component: ComponentInfo{com.google.android.syncadapters.contacts/com.google.android.syncadapters.contacts.ContactsSyncAdapterService}
+10-21 10:13:51.165  6000  6266 W PeoplePU: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3015)
+10-21 10:13:51.165  6000  6266 W PeoplePU: 	at android.os.Parcel.createException(Parcel.java:2995)
+10-21 10:13:51.165  6000  6266 W PeoplePU: 	at android.os.Parcel.readException(Parcel.java:2978)
+10-21 10:13:51.165  6000  6266 W PeoplePU: 	at android.os.Parcel.readException(Parcel.java:2920)
+10-21 10:13:51.165  6000  6266 W PeoplePU: Caused by: android.os.RemoteException: Remote stack trace:
+10-21 10:13:51.173  6000  6266 W PeoplePU: java.lang.IllegalArgumentException: Unknown component: ComponentInfo{com.google.android.syncadapters.contacts/com.google.android.syncadapters.contacts.ContactsSyncAdapterService}
+10-21 10:13:51.173  6000  6266 W PeoplePU: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3015)
+10-21 10:13:51.173  6000  6266 W PeoplePU: 	at android.os.Parcel.createException(Parcel.java:2995)
+10-21 10:13:51.173  6000  6266 W PeoplePU: 	at android.os.Parcel.readException(Parcel.java:2978)
+10-21 10:13:51.173  6000  6266 W PeoplePU: 	at android.os.Parcel.readException(Parcel.java:2920)
+10-21 10:13:51.174  6000  6266 W PeoplePU: java.lang.IllegalArgumentException: Unknown component: ComponentInfo{com.google.android.syncadapters.contacts/com.google.android.syncadapters.contacts.ProxyGalProvider}
+10-21 10:13:51.174  6000  6266 W PeoplePU: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3015)
+10-21 10:13:51.174  6000  6266 W PeoplePU: 	at android.os.Parcel.createException(Parcel.java:2995)
+10-21 10:13:51.174  6000  6266 W PeoplePU: 	at android.os.Parcel.readException(Parcel.java:2978)
+10-21 10:13:51.174  6000  6266 W PeoplePU: 	at android.os.Parcel.readException(Parcel.java:2920)
+10-21 10:13:51.616  6501  6501 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-21 10:13:51.626  6501  6501 I AndroidRuntime: Using default boot image
+10-21 10:13:51.627  6501  6501 I AndroidRuntime: Leaving lock profiling enabled
+10-21 10:13:51.685  1591  5730 W ModernMediaScanner: Failed to visit /data/data/com.android.providers.downloads/cache/model.smfb.metadata: java.nio.file.NoSuchFileException: /data/data/com.android.providers.downloads/cache/model.smfb.metadata
+10-21 10:13:51.720  1591  1637 W ModernMediaScanner: Failed to visit /data/data/com.android.providers.downloads/cache/model.smfb: java.nio.file.NoSuchFileException: /data/data/com.android.providers.downloads/cache/model.smfb
+10-21 10:13:51.756  6501  6501 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-21 10:13:51.844  1591  1637 W ModernMediaScanner: Failed to visit /data/data/com.android.providers.downloads/cache/en.fb.metadata: java.nio.file.NoSuchFileException: /data/data/com.android.providers.downloads/cache/en.fb.metadata
+10-21 10:13:51.848  1591  1637 W ModernMediaScanner: Failed to visit /data/data/com.android.providers.downloads/cache/en.fb: java.nio.file.NoSuchFileException: /data/data/com.android.providers.downloads/cache/en.fb
+10-21 10:13:52.076  5756  6534 E AssistantConnector: java.lang.IllegalStateException: Failed to query AGSA value. This is most likely caused by a Google signature check failure. Please make sure both of the AGSA app and the client app are either release or dev builds.
+10-21 10:13:52.453  1591  1637 W ModernMediaScanner: Failed to visit /data/data/com.android.providers.downloads/cache/en.model.metadata: java.nio.file.NoSuchFileException: /data/data/com.android.providers.downloads/cache/en.model.metadata
+10-21 10:13:52.455  1591  1637 W ModernMediaScanner: Failed to visit /data/data/com.android.providers.downloads/cache/en.model: java.nio.file.NoSuchFileException: /data/data/com.android.providers.downloads/cache/en.model
+10-21 10:13:52.836  6501  6501 D AndroidRuntime: Shutting down VM
+10-21 10:13:53.271  6545  6545 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:53.336  6563  6563 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:53.383  6582  6582 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:55.341  1696  2240 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:55.436  1696  2240 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:55.584  1696  2240 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:56.102  6000  6266 W PeoplePU: java.lang.IllegalArgumentException: Unknown component: ComponentInfo{com.google.android.syncadapters.contacts/com.google.android.syncadapters.contacts.ContactsSyncAdapterService}
+10-21 10:13:56.102  6000  6266 W PeoplePU: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3015)
+10-21 10:13:56.102  6000  6266 W PeoplePU: 	at android.os.Parcel.createException(Parcel.java:2995)
+10-21 10:13:56.102  6000  6266 W PeoplePU: 	at android.os.Parcel.readException(Parcel.java:2978)
+10-21 10:13:56.102  6000  6266 W PeoplePU: 	at android.os.Parcel.readException(Parcel.java:2920)
+10-21 10:13:56.102  6000  6266 W PeoplePU: Caused by: android.os.RemoteException: Remote stack trace:
+10-21 10:13:56.104  6000  6266 W PeoplePU: java.lang.IllegalArgumentException: Unknown component: ComponentInfo{com.google.android.syncadapters.contacts/com.google.android.syncadapters.contacts.ContactsSyncAdapterService}
+10-21 10:13:56.104  6000  6266 W PeoplePU: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3015)
+10-21 10:13:56.104  6000  6266 W PeoplePU: 	at android.os.Parcel.createException(Parcel.java:2995)
+10-21 10:13:56.104  6000  6266 W PeoplePU: 	at android.os.Parcel.readException(Parcel.java:2978)
+10-21 10:13:56.104  6000  6266 W PeoplePU: 	at android.os.Parcel.readException(Parcel.java:2920)
+10-21 10:13:56.105  6000  6266 W PeoplePU: java.lang.IllegalArgumentException: Unknown component: ComponentInfo{com.google.android.syncadapters.contacts/com.google.android.syncadapters.contacts.ProxyGalProvider}
+10-21 10:13:56.105  6000  6266 W PeoplePU: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3015)
+10-21 10:13:56.105  6000  6266 W PeoplePU: 	at android.os.Parcel.createException(Parcel.java:2995)
+10-21 10:13:56.105  6000  6266 W PeoplePU: 	at android.os.Parcel.readException(Parcel.java:2978)
+10-21 10:13:56.105  6000  6266 W PeoplePU: 	at android.os.Parcel.readException(Parcel.java:2920)
+10-21 10:13:56.461  6631  6631 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-21 10:13:56.474  6631  6631 I AndroidRuntime: Using default boot image
+10-21 10:13:56.474  6631  6631 I AndroidRuntime: Leaving lock profiling enabled
+10-21 10:13:56.754  6634  6634 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:56.772  6631  6631 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-21 10:13:56.849  6665  6665 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:56.898  6682  6682 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:56.958  6699  6699 I AndroidRuntime: VM exiting with result code 0, cleanup skipped.
+10-21 10:13:57.256  1696  2217 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:57.355  1696  2217 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:57.466  1696  2236 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+10-21 10:13:57.671  6000  6272 W PeoplePU: java.lang.IllegalArgumentException: Unknown component: ComponentInfo{com.google.android.syncadapters.contacts/com.google.android.syncadapters.contacts.ContactsSyncAdapterService}
+10-21 10:13:57.671  6000  6272 W PeoplePU: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3015)
+10-21 10:13:57.671  6000  6272 W PeoplePU: 	at android.os.Parcel.createException(Parcel.java:2995)
+10-21 10:13:57.671  6000  6272 W PeoplePU: 	at android.os.Parcel.readException(Parcel.java:2978)
+10-21 10:13:57.671  6000  6272 W PeoplePU: 	at android.os.Parcel.readException(Parcel.java:2920)
+10-21 10:13:57.671  6000  6272 W PeoplePU: Caused by: android.os.RemoteException: Remote stack trace:
+10-21 10:13:57.673  6000  6272 W PeoplePU: java.lang.IllegalArgumentException: Unknown component: ComponentInfo{com.google.android.syncadapters.contacts/com.google.android.syncadapters.contacts.ContactsSyncAdapterService}
+10-21 10:13:57.673  6000  6272 W PeoplePU: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3015)
+10-21 10:13:57.673  6000  6272 W PeoplePU: 	at android.os.Parcel.createException(Parcel.java:2995)
+10-21 10:13:57.673  6000  6272 W PeoplePU: 	at android.os.Parcel.readException(Parcel.java:2978)
+10-21 10:13:57.673  6000  6272 W PeoplePU: 	at android.os.Parcel.readException(Parcel.java:2920)
+10-21 10:13:57.674  6000  6272 W PeoplePU: java.lang.IllegalArgumentException: Unknown component: ComponentInfo{com.google.android.syncadapters.contacts/com.google.android.syncadapters.contacts.ProxyGalProvider}
+10-21 10:13:57.674  6000  6272 W PeoplePU: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3015)
+10-21 10:13:57.674  6000  6272 W PeoplePU: 	at android.os.Parcel.createException(Parcel.java:2995)
+10-21 10:13:57.674  6000  6272 W PeoplePU: 	at android.os.Parcel.readException(Parcel.java:2978)
+10-21 10:13:57.674  6000  6272 W PeoplePU: 	at android.os.Parcel.readException(Parcel.java:2920)
+10-21 10:13:57.784  5844  6030 W NetworkScheduler: java.lang.IllegalArgumentException: Only the following extra parameter types are supported: Integer, Long, Double, String, Boolean, and nested Bundles with the same restrictions.
+10-21 10:13:57.828  6631  6631 D AndroidRuntime: Shutting down VM
+10-21 10:14:01.237  6736  6736 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-21 10:14:01.239  6736  6736 I AndroidRuntime: Using default boot image
+10-21 10:14:01.239  6736  6736 I AndroidRuntime: Leaving lock profiling enabled
+10-21 10:14:01.293  6736  6736 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-21 10:14:02.317  6736  6736 D AndroidRuntime: Shutting down VM
+10-21 10:14:05.732  6762  6762 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-21 10:14:05.736  6762  6762 I AndroidRuntime: Using default boot image
+10-21 10:14:05.736  6762  6762 I AndroidRuntime: Leaving lock profiling enabled
+10-21 10:14:05.794  6762  6762 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-21 10:14:06.820  6762  6762 D AndroidRuntime: Shutting down VM
+10-21 10:14:10.216  6799  6799 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-21 10:14:10.218  6799  6799 I AndroidRuntime: Using default boot image
+10-21 10:14:10.218  6799  6799 I AndroidRuntime: Leaving lock profiling enabled
+10-21 10:14:10.282  6799  6799 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-21 10:14:11.314  6799  6799 D AndroidRuntime: Shutting down VM
+10-21 10:14:14.581   485   485 E PermissionControllerManager: java.util.concurrent.TimeoutException
+10-21 10:14:17.617  5844  5955 W TapAndPay: java.lang.NullPointerException: NfcAdapter is null
+10-21 10:14:17.749  1696  6843 E d       : RuntimeException while executing runnable cb{com.google.apps.tiktok.tracing.ej@47a5e07} with executor MoreExecutors.directExecutor()
+10-21 10:14:17.749  1696  6843 E d       : java.lang.NullPointerException: Attempt to read from field 'java.lang.String com.google.android.libraries.mdi.download.ae.b' on a null object reference in method 'void com.google.android.libraries.mdi.download.h.bq.gH(java.lang.Object)'
+10-21 10:14:17.914  1696  6847 E d       : RuntimeException while executing runnable cb{com.google.apps.tiktok.tracing.ej@3a520c5} with executor MoreExecutors.directExecutor()
+10-21 10:14:17.914  1696  6847 E d       : java.lang.NullPointerException: Attempt to read from field 'java.lang.String com.google.android.libraries.mdi.download.ae.b' on a null object reference in method 'void com.google.android.libraries.mdi.download.h.bq.gH(java.lang.Object)'
+10-21 10:14:17.924  1696  6847 E d       : RuntimeException while executing runnable cb{com.google.apps.tiktok.tracing.ej@e8c535} with executor MoreExecutors.directExecutor()
+10-21 10:14:17.924  1696  6847 E d       : java.lang.NullPointerException: Attempt to read from field 'java.lang.String com.google.android.libraries.mdi.download.ae.b' on a null object reference in method 'void com.google.android.libraries.mdi.download.h.bq.gH(java.lang.Object)'
+10-21 10:14:17.989  1074  1374 D SettingsSliceProvider: java.lang.IllegalStateException: Invalid Slices key from path: wifi_calling
+10-21 10:14:23.937  6933  6933 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-21 10:14:23.941  6933  6933 I AndroidRuntime: Using default boot image
+10-21 10:14:23.941  6933  6933 I AndroidRuntime: Leaving lock profiling enabled
+10-21 10:14:24.016  6933  6933 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-21 10:14:25.064  6933  6933 D AndroidRuntime: Shutting down VM
+10-21 10:14:30.645  6976  6976 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-21 10:14:30.649  6976  6976 I AndroidRuntime: Using default boot image
+10-21 10:14:30.649  6976  6976 I AndroidRuntime: Leaving lock profiling enabled
+10-21 10:14:30.724  6976  6976 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-21 10:14:31.768  6976  6976 D AndroidRuntime: Shutting down VM
+10-21 10:14:37.295  7008  7008 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-21 10:14:37.297  7008  7008 I AndroidRuntime: Using default boot image
+10-21 10:14:37.297  7008  7008 I AndroidRuntime: Leaving lock profiling enabled
+10-21 10:14:37.369  7008  7008 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-21 10:14:38.418  7008  7008 D AndroidRuntime: Shutting down VM
+10-21 10:14:40.206  5844  7059 W NetworkScheduler: java.lang.IllegalArgumentException: Only the following extra parameter types are supported: Integer, Long, Double, String, Boolean, and nested Bundles with the same restrictions.
+10-21 10:14:40.273  6000  6091 W PeoplePU: java.lang.IllegalArgumentException: Unknown component: ComponentInfo{com.google.android.syncadapters.contacts/com.google.android.syncadapters.contacts.ContactsSyncAdapterService}
+10-21 10:14:40.273  6000  6091 W PeoplePU: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3015)
+10-21 10:14:40.273  6000  6091 W PeoplePU: 	at android.os.Parcel.createException(Parcel.java:2995)
+10-21 10:14:40.273  6000  6091 W PeoplePU: 	at android.os.Parcel.readException(Parcel.java:2978)
+10-21 10:14:40.273  6000  6091 W PeoplePU: 	at android.os.Parcel.readException(Parcel.java:2920)
+10-21 10:14:40.273  6000  6091 W PeoplePU: Caused by: android.os.RemoteException: Remote stack trace:
+10-21 10:14:40.275  6000  6091 W PeoplePU: java.lang.IllegalArgumentException: Unknown component: ComponentInfo{com.google.android.syncadapters.contacts/com.google.android.syncadapters.contacts.ContactsSyncAdapterService}
+10-21 10:14:40.275  6000  6091 W PeoplePU: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3015)
+10-21 10:14:40.275  6000  6091 W PeoplePU: 	at android.os.Parcel.createException(Parcel.java:2995)
+10-21 10:14:40.275  6000  6091 W PeoplePU: 	at android.os.Parcel.readException(Parcel.java:2978)
+10-21 10:14:40.275  6000  6091 W PeoplePU: 	at android.os.Parcel.readException(Parcel.java:2920)
+10-21 10:14:40.275  6000  6091 W PeoplePU: java.lang.IllegalArgumentException: Unknown component: ComponentInfo{com.google.android.syncadapters.contacts/com.google.android.syncadapters.contacts.ProxyGalProvider}
+10-21 10:14:40.275  6000  6091 W PeoplePU: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3015)
+10-21 10:14:40.275  6000  6091 W PeoplePU: 	at android.os.Parcel.createException(Parcel.java:2995)
+10-21 10:14:40.275  6000  6091 W PeoplePU: 	at android.os.Parcel.readException(Parcel.java:2978)
+10-21 10:14:40.275  6000  6091 W PeoplePU: 	at android.os.Parcel.readException(Parcel.java:2920)
+10-21 10:14:40.347  6000  6058 W GmsPipelineLogger: java.lang.NullPointerException
+10-21 10:14:40.514  5844  6864 I SemanticLocation: java.io.FileNotFoundException: /data/user/0/com.google.android.gms/files/model_bundle_metadata.pb: open failed: ENOENT (No such file or directory)
+10-21 10:14:40.514  5844  6864 I SemanticLocation: Caused by: android.system.ErrnoException: open failed: ENOENT (No such file or directory)
+10-21 10:14:40.545  5844  6864 I SemanticLocation: java.io.FileNotFoundException: /data/user/0/com.google.android.gms/files/model_bundle_metadata.pb: open failed: ENOENT (No such file or directory)
+10-21 10:14:40.545  5844  6864 I SemanticLocation: Caused by: android.system.ErrnoException: open failed: ENOENT (No such file or directory)
+10-21 10:14:43.958  7113  7113 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-21 10:14:43.961  7113  7113 I AndroidRuntime: Using default boot image
+10-21 10:14:43.961  7113  7113 I AndroidRuntime: Leaving lock profiling enabled
+10-21 10:14:44.048  7113  7113 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-21 10:14:45.084  7113  7113 D AndroidRuntime: Shutting down VM
+10-21 10:14:47.969  7131  7131 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-21 10:14:47.971  7131  7131 I AndroidRuntime: Using default boot image
+10-21 10:14:47.971  7131  7131 I AndroidRuntime: Leaving lock profiling enabled
+10-21 10:14:48.030  7131  7131 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-21 10:14:49.050  7131  7131 D AndroidRuntime: Shutting down VM
+10-21 10:14:51.921  7156  7156 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-21 10:14:51.923  7156  7156 I AndroidRuntime: Using default boot image
+10-21 10:14:51.923  7156  7156 I AndroidRuntime: Leaving lock profiling enabled
+10-21 10:14:51.980  7156  7156 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-21 10:14:53.004  7156  7156 D AndroidRuntime: Shutting down VM
+10-21 10:14:55.869  7175  7175 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-21 10:14:55.871  7175  7175 I AndroidRuntime: Using default boot image
+10-21 10:14:55.871  7175  7175 I AndroidRuntime: Leaving lock profiling enabled
+10-21 10:14:55.923  7175  7175 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-21 10:14:56.951  7175  7175 D AndroidRuntime: Shutting down VM
+10-21 10:14:59.249  1696  6856 E d       : RuntimeException while executing runnable cb{com.google.apps.tiktok.tracing.ej@7a71bbd} with executor MoreExecutors.directExecutor()
+10-21 10:14:59.249  1696  6856 E d       : java.lang.NullPointerException: Attempt to read from field 'java.lang.String com.google.android.libraries.mdi.download.ae.b' on a null object reference in method 'void com.google.android.libraries.mdi.download.h.bq.gH(java.lang.Object)'
+10-21 10:14:59.345  1696  6856 E d       : RuntimeException while executing runnable cb{com.google.apps.tiktok.tracing.ej@bae2e57} with executor MoreExecutors.directExecutor()
+10-21 10:14:59.345  1696  6856 E d       : java.lang.NullPointerException: Attempt to read from field 'java.lang.String com.google.android.libraries.mdi.download.ae.b' on a null object reference in method 'void com.google.android.libraries.mdi.download.h.bq.gH(java.lang.Object)'

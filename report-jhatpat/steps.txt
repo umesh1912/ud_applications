@@ -1,0 +1,8 @@
+shot 01-start
+shot 02-home
+NOT FOUND: 10-digit number
+shot 03-plans
+NOT FOUND: 299
+shot 04-checkout
+shot 05-receipt
+shot 06-history

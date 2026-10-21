@@ -1,0 +1,12 @@
+shot 01-start
+NOT FOUND: Let's play
+shot 02-home
+NOT FOUND: Quick play
+shot 03-quiz
+shot 04-answered
+NOT FOUND: Next question
+shot 05-next
+NOT FOUND: Quit
+shot 06-home-bottom
+NOT FOUND: Science
+shot 07-category

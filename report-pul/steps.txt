@@ -1,0 +1,14 @@
+shot 01-start
+shot 02-home
+NOT FOUND: I agree
+NOT FOUND: Submit
+shot 03-kyc
+NOT FOUND: Save PIN
+NOT FOUND: Start a transfer
+NOT FOUND: Someone new
+NO FIELD 3
+NO FIELD 4
+NOT FOUND: Save recipient
+shot 04-quote
+NOT FOUND: Continue
+shot 05-review

@@ -1,0 +1,8 @@
+shot 01-start
+shot 02-pin
+shot 03-home
+shot 04-home-2
+shot 05-passbook
+shot 06-plan
+shot 07-wealth
+NOT FOUND: Add entry
