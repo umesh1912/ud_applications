@@ -248,15 +248,20 @@ class Store extends ChangeNotifier {
   Store._(this._prefs);
 
   static const _key = 'sawaal_v1';
-  final SharedPreferences _prefs;
+  final SharedPreferences? _prefs; // null if storage is unavailable: app still runs, nothing is saved
   final List<Profile> profiles = [];
   String? activeId;
   final Settings settings = Settings();
 
   static Future<Store> load() async {
-    final prefs = await SharedPreferences.getInstance();
+    SharedPreferences? prefs;
+    try {
+      prefs = await SharedPreferences.getInstance().timeout(const Duration(seconds: 4));
+    } catch (_) {
+      prefs = null; // never block start-up on storage
+    }
     final s = Store._(prefs);
-    final raw = prefs.getString(_key);
+    final raw = prefs?.getString(_key);
     if (raw != null) {
       try {
         final j = jsonDecode(raw) as Map<String, dynamic>;
@@ -271,7 +276,7 @@ class Store extends ChangeNotifier {
   }
 
   void _save() {
-    _prefs.setString(
+    _prefs?.setString(
       _key,
       jsonEncode({
         'profiles': profiles.map((p) => p.toJson()).toList(),

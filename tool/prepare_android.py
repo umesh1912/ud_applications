@@ -28,7 +28,7 @@ if app_extra.exists() and "<!-- ud-app-extra -->" not in text:
 manifest.write_text(text)
 print("label set:", label)
 
-# 2. Keep plugin classes that are called from Dart through JNI. Without this,
+# 2. Turn off R8 shrinking and keep plugin classes that are called from Dart through JNI. Without this,
 #    R8 (release shrinking) strips methods such as
 #    SharedPreferencesApiRegistrar.getAll and the app hangs on the splash screen.
 rules = android / "app/proguard-rules.pro"
@@ -41,6 +41,7 @@ keep = """
 -keep class com.github.dart_lang.jni.** { *; }
 -keep class kotlin.coroutines.** { *; }
 -keep class kotlinx.coroutines.** { *; }
+-keep class kotlin.** { *; }
 -dontwarn kotlinx.coroutines.**
 """
 existing = rules.read_text() if rules.exists() else ""
@@ -57,6 +58,8 @@ if kts_file.exists():
         g = g.replace(
             'signingConfig = signingConfigs.getByName("debug")',
             'signingConfig = signingConfigs.getByName("debug")\n'
+            '            isMinifyEnabled = false\n'
+            '            isShrinkResources = false\n'
             '            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")',
             1,
         )
@@ -68,6 +71,8 @@ elif groovy_file.exists():
         g = g.replace(
             "signingConfig signingConfigs.debug",
             "signingConfig signingConfigs.debug\n"
+            "            minifyEnabled false\n"
+            "            shrinkResources false\n"
             "            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'",
             1,
         )

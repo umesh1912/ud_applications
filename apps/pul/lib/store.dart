@@ -13,7 +13,7 @@ class Store extends ChangeNotifier {
   Store._(this._prefs);
 
   static const _key = 'pul_v1';
-  final SharedPreferences _prefs;
+  final SharedPreferences? _prefs; // null if storage is unavailable: app still runs, nothing is saved
   final _rand = Random();
   Timer? _ticker;
 
@@ -41,9 +41,14 @@ class Store extends ChangeNotifier {
   final List<RateAlert> freshAlerts = [];
 
   static Future<Store> load() async {
-    final prefs = await SharedPreferences.getInstance();
+    SharedPreferences? prefs;
+    try {
+      prefs = await SharedPreferences.getInstance().timeout(const Duration(seconds: 4));
+    } catch (_) {
+      prefs = null; // never block start-up on storage
+    }
     final s = Store._(prefs);
-    final raw = prefs.getString(_key);
+    final raw = prefs?.getString(_key);
     if (raw != null) {
       try {
         s._fromJson(jsonDecode(raw) as Map<String, dynamic>);
@@ -91,7 +96,7 @@ class Store extends ChangeNotifier {
       };
 
   void changed() {
-    _prefs.setString(_key, jsonEncode(_toJson()));
+    _prefs?.setString(_key, jsonEncode(_toJson()));
     notifyListeners();
   }
 
